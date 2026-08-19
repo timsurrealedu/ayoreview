@@ -114,6 +114,7 @@ export type CardWithStats = Card & {
   google_review_url?: string;
   stats: {
     today: number;
+    yesterday: number;
     last7Days: number;
     last30Days: number;
     allTime: number;

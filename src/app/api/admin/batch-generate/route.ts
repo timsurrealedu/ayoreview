@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
 import { checkAdminApiAccess } from '@/lib/auth';
+import { handleApiError } from '@/lib/api-helpers';
 
 export async function POST(request: NextRequest) {
   const adminCheck = await checkAdminApiAccess(request);
@@ -13,6 +14,7 @@ export async function POST(request: NextRequest) {
     const created = await dbRepo.batchGenerateBlankCards(Math.min(count, 100));
     return NextResponse.json({ success: true, count: created.length, data: created });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    const result = handleApiError(err, 'POST /api/admin/batch-generate');
+    return NextResponse.json(result, { status: 500 });
   }
 }

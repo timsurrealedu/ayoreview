@@ -13,11 +13,19 @@ import {
   Sparkles,
   Printer
 } from 'lucide-react';
-import { Location } from '@/lib/types';
+
+interface AdminLocation {
+  id: string;
+  name: string;
+  city: string;
+  business_name: string;
+  organization_id: string;
+  organization_name: string;
+}
 
 export default function AdminCardsInventoryPage() {
   const [cards, setCards] = useState<any[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [locations, setLocations] = useState<AdminLocation[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [batchCount, setBatchCount] = useState(10);
@@ -34,16 +42,12 @@ export default function AdminCardsInventoryPage() {
 
   const fetchCards = async () => {
     try {
-      const [cRes, locRes] = await Promise.all([
-        fetch('/api/cards'),
-        fetch('/api/locations'),
-      ]);
-      const cJson = await cRes.json();
-      const locJson = await locRes.json();
-      if (cJson.success) setCards(cJson.data || []);
-      if (locJson.success) {
-        setLocations(locJson.data || []);
-        if (locJson.data?.length > 0) setSelectedLocationId(locJson.data[0].id);
+      const res = await fetch('/api/admin/inventory');
+      const json = await res.json();
+      if (json.success) {
+        setCards(json.data.cards || []);
+        setLocations(json.data.locations || []);
+        if (json.data.locations?.length > 0) setSelectedLocationId(json.data.locations[0].id);
       }
     } catch (err) {
       console.error(err);
@@ -262,7 +266,7 @@ export default function AdminCardsInventoryPage() {
                 >
                   {locations.map((l) => (
                     <option key={l.id} value={l.id}>
-                      {l.name} ({l.city})
+                      {l.name} ({l.city}) — {l.business_name} [{l.organization_name}]
                     </option>
                   ))}
                 </select>

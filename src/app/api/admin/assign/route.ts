@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
 import { checkAdminApiAccess } from '@/lib/auth';
+import { handleApiError } from '@/lib/api-helpers';
 
 export async function POST(request: NextRequest) {
   const adminCheck = await checkAdminApiAccess(request);
@@ -23,6 +24,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Physical card not found' }, { status: 404 });
     }
 
+    // Verify location exists before assigning
+    const location = await dbRepo.getLocationById(location_id);
+    if (!location) {
+      return NextResponse.json({ success: false, error: 'Target location not found' }, { status: 404 });
+    }
+
     await dbRepo.updateCard(card.id, {
       location_id,
       placement: placement || 'cashier',
@@ -32,6 +39,7 @@ export async function POST(request: NextRequest) {
     const updated = await dbRepo.getCardById(card.id);
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    const result = handleApiError(err, 'POST /api/admin/assign');
+    return NextResponse.json(result, { status: 500 });
   }
 }

@@ -1,0 +1,81 @@
+{
+  "strategy": "security-first canary rollout, approval per edit, no commits",
+  "generatedAt": "2026-08-19",
+  "constraints": {
+    "editAuthority": "none by default - every edit requires explicit user approval in conversation",
+    "commits": "forbidden",
+    "verification": "tsc --noEmit + next build after each approved batch (no test suite exists in repo)"
+  },
+  "waves": [
+    {
+      "wave": 1,
+      "name": "Critical privilege escalation",
+      "findings": ["H1"],
+      "files": ["supabase/migrations/002_rls_and_auth_triggers.sql (new migration 003)", "src/lib/auth.ts (optional defense-in-depth)"],
+      "approach": "New migration 003_admin_flag_hardening.sql: replace handle_new_user so is_platform_admin is never sourced from raw_user_meta_data (always false on self-signup; platform admins granted via ADMIN_EMAILS env or manual SQL). Optionally keep auth.ts ADMIN_EMAILS path as recovery channel. Also scrub any existing self-granted admin rows.",
+      "risk": "low - signup flow untouched for normal users",
+      "rollback": "revert migration file"
+    },
+    {
+      "wave": 2,
+      "name": "Tenant isolation",
+      "findings": ["H2", "H19"],
+      "files": ["src/lib/db.ts", "supabase/migrations/ (policy migration)"],
+      "approach": "H2: change getCards org filter to strict equality (drop || !c.location_id) and add explicit admin-only listing for blanks (used by wave 3). H19: drop 'Public read for locations' policy; narrow cards public SELECT to the columns/path actually needed (nothing - service role bypasses RLS) and drop 'Public insert for interactions' (recordInteraction uses admin client). Verify redirects still work (service role bypasses RLS - yes).",
+      "risk": "medium - touches RLS; requires careful check that no anon path reads these tables",
+      "rollback": "restore prior policies in same migration style"
+    },
+    {
+      "wave": 3,
+      "name": "Operator admin workflow",
+      "findings": ["H3", "H15-partial"],
+      "files": ["src/app/admin/cards/page.tsx", "src/app/api/admin/inventory/route.ts (new)", "src/lib/db.ts"],
+      "approach": "New admin-only GET /api/admin/inventory returning getAllInventoryCards() + all locations (org name labeled). Rewire admin cards page to it; assign modal lists all locations with org labels. Larger refactor per referee.",
+      "risk": "medium",
+      "rollback": "revert page fetch"
+    },
+    {
+      "wave": 4,
+      "name": "Analytics correctness",
+      "findings": ["H4", "H5", "H6"],
+      "files": ["src/lib/db.ts", "src/app/dashboard/locations/[id]/page.tsx", "src/app/dashboard/cards/page.tsx"],
+      "approach": "H4: accumulate yesterday (add yesterday window to stats or compute from interactions). H5: align param name (send locationId). H6: read searchParams filter in cards page.",
+      "risk": "low",
+      "rollback": "trivial revert"
+    },
+    {
+      "wave": 5,
+      "name": "Input validation + error hygiene",
+      "findings": ["H8", "H9", "H21"],
+      "files": ["src/app/api/cards/route.ts", "src/app/api/admin/assign/route.ts", "src/app/api/cards/[id]/route.ts", "src/app/api/locations/route.ts", "src/app/api/businesses/route.ts", "src/app/api/admin/batch-generate/route.ts"],
+      "approach": "Shared helpers: validateInventoryCode (regex ^RT-[0-9]{6}$ or general safe charset, reject RT- prefix for non-platform callers), validatePlacement (enum), sanitizeApiError(err) -> generic message + Sentry.captureException. Assign route: verify location exists first.",
+      "risk": "low",
+      "rollback": "trivial revert"
+    },
+    {
+      "wave": 6,
+      "name": "Redirect/URL hardening",
+      "findings": ["H7", "H12"],
+      "files": ["src/app/(auth)/login/page.tsx", "src/app/dashboard/cards/[id]/print/page.tsx"],
+      "approach": "H7: sanitize redirectTo (must start with '/' and not '//'). H12: derive appUrl from headers() host + protocol with NEXT_PUBLIC_APP_URL override; remove hardcoded reviewtap.id fallback.",
+      "risk": "low",
+      "rollback": "trivial revert"
+    },
+    {
+      "wave": 7,
+      "name": "Config fail-closed + small UX fixes",
+      "findings": ["H13", "H16", "H20"],
+      "files": ["src/lib/supabase/admin.ts", "src/app/dashboard/cards/[id]/print/page.tsx", "src/components/dashboard/sidebar.tsx", "src/app/dashboard/page.tsx"],
+      "approach": "H13: throw at client creation when SERVICE_ROLE_KEY missing in production. H16: window.print(). H20: render error message for unauthorized_admin_access or hide admin link for non-admins (sidebar needs user prop - dashboard layout already has context).",
+      "risk": "low",
+      "rollback": "trivial revert"
+    },
+    {
+      "wave": 8,
+      "name": "Manual-review decisions (product/infra)",
+      "findings": ["H10", "H11", "H14", "H15-rest", "H18"],
+      "approach": "Present options to user: rate limiting mechanism choice (Supabase auth config vs middleware), test-flag gating, getCards scalability refactor, dead-code removal vs wiring, batch-generate conflict retry. Not auto-planned.",
+      "risk": "n/a"
+    }
+  ]
+}

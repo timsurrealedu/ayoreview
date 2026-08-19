@@ -370,12 +370,14 @@ export const dbRepo = {
 
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterdayStart = todayStart - 86400000;
     const d7Start = now.getTime() - 7 * 86400000;
     const d30Start = now.getTime() - 30 * 86400000;
 
     let results = data.map((c: any) => {
       const validInts = (c.interactions || []).filter((i: any) => i.is_bot === 0);
       let today = 0;
+      let yesterday = 0;
       let last7Days = 0;
       let last30Days = 0;
       let qr = 0;
@@ -384,6 +386,7 @@ export const dbRepo = {
       validInts.forEach((i: any) => {
         const time = new Date(i.timestamp).getTime();
         if (time >= todayStart) today++;
+        else if (time >= yesterdayStart) yesterday++;
         if (time >= d7Start) last7Days++;
         if (time >= d30Start) last30Days++;
         if (i.source === 'qr') qr++;
@@ -406,6 +409,7 @@ export const dbRepo = {
         organization_id: c.locations?.businesses?.organization_id,
         stats: {
           today,
+          yesterday,
           last7Days,
           last30Days,
           allTime: validInts.length,
@@ -416,7 +420,7 @@ export const dbRepo = {
     });
 
     if (options?.orgId) {
-      results = results.filter((c: any) => c.organization_id === options.orgId || !c.location_id);
+      results = results.filter((c: any) => c.organization_id === options.orgId);
     }
 
     return results;
@@ -583,6 +587,7 @@ export const dbRepo = {
 
     cards.forEach((c) => {
       today += c.stats.today;
+      yesterday += c.stats.yesterday;
       last7Days += c.stats.last7Days;
       last30Days += c.stats.last30Days;
       allTime += c.stats.allTime;
@@ -711,6 +716,34 @@ export const dbRepo = {
     }));
   },
 
+  async getAllLocationsWithOrg(): Promise<any[]> {
+    const supabase = getAdminClient();
+    const { data } = await supabase
+      .from('locations')
+      .select(`
+        *,
+        businesses (
+          id,
+          name,
+          organization_id,
+          organizations (
+            id,
+            name
+          )
+        )
+      `)
+      .order('name', { ascending: true });
+
+    if (!data) return [];
+
+    return data.map((row: any) => ({
+      ...row,
+      business_name: row.businesses?.name,
+      organization_id: row.businesses?.organization_id,
+      organization_name: row.businesses?.organizations?.name,
+    }));
+  },
+
   async batchGenerateBlankCards(count: number = 10): Promise<Card[]> {
     const supabase = getAdminClient();
     const { data: lastRows } = await supabase
@@ -727,6 +760,9 @@ export const dbRepo = {
       if (!isNaN(parsed)) startNum = parsed + 1;
     }
 
+    // NOTE: Race condition — concurrent calls can derive overlapping ranges and
+    // hit unique constraint on inventory_code. At pilot/admin-only scale this is
+    // low risk. For production hardening, use a DB sequence or wrap in a retry loop.
     const created: Card[] = [];
     for (let i = 0; i < count; i++) {
       const code = 'RT-' + (startNum + i);

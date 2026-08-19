@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
 import { checkOrgApiAccess } from '@/lib/auth';
+import { handleApiError } from '@/lib/api-helpers';
 import { validateGoogleReviewUrl, validateGoogleMapsUrl } from '@/lib/url-validator';
 
 export async function GET(request: NextRequest) {
@@ -69,7 +70,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: location }, { status: 201 });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    const result = handleApiError(err, 'POST /api/locations');
+    return NextResponse.json(result, { status: 500 });
   }
 }
 
@@ -118,6 +120,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    const result = handleApiError(err, 'PATCH /api/locations');
+    return NextResponse.json(result, { status: 500 });
   }
 }

@@ -1,0 +1,34 @@
+{
+  "referee": "local-sequential",
+  "generatedAt": "2026-08-19",
+  "verdicts": [
+    { "id": "H1", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "critical", "rationale": "Client-controlled signup metadata becomes a persistent platform-admin flag; both writer (trigger) and reader (auth.ts) confirmed. Fix is small and surgical (stop trusting the field / whitelist trusted metadata)." },
+    { "id": "H2", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "high", "rationale": "Cross-tenant read + write of unassigned cards via org-filter bypass in getCards; no compensating control exists." },
+    { "id": "H3", "verdict": "REAL_BUG", "confidence": "high", "classification": "larger-refactor", "severity": "high", "rationale": "Operator inventory page bound to merchant-scoped endpoints; correct fix wires getAllInventoryCards + a location source that spans orgs (new endpoint or parametrized query). Multi-file change." },
+    { "id": "H4", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "medium", "rationale": "yesterday never accumulated; growth metric mathematically wrong." },
+    { "id": "H5", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "medium", "rationale": "Exact param-name mismatch verified on both sides." },
+    { "id": "H6", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "low", "rationale": "Link param ignored; small fix (read searchParams in cards page)." },
+    { "id": "H7", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "medium", "rationale": "Client-side post-auth open redirect; constrain redirectTo to same-origin paths." },
+    { "id": "H8", "verdict": "REAL_BUG", "confidence": "medium", "classification": "safe-autofix", "severity": "medium", "rationale": "Unvalidated inventory_code/placement; add format allowlist + RT- range protection." },
+    { "id": "H9", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "medium", "rationale": "Raw err.message exposure across 7 handlers; replace with generic message + Sentry capture." },
+    { "id": "H10", "verdict": "REAL_BUG", "confidence": "medium", "classification": "manual-review", "severity": "medium", "rationale": "PRD SR-006 unimplemented. Choice of mechanism (Supabase auth limits config vs app middleware) is a product/infra decision; auth endpoints partially covered by platform defaults, card creation fully open." },
+    { "id": "H11", "verdict": "REAL_BUG", "confidence": "medium", "classification": "manual-review", "severity": "low", "rationale": "Public test flag + no dedup enables analytics suppression/inflation. Whether to gate by auth or keep for merchant self-test is a product call." },
+    { "id": "H12", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "medium", "rationale": "Hardcoded fallback domain diverges from preview; printed media failure mode. Fix: derive from request origin server-side (headers()) with env override." },
+    { "id": "H13", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "low", "rationale": "Fail-open credential fallback; make missing service key a hard startup error." },
+    { "id": "H14", "verdict": "MANUAL_REVIEW", "confidence": "high", "classification": "architectural-remediation", "severity": "low", "rationale": "Scalability design risk, no incorrect behavior at current scale." },
+    { "id": "H15", "verdict": "REAL_BUG", "confidence": "high", "classification": "manual-review", "severity": "low", "rationale": "Dead methods/states are symptoms of unwired features (H3). Removing vs wiring them is a roadmap decision; updateLocation orgId footgun can be fixed safely." },
+    { "id": "H16", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "low", "rationale": "Empty onClick on Print button; one-line window.print() fix." },
+    { "id": "H17", "verdict": "NOT_A_BUG", "confidence": "medium", "classification": "report-only", "severity": "low", "rationale": "Both bucketing strategies coincide on UTC servers (Vercel target). Only non-UTC hosts diverge. Keep as hardening note." },
+    { "id": "H18", "verdict": "REAL_BUG", "confidence": "medium", "classification": "safe-autofix", "severity": "low", "rationale": "Race window real but admin-only; fix with retry-on-conflict or DB sequence." },
+    { "id": "H19", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "high", "rationale": "Overbroad public RLS (SELECT cards/locations USING(true), INSERT interactions WITH CHECK(true)) with zero code paths depending on it (all reads/writes go through service-role client). Full merchant directory enumerable + arbitrary interaction injection via anon REST. Tighten policies; redirect flow unaffected (service role bypasses RLS)." },
+    { "id": "H20", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "low", "rationale": "Silent redirect with unrendered error param; surface a message or hide the link." },
+    { "id": "H21", "verdict": "REAL_BUG", "confidence": "high", "classification": "safe-autofix", "severity": "low", "rationale": "Validate location existence before update; small guard." }
+  ],
+  "summary": {
+    "realBug": 19,
+    "notABug": 1,
+    "manualReview": 1,
+    "total": 21,
+    "note": "Verdict axis. Classification axis: safe-autofix 15, larger-refactor 1 (H3), manual-review 3 (H10, H11, H15), architectural 1 (H14), report-only 1 (H17)."
+  }
+}

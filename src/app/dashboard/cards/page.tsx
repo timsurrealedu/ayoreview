@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { DashboardHeader } from '@/components/dashboard/header';
 import Link from 'next/link';
 import { 
@@ -18,7 +19,8 @@ import {
 import { CardWithStats, CardPlacement, Location, Business } from '@/lib/types';
 import { QrPreviewModal } from '@/components/ui/qr-preview';
 
-export default function CardsListPage() {
+function CardsListPage() {
+  const searchParams = useSearchParams();
   const [cards, setCards] = useState<CardWithStats[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,8 +38,12 @@ export default function CardsListPage() {
 
   const fetchData = async () => {
     try {
+      const params = new URLSearchParams();
+      const locFilter = searchParams.get('location_id');
+      if (locFilter) params.set('locationId', locFilter);
+      const qs = params.toString();
       const [cardsRes, locRes] = await Promise.all([
-        fetch('/api/cards'),
+        fetch(`/api/cards${qs ? `?${qs}` : ''}`),
         fetch('/api/locations'),
       ]);
       const cardsJson = await cardsRes.json();
@@ -363,5 +369,14 @@ export default function CardsListPage() {
         )}
       </main>
     </div>
+  );
+}
+
+// Wrapped export to satisfy Next.js App Router Suspense boundary requirement for useSearchParams()
+export default function CardsListPageWrapper() {
+  return (
+    <Suspense fallback={<div className="flex-1 flex flex-col"><main className="p-8 text-zinc-400 text-xs">Loading cards...</main></div>}>
+      <CardsListPage />
+    </Suspense>
   );
 }

@@ -1,0 +1,251 @@
+{
+  "hunter": "local-sequential",
+  "target": "/home/timsurreal/Documents/mycode/projects/reviewtap",
+  "generatedAt": "2026-08-19",
+  "coverage": {
+    "scannableFiles": 56,
+    "readFully": 54,
+    "readPartially": 2,
+    "notes": "locations/page.tsx and analytics/page.tsx read beyond risk-relevant sections (form markup only omitted tail)."
+  },
+  "findings": [
+    {
+      "id": "H1",
+      "title": "Signup trigger trusts client-controlled is_platform_admin metadata -> self-provisioned platform admin",
+      "severity": "critical",
+      "category": "security/privilege-escalation",
+      "file": "supabase/migrations/002_rls_and_auth_triggers.sql",
+      "line": 123,
+      "evidence": "handle_new_user() inserts public.users with COALESCE((NEW.raw_user_meta_data->>'is_platform_admin')::boolean, false). raw_user_meta_data is set by the caller of POST /auth/v1/signup (anon key, public endpoint) via options.data. The app signup page only sends name/organization_name (src/app/(auth)/signup/page.tsx:29-32), but an attacker can call the Supabase Auth API directly with {data:{is_platform_admin:true}}.",
+      "impact": "Any visitor becomes platform admin: /admin portal, all organizations' data via requireOrgMembership admin override (src/lib/auth.ts:82-88), checkAdminApiAccess passes for /api/admin/* (batch-generate, assign). Full platform takeover.",
+      "trigger": "curl -X POST $SUPABASE_URL/auth/v1/signup -H \"apikey: $ANON_KEY\" -d '{\"email\":\"a@b.c\",\"password\":\"...\",\"data\":{\"is_platform_admin\":true}}'",
+      "stride": "Elevation of Privilege",
+      "cwe": "CWE-284"
+    },
+    {
+      "id": "H2",
+      "title": "getCards org filter includes other tenants' unassigned cards -> cross-tenant read AND claim of platform inventory",
+      "severity": "high",
+      "category": "security/tenant-isolation",
+      "file": "src/lib/db.ts",
+      "line": 419,
+      "evidence": "results.filter((c) => c.organization_id === options.orgId || !c.location_id). Blank cards (location_id null) are platform inventory created by /api/admin/batch-generate. GET /api/cards -> checkOrgApiAccess() (user's own org) -> getCards({orgId}) returns ALL unassigned cards from every org, including inventory_code.",
+      "impact": "1) Data leak: every merchant sees every blank card and its inventory code. 2) Unauthorized write: getCardById(id, orgId) uses the same filter, so PATCH /api/cards/[id] authz pre-check (src/app/api/cards/[id]/route.ts:40) passes for any blank card -> org admin can rename/claim/reassign platform hardware to their org. Also inflates merchant analytics (blank cards included in getAnalyticsOverview/getTopCards).",
+      "trigger": "Merchant A (org admin) GET /api/cards -> sees 'Blank RT-100105' owned by platform; PATCH /api/cards/{blankCardId} {location_id: A-loc} -> card now assigned to org A.",
+      "stride": "Information Disclosure / Tampering",
+      "cwe": "CWE-639"
+    },
+    {
+      "id": "H3",
+      "title": "Operator admin inventory page uses merchant-scoped APIs; cross-org assign workflow broken",
+      "severity": "high",
+      "category": "logic/functional",
+      "file": "src/app/admin/cards/page.tsx",
+      "line": 38,
+      "evidence": "fetchCards() calls fetch('/api/cards') and fetch('/api/locations'). Both route through checkOrgApiAccess() which resolves the ADMIN'S OWN first org (src/lib/auth.ts:74). The page therefore only shows admin-org cards + platform blanks, and the assign modal's location dropdown only contains admin-org locations. dbRepo.getAllInventoryCards() (src/lib/db.ts:687) — built for exactly this page — is never called (dead code).",
+      "impact": "The 'assign hardware to merchant venue' operator workflow (page header: 'assign to merchants on-site') can only target locations inside the platform admin's personal org. Assigning to a real merchant org is impossible via UI; operators see wrong inventory list (missing all deployed cards).",
+      "trigger": "Open /admin/cards as platform admin: table lacks cards assigned to merchant orgs; Assign Venue modal lists only admin's own locations.",
+      "cwe": "CWE-840"
+    },
+    {
+      "id": "H4",
+      "title": "getAnalyticsOverview never counts yesterday -> Today growth % is always today*100",
+      "severity": "medium",
+      "category": "logic/data-correctness",
+      "file": "src/lib/db.ts",
+      "line": 577,
+      "evidence": "let yesterday = 0; ... cards.forEach only accumulates today/last7Days/last30Days/allTime/qr/nfc. yesterdayStart (line 572) is computed but never used. todayGrowthPct = Math.round(((today - yesterday) / (yesterday || 1)) * 100) => today*100.",
+      "impact": "Dashboard 'Today's Review Visits' badge always shows +(today*100)% regardless of real trend (10 visits today -> '+1000%'). Merchant-facing metric is fabricated.",
+      "trigger": "Any visit to /dashboard with today>0."
+    },
+    {
+      "id": "H5",
+      "title": "Location detail page sends location_id but API reads locationId -> card filter never applied",
+      "severity": "medium",
+      "category": "logic/api-contract",
+      "file": "src/app/dashboard/locations/[id]/page.tsx",
+      "line": 41,
+      "evidence": "fetch(`/api/cards?location_id=${id}`) but GET handler reads request.nextUrl.searchParams.get('locationId') (src/app/api/cards/route.ts:12). Param name mismatch -> locationId undefined -> all org cards returned.",
+      "impact": "Every location detail page lists ALL of the org's cards under 'cards attached to this location' (wrong count in UI copy 'Modifying this URL immediately redirects all {cards.length} attached NFC & QR cards').",
+      "trigger": "Open /dashboard/locations/[id] for an org with cards in 2+ locations."
+    },
+    {
+      "id": "H6",
+      "title": "locations page 'View Cards' link filter ignored by cards page",
+      "severity": "low",
+      "category": "logic/ui",
+      "file": "src/app/dashboard/locations/page.tsx",
+      "line": 193,
+      "evidence": "href=`/dashboard/cards?location_id=${loc.id}` but src/app/dashboard/cards/page.tsx never reads searchParams/useSearchParams (verified by grep). Filter is silently dropped.",
+      "impact": "Clicking 'View Cards' on a location shows the unfiltered full card list; user expectation broken.",
+      "trigger": "Click View Cards from /dashboard/locations."
+    },
+    {
+      "id": "H7",
+      "title": "Post-login open redirect via redirectTo search param",
+      "severity": "medium",
+      "category": "security/open-redirect",
+      "file": "src/app/(auth)/login/page.tsx",
+      "line": 38,
+      "evidence": "const redirectTo = searchParams.get('redirectTo') || '/dashboard'; ... router.push(redirectTo). No same-origin/path validation. (Middleware path is safe because it assigns url.pathname, but the client-side push after login is not.)",
+      "impact": "Phishing: /login?redirectTo=https://evil.com/fake-reviewtap sends the just-authenticated merchant to attacker site.",
+      "trigger": "Victim logs in via crafted link.",
+      "stride": "Spoofing",
+      "cwe": "CWE-601"
+    },
+    {
+      "id": "H8",
+      "title": "Client-supplied inventory_code and placement accepted without validation",
+      "severity": "medium",
+      "category": "validation",
+      "file": "src/app/api/cards/route.ts",
+      "line": 43,
+      "evidence": "createCard({name, location_id, placement, inventory_code}) passes body values through; db.ts:474 default generates RT-XXXXXX but caller value is stored as-is (no charset/format/length check, no collision retry).",
+      "impact": "Merchant can register codes that collide with the platform RT- sequence (breaks batchGenerateBlankCards startNum derivation, which parses max RT- code, db.ts:723-728), inject arbitrary strings shown in operator inventory, or trigger raw unique-violation 500s. replaceCard (dead code) also resolves cards by inventory_code, so code squatting would hijack replacement flow if wired up.",
+      "trigger": "POST /api/cards {inventory_code: 'RT-999999', ...} then admin batch-generate picks up corrupted sequence.",
+      "cwe": "CWE-20"
+    },
+    {
+      "id": "H9",
+      "title": "Raw internal error messages returned to API clients",
+      "severity": "medium",
+      "category": "security/info-disclosure",
+      "file": "src/app/api/cards/route.ts",
+      "line": 52,
+      "evidence": "catch (err:any) -> NextResponse.json({error: err.message}, {status:500}). Same pattern in api/cards/[id]:61, api/locations:72/121, api/businesses:41, api/admin/assign:35, api/admin/batch-generate:16. Supabase/Postgres errors include constraint and relation names.",
+      "impact": "Schema/infrastructure detail leak on any DB error; also inconsistent UX (no Sentry capture in these handlers).",
+      "cwe": "CWE-209"
+    },
+    {
+      "id": "H10",
+      "title": "PRD SR-006 rate limiting absent (login, signup, card creation)",
+      "severity": "medium",
+      "category": "security/spec-violation",
+      "file": "src/app/(auth)/login/page.tsx",
+      "line": 26,
+      "evidence": "PRD.md:1812-1821 mandates basic rate limits on login, signup, card creation. Grep of repo shows no rate limiting implementation anywhere (no limiter util, no Supabase auth captcha/limits config, no per-route throttling). signInWithPassword has unlimited attempts.",
+      "impact": "Credential stuffing / password brute force on login; spam account or card creation.",
+      "stride": "Spoofing / Denial of Service",
+      "cwe": "CWE-307"
+    },
+    {
+      "id": "H11",
+      "title": "Public ?test=true flag suppresses interaction analytics",
+      "severity": "low",
+      "category": "security/abuse",
+      "file": "src/app/q/[publicId]/route.ts",
+      "line": 15,
+      "evidence": "isTest = searchParams.get('test') === 'true' skips recordInteraction (same in /n route:15). The dashboard QR preview component links it openly ('Test live redirect ... bypasses analytics', qr-preview.tsx:148).",
+      "impact": "Anyone (including a merchant wanting to fake ratios, or a competitor) can hit /q/<id> untracked; conversely merchants testing their own card with the provided link silently lose real analytics. Combined with no per-IP dedup (ip_hash stored but never queried), interaction counts are trivially inflatable.",
+      "cwe": "CWE-1050"
+    },
+    {
+      "id": "H12",
+      "title": "Print page QR base URL defaults to production domain, inconsistent with preview component",
+      "severity": "medium",
+      "category": "config/correctness",
+      "file": "src/app/dashboard/cards/[id]/print/page.tsx",
+      "line": 22,
+      "evidence": "const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://reviewtap.id'; qr-preview.tsx:26 uses window.location.origin. Two different bases for the same card's QR.",
+      "impact": "If NEXT_PUBLIC_APP_URL is unset (staging, preview deployments, custom domains), every PRINTED acrylic stand QR points to https://reviewtap.id/... (possibly dead or wrong env) while the on-screen preview shows the correct origin. Printed hardware is expensive to fix after the fact.",
+      "trigger": "Deploy to any non-reviewtap.id domain without setting NEXT_PUBLIC_APP_URL, print stands."
+    },
+    {
+      "id": "H13",
+      "title": "Admin client silently falls back to anon key / dummy credentials",
+      "severity": "low",
+      "category": "config/fail-open",
+      "file": "src/lib/supabase/admin.ts",
+      "line": 5,
+      "evidence": "const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy-service-key'. Missing service key silently degrades 'admin' client to anon (RLS applies; admin pages break in confusing ways) instead of failing loudly at startup.",
+      "impact": "Misconfiguration produces subtle authz/query failures (or empty data) rather than an explicit boot error; harder to detect in deploy review.",
+      "cwe": "CWE-1188"
+    },
+    {
+      "id": "H14",
+      "title": "unreviewed scalability: getCards loads every interaction row for every dashboard render",
+      "severity": "low",
+      "category": "performance",
+      "file": "src/lib/db.ts",
+      "line": 344,
+      "evidence": "getCards selects cards(*) + all interactions rows and computes stats in JS; getCardById(id, orgId) calls getCards for the whole org; getAnalyticsOverview/getTopCards/getPlacementsBreakdown each re-run it (dashboard page fires 3-5 concurrent full scans).",
+      "impact": "Latency and memory grow linearly with total interactions table size; PRD targets <300ms p95 redirects (dashboard is secondary but shares the DB). Manual-review/architectural item, not an immediate defect."
+    },
+    {
+      "id": "H15",
+      "title": "Dead repo methods and dead UI states indicate unfinished admin workflows",
+      "severity": "low",
+      "category": "maintainability",
+      "file": "src/lib/db.ts",
+      "line": 516,
+      "evidence": "replaceCard (516), getAllInventoryCards (687), updateOrganizationPlan (62), updateBusiness (165) have zero callers (grep-verified). admin/cards/page.tsx declares replacingCard/newInventoryCode state (32-33) with no UI. updateLocation accepts orgId param but never uses it (299-337) - currently safe only because the route pre-checks ownership; a future caller relying on the param gets no scoping.",
+      "impact": "Card replacement feature, org plan management, business editing, and operator inventory view are unreachable; orgId-shaped footgun in updateLocation.",
+      "cwe": "CWE-1164"
+    },
+    {
+      "id": "H16",
+      "title": "Print button on print template page does nothing",
+      "severity": "low",
+      "category": "ui",
+      "file": "src/app/dashboard/cards/[id]/print/page.tsx",
+      "line": 37,
+      "evidence": "onClick={() => {}} on the 'Print Stand Card' button; no window.print() anywhere in file.",
+      "impact": "Operators must use browser menu to print; button is a dead control."
+    },
+    {
+      "id": "H17",
+      "title": "Analytics day bucketing inconsistent: UTC (trend chart) vs server-local (KPI stats)",
+      "severity": "low",
+      "category": "data-correctness",
+      "file": "src/lib/db.ts",
+      "line": 633,
+      "evidence": "getDailyTrend buckets by row.timestamp.slice(0,10) (UTC ISO), while getCards stats bucket by local server midnight (new Date(y,m,d), db.ts:372). Also dateMap keys use d.toISOString().slice(0,10) (UTC) vs 'now' local.",
+      "impact": "Chart totals and KPI totals disagree near midnight for non-UTC deployments (Vercel default UTC vs Indonesia UTC+7 merchants): 'Last 30 Days' KPI != sum of chart bars.",
+      "trigger": "Any org with interactions in the 7-hour UTC+7 offset window."
+    },
+    {
+      "id": "H18",
+      "title": "batchGenerateBlankCards race: concurrent calls derive same startNum -> unique violation",
+      "severity": "low",
+      "category": "concurrency",
+      "file": "src/lib/db.ts",
+      "line": 716,
+      "evidence": "Reads max RT- code, then sequentially inserts count cards with startNum+i. Two overlapping requests compute identical ranges; cards.inventory_code is UNIQUE (001_initial_schema.sql:67) -> second insert fails mid-batch with raw 500.",
+      "impact": "Partial batch + 500 error for admin; no transaction/retry. Admin-only so severity low.",
+      "trigger": "Two admins (or double-click) trigger batch-generate simultaneously."
+    },
+    {
+      "id": "H19",
+      "title": "Public RLS SELECT on locations exposes all merchant location rows via anon key",
+      "severity": "medium",
+      "category": "security/tenant-isolation",
+      "file": "supabase/migrations/002_rls_and_auth_triggers.sql",
+      "line": 98,
+      "evidence": "CREATE POLICY \"Public read for locations\" ON public.locations FOR SELECT USING (true). Same for cards (line 94). Anyone with the anon key (embedded in the app) can enumerate every merchant's locations incl. google_review_url, address, city, and all cards' public_id/inventory_code via the Supabase REST API.",
+      "impact": "Whole-database directory of merchants (names, addresses, review URLs, hardware codes) is publicly readable through the REST endpoint, independent of the Next.js app. inventory_code enumeration also enables guessing/claiming flows.",
+      "stride": "Information Disclosure",
+      "cwe": "CWE-732"
+    },
+    {
+      "id": "H20",
+      "title": "requirePlatformAdmin error param never surfaced; sidebar admin link shown to all merchants",
+      "severity": "low",
+      "category": "ux",
+      "file": "src/lib/auth.ts",
+      "line": 107,
+      "evidence": "redirect('/dashboard?error=unauthorized_admin_access') but dashboard page never reads searchParams; sidebar.tsx:29 renders 'Platform Admin' link unconditionally.",
+      "impact": "Merchant clicking Platform Admin gets silent bounce to dashboard with no explanation."
+    },
+    {
+      "id": "H21",
+      "title": "assign admin API does not validate location_id existence",
+      "severity": "low",
+      "category": "validation",
+      "file": "src/app/api/admin/assign/route.ts",
+      "line": 26,
+      "evidence": "updateCard(card.id, {location_id, ...}) without checking the location exists or is active; nonexistent id -> FK violation raw 500; existing-but-other-org id is allowed by design (platform admin) but no feedback for typo'd ids.",
+      "impact": "Raw DB error surfaces; minor admin UX gap.",
+      "cwe": "CWE-20"
+    }
+  ]
+}

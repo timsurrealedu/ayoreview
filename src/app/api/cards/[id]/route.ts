@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
 import { checkOrgApiAccess } from '@/lib/auth';
+import { handleApiError } from '@/lib/api-helpers';
 
 export async function GET(
   request: NextRequest,
@@ -58,6 +59,7 @@ export async function PATCH(
 
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    const result = handleApiError(err, 'PATCH /api/cards/\[id\]');
+    return NextResponse.json(result, { status: 500 });
   }
 }

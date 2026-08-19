@@ -1,0 +1,91 @@
+{
+  "skeptic": "local-sequential",
+  "generatedAt": "2026-08-19",
+  "challenges": [
+    {
+      "id": "H1",
+      "challenge": "Maybe Supabase sanitizes signup metadata, or the app never reads the flag from public.users?",
+      "recheck": "Supabase signUp options.data maps directly to raw_user_meta_data (client-controlled, documented behavior). auth.ts:33 computes isPlatformAdmin from dbUser.is_platform_admin OR ADMIN_EMAILS. public.users row is written by the trigger with the tainted flag. Neither layer sanitizes. ADMIN_EMAILS fallback does not remove the db-flag path.",
+      "survives": true
+    },
+    {
+      "id": "H2",
+      "challenge": "Including blank cards may be intentional so merchants can self-assign purchased hardware; maybe PATCH is still blocked elsewhere?",
+      "recheck": "Blank cards have no ownership column; there is no per-org claim mechanism. PATCH /api/cards/[id] authz is getCardById(id, org.id) which uses the same !c.location_id inclusion, then updateCard has no org constraint. No other gate. Intent or not, every org can read and claim every blank card across the platform.",
+      "survives": true
+    },
+    {
+      "id": "H3",
+      "challenge": "Maybe platform admins are expected to have a personal org only and assignment to merchants happens out-of-band?",
+      "recheck": "Page copy: 'assign to merchants on-site'; modal title 'Assign Hardware'; PRD operator flow expects cross-org assignment. /api/admin/assign accepts any location_id (no org check), but the UI dropdown only ever contains admin-org locations, so the workflow is unreachable in practice. getAllInventoryCards dead code confirms the intended data source was never wired.",
+      "survives": true
+    },
+    {
+      "id": "H4",
+      "challenge": "Maybe yesterday is accumulated via c.stats elsewhere?",
+      "recheck": "CardWithStats.stats has no yesterday field (types.ts:111-123); forEach in getAnalyticsOverview (db.ts:584-591) never touches yesterday. Expression reduces to round(today/1*100).",
+      "survives": true
+    },
+    {
+      "id": "H5",
+      "challenge": "Maybe Next.js normalizes the query param name?",
+      "recheck": "searchParams.get('locationId') is exact-match; caller sends location_id. No normalization. Filter silently undefined.",
+      "survives": true
+    },
+    {
+      "id": "H7",
+      "challenge": "router.push() with external URL may be ignored by Next router?",
+      "recheck": "App Router router.push with an absolute http(s) URL performs a full-window navigation (documented; same as Link href). No same-origin check is applied to the string. The middleware variant is safe (url.pathname assignment) but the client-side post-login push is not.",
+      "survives": true
+    },
+    {
+      "id": "H10",
+      "challenge": "Hosted Supabase applies platform-level auth rate limits already; is the finding overstated?",
+      "recheck": "True: hosted Supabase throttles auth endpoints by default (per-IP). That mitigates login/signup brute force partially (configurable, off by default in some tiers / self-hosted). Card creation (POST /api/cards) has no platform-level or app-level limit at all. PRD SR-006 explicitly requires app-side basic limits. Finding stands with mitigation noted; severity stays medium.",
+      "survives": true,
+      "note": "Scope reduced: auth endpoints partially covered by Supabase defaults; card-creation limit fully absent."
+    },
+    {
+      "id": "H17",
+      "challenge": "Are the buckets actually inconsistent in the real deployment target?",
+      "recheck": "Vercel Node runtime runs in UTC, so server-local midnight == UTC midnight == chart bucketing. Discrepancy appears only on non-UTC hosts (self-host, some containers) or local dev. Not a defect on the documented deployment target.",
+      "survives": false,
+      "note": "Referee should dismiss for the intended deployment; keep as a hardening note."
+    },
+    {
+      "id": "H19",
+      "challenge": "Public SELECT policies may be required for the /q,/n redirect flow; and can anon REST really read everything?",
+      "recheck": "Redirect routes use getAdminClient (service role) which bypasses RLS entirely - the public policies are not needed by any code path (grep: no anon/browser client reads cards/locations). Anon-key REST reads are unauthenticated by design; with USING(true) the full tables are enumerable. Public INSERT on interactions likewise unused (recordInteraction uses admin client) but allows arbitrary row injection via REST.",
+      "survives": true,
+      "note": "Severity raised: includes unrestricted interaction INSERT, not just SELECT."
+    },
+    {
+      "id": "H12",
+      "challenge": "Is window.location.origin not equally 'wrong' on preview URLs?",
+      "recheck": "Preview shows what you are currently looking at (self-consistent); print page hardcodes a possibly-unrelated domain. The two disagree exactly when NEXT_PUBLIC_APP_URL is unset and host != reviewtap.id. Printed QR is permanent media - failure mode is expensive.",
+      "survives": true
+    },
+    {
+      "id": "H14",
+      "challenge": "Is this a bug today at pilot scale?",
+      "recheck": "No incorrect behavior at current scale; it is an unbounded-growth design risk. Should be architectural/manual-review, not an autofix.",
+      "survives": false,
+      "note": "Reclassify as manual-review hardening item."
+    },
+    {
+      "id": "H9",
+      "challenge": "err.message leak - does Supabase actually expose schema details?",
+      "recheck": "Postgres errors via supabase-js include constraint/relation text (e.g. duplicate key value violates unique constraint \"cards_inventory_code_key\"). Confirmed pattern across 7 handlers.",
+      "survives": true
+    },
+    {
+      "id": "H8",
+      "challenge": "Is client-chosen inventory_code actually harmful given uniqueness constraint?",
+      "recheck": "Uniqueness prevents duplicates but not format abuse, cross-range squatting (RT- prefix poisoning of batch counter), or error-500 UX. replaceCard dead-code risk noted. Medium-low at worst; keep as validation finding.",
+      "survives": true,
+      "note": "Severity: medium (affects operator batch pipeline integrity)."
+    }
+  ],
+  "notChallenged": ["H6", "H11", "H13", "H15", "H16", "H18", "H20", "H21"],
+  "notChallengedReason": "Directly re-verified by grep/read during Hunter pass (param names, dead code, empty onClick, race window, unrendered error param); evidence is mechanical."
+}

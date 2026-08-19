@@ -1,0 +1,29 @@
+{
+  "plan": "reviewtap-fix-plan",
+  "generatedAt": "2026-08-19",
+  "authority": "PLAN_ONLY - no edit executed; each item requires explicit user approval before implementation; commits disabled",
+  "verification": {
+    "steps": ["npx tsc --noEmit", "npm run build"],
+    "note": "Repo has no test suite; DB migrations verified by inspection only"
+  },
+  "orderedWork": [
+    { "id": "F1", "finding": "H1", "wave": 1, "title": "Remove is_platform_admin trust from signup trigger (new migration 003)", "edit": "new file supabase/migrations/003_admin_flag_hardening.sql + optional auth.ts hardening", "approved": false },
+    { "id": "F2", "finding": "H2", "wave": 2, "title": "Strict org filter in getCards (drop !c.location_id inclusion)", "edit": "src/lib/db.ts:419", "approved": false },
+    { "id": "F3", "finding": "H19", "wave": 2, "title": "Tighten public RLS: drop locations public SELECT, cards public SELECT, interactions public INSERT (new migration)", "edit": "new file supabase/migrations/004_rls_tightening.sql", "approved": false },
+    { "id": "F4", "finding": "H3", "wave": 3, "title": "Operator inventory endpoint + admin page rewire", "edit": "new src/app/api/admin/inventory/route.ts; edit src/app/admin/cards/page.tsx", "approved": false },
+    { "id": "F5", "finding": "H4", "wave": 4, "title": "Fix yesterday accumulation in getAnalyticsOverview", "edit": "src/lib/db.ts:577-596", "approved": false },
+    { "id": "F6", "finding": "H5", "wave": 4, "title": "Align locationId param name", "edit": "src/app/dashboard/locations/[id]/page.tsx:41", "approved": false },
+    { "id": "F7", "finding": "H6", "wave": 4, "title": "Honor location_id filter on cards page", "edit": "src/app/dashboard/cards/page.tsx", "approved": false },
+    { "id": "F8", "finding": "H8", "wave": 5, "title": "Validate inventory_code + placement on card create", "edit": "src/app/api/cards/route.ts", "approved": false },
+    { "id": "F9", "finding": "H9", "wave": 5, "title": "Generic API error responses + Sentry capture (7 handlers)", "edit": "all src/app/api/**/route.ts catch blocks", "approved": false },
+    { "id": "F10", "finding": "H21", "wave": 5, "title": "Validate location existence in admin assign", "edit": "src/app/api/admin/assign/route.ts", "approved": false },
+    { "id": "F11", "finding": "H7", "wave": 6, "title": "Sanitize redirectTo (same-origin paths only)", "edit": "src/app/(auth)/login/page.tsx:12,38", "approved": false },
+    { "id": "F12", "finding": "H12", "wave": 6, "title": "Derive print QR base URL from request origin", "edit": "src/app/dashboard/cards/[id]/print/page.tsx:22", "approved": false },
+    { "id": "F13", "finding": "H13", "wave": 7, "title": "Fail closed on missing service role key in production", "edit": "src/lib/supabase/admin.ts", "approved": false },
+    { "id": "F14", "finding": "H16", "wave": 7, "title": "Wire Print button (window.print)", "edit": "src/app/dashboard/cards/[id]/print/page.tsx:37", "approved": false },
+    { "id": "F15", "finding": "H20", "wave": 7, "title": "Hide Platform Admin link for non-admins / surface error", "edit": "src/components/dashboard/sidebar.tsx + dashboard layout", "approved": false },
+    { "id": "F16", "finding": "H10", "wave": 8, "title": "[DECISION] Rate limiting mechanism (PRD SR-006)", "edit": "n/a - user decision required", "approved": false },
+    { "id": "F17", "finding": "H11", "wave": 8, "title": "[DECISION] Gate ?test=true / interaction dedup policy", "edit": "n/a - user decision required", "approved": false },
+    { "id": "F18", "finding": "H14+H15+H18", "wave": 8, "title": "[DECISION] Analytics scalability refactor, dead-code removal, batch race retry", "edit": "n/a - user decision required", "approved": false }
+  ]
+}

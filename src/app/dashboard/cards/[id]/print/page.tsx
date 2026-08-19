@@ -3,6 +3,7 @@ import { requireOrgMembership } from '@/lib/auth';
 import { generateQrPngDataUrl } from '@/lib/qr';
 import Link from 'next/link';
 import { Smartphone, ArrowLeft } from 'lucide-react';
+import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +20,12 @@ export default async function PrintCardTemplatePage({
     return <div className="p-8 text-black">Card not found in your organization.</div>;
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://reviewtap.id';
+  // Derive base URL from request origin with env override — never hardcode a domain
+  const headerStore = await headers();
+  const host = headerStore.get('host') || 'localhost:3000';
+  const protocol = headerStore.get('x-forwarded-proto') || 'http';
+  const originFromRequest = `${protocol}://${host}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || originFromRequest;
   const qrUrl = `${appUrl}/q/${card.public_id}`;
   const pngDataUrl = await generateQrPngDataUrl(qrUrl, { width: 800, margin: 1 });
 
@@ -34,7 +40,7 @@ export default async function PrintCardTemplatePage({
           <ArrowLeft className="w-4 h-4" /> Back to Card Settings
         </Link>
         <button
-          onClick={() => {}}
+          onClick={() => window.print()}
           className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold rounded-xl shadow cursor-pointer"
         >
           Print Stand Card

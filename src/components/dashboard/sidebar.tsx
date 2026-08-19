@@ -26,10 +26,11 @@ const navItems = [
 const bottomNavItems = [
   { label: 'Account & Settings', href: '/dashboard/settings', icon: Settings },
   { label: 'Plan & Billing', href: '/dashboard/billing', icon: Receipt },
-  { label: 'Platform Admin', href: '/admin', icon: ShieldCheck },
 ];
 
-export function DashboardSidebar({ organizationName }: { organizationName?: string }) {
+const adminNavItem = { label: 'Platform Admin', href: '/admin', icon: ShieldCheck };
+
+export function DashboardSidebar({ organizationName, isPlatformAdmin }: { organizationName?: string; isPlatformAdmin?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -120,6 +121,27 @@ export function DashboardSidebar({ organizationName }: { organizationName?: stri
             </Link>
           );
         })}
+
+        {/* Platform Admin — only visible to platform operators */}
+        {isPlatformAdmin && (() => {
+          const Icon = adminNavItem.icon;
+          const isActive = pathname === adminNavItem.href;
+          return (
+            <Link
+              key={adminNavItem.href}
+              href={adminNavItem.href}
+              className={clsx(
+                'flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-all',
+                isActive
+                  ? 'bg-zinc-800 text-white font-semibold'
+                  : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+              )}
+            >
+              <Icon className="w-4 h-4 text-zinc-400" />
+              {adminNavItem.label}
+            </Link>
+          );
+        })()}
 
         <div className="pt-2 px-2 space-y-1.5">
           <Link

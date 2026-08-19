@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
 import { isBotUserAgent, detectDeviceType, hashIp } from '@/lib/bot-filter';
 import { validateGoogleReviewUrl } from '@/lib/url-validator';
+import { isAuthenticatedRequest } from '@/lib/session-check';
 import * as Sentry from '@sentry/nextjs';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +13,8 @@ export async function GET(
 ) {
   try {
     const { publicId } = await context.params;
-    const isTest = request.nextUrl.searchParams.get('test') === 'true';
+    const rawTest = request.nextUrl.searchParams.get('test') === 'true';
+    const isTest = rawTest && await isAuthenticatedRequest(request);
 
     const card = await dbRepo.getCardByPublicId(publicId);
 

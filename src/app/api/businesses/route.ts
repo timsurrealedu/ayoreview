@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
 import { checkOrgApiAccess } from '@/lib/auth';
+import { handleApiError } from '@/lib/api-helpers';
 
 export async function GET(request: NextRequest) {
   const authRes = await checkOrgApiAccess();
@@ -38,6 +39,7 @@ export async function POST(request: NextRequest) {
     const business = await dbRepo.createBusiness(org.id, name, category, logo_url);
     return NextResponse.json({ success: true, data: business }, { status: 201 });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    const result = handleApiError(err, 'POST /api/businesses');
+    return NextResponse.json(result, { status: 500 });
   }
 }

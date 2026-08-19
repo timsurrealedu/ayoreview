@@ -14,13 +14,20 @@ import {
   Smartphone,
   ExternalLink,
   Store,
-  Sparkles
+  Sparkles,
+  AlertCircle
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
-export default async function DashboardOverviewPage() {
+export default async function DashboardOverviewPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const { org } = await requireOrgMembership();
+  const params = await searchParams;
+  const adminError = params.error === 'unauthorized_admin_access' ? 'You do not have platform operator privileges.' : null;
   const [overview, trend, topCards, locations, businesses] = await Promise.all([
     dbRepo.getAnalyticsOverview(org.id),
     dbRepo.getDailyTrend(org.id, 30),
@@ -55,6 +62,14 @@ export default async function DashboardOverviewPage() {
       />
 
       <main className="p-8 space-y-8 max-w-7xl w-full mx-auto">
+        {/* Error Banner */}
+        {adminError && (
+          <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{adminError}</span>
+          </div>
+        )}
+
         {/* KPI Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Today */}

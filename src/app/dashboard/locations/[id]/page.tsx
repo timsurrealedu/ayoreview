@@ -38,7 +38,7 @@ export default function LocationDetailPage() {
   const fetchLocationData = async () => {
     try {
       const [cardsRes, locRes] = await Promise.all([
-        fetch(`/api/cards?location_id=${id}`),
+        fetch(`/api/cards?locationId=${id}`),
         fetch(`/api/locations`),
       ]);
       const cardsJson = await cardsRes.json();

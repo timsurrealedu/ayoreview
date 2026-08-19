@@ -10,6 +10,10 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirectTo') || '/dashboard';
+  // Sanitize: only same-origin relative paths, prevent open redirect
+  const sanitizedRedirect = redirectTo.startsWith('/') && !redirectTo.startsWith('//') 
+    ? redirectTo 
+    : '/dashboard';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +39,7 @@ function LoginForm() {
       }
 
       if (data.session) {
-        router.push(redirectTo);
+        router.push(sanitizedRedirect);
         router.refresh();
       }
     } catch (err: any) {
