@@ -70,6 +70,23 @@ export default async function DashboardOverviewPage({
           </div>
         )}
 
+        {/* Create QR Code CTA Card */}
+        <div className="bg-gradient-to-r from-emerald-950/30 to-[#111115] border border-emerald-500/20 rounded-2xl p-6 shadow-sm flex items-center justify-between gap-6">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
+              <Sparkles className="w-4 h-4" /> New Review Card
+            </div>
+            <h3 className="text-lg font-bold text-white tracking-tight">Create a new QR Code</h3>
+            <p className="text-xs text-zinc-400">Generate a fresh NFC + QR redirect for a new table, cashier, or entrance stand.</p>
+          </div>
+          <Link
+            href="/dashboard/cards"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all active:scale-[0.97] shrink-0"
+          >
+            <QrCode className="w-4 h-4" /> Create QR Code
+          </Link>
+        </div>
+
         {/* KPI Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Today */}

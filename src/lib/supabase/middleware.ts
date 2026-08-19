@@ -56,6 +56,14 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Protect /onboarding — QR creation requires an account
+  if (path === '/onboarding' && !user) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/login';
+    url.searchParams.set('redirectTo', '/onboarding');
+    return NextResponse.redirect(url);
+  }
+
   // Redirect authenticated user away from /login /signup
   if ((path === '/login' || path === '/signup') && user) {
     const redirectTo = request.nextUrl.searchParams.get('redirectTo') || '/dashboard';

@@ -113,10 +113,10 @@ function CardsListPage() {
         actions={
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-semibold shadow-lg shadow-emerald-500/20 transition active:scale-[0.98]"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-bold shadow-lg shadow-emerald-500/25 transition-all active:scale-[0.97]"
           >
-            <Plus className="w-4 h-4" />
-            Add Card
+            <QrCode className="w-4 h-4" />
+            Create New QR Code
           </button>
         }
       />
@@ -367,6 +367,15 @@ function CardsListPage() {
             </div>
           </div>
         )}
+
+        {/* Floating Create QR Code FAB */}
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-2xl shadow-emerald-500/30 transition-all active:scale-[0.95] hover:shadow-emerald-500/50"
+        >
+          <QrCode className="w-4 h-4" />
+          Create QR Code
+        </button>
       </main>
     </div>
   );
