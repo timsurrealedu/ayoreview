@@ -14,6 +14,7 @@
 | Anon table access | RLS default-deny everywhere — no anon policies remain. Redirects resolve via service-role in the Next.js route, never the browser. |
 | Blank inventory cards | Org-scoped RLS; unassigned cards readable/writable only by platform admin / service role. |
 | Tenant isolation in app code | Route-level ownership pre-checks + `dbRepo` org-scoped lookups (`get*ById(id, orgId)`), `updateLocation`/`updateCard` enforce `orgId` internally. |
+| Visitor privacy | IPs stored only as HMAC-SHA-256 under `IP_HASH_SECRET` (server-only env); reversible only with the secret. Missing secret in prod degrades to `anonymous` rather than failing redirects. |
 
 ## Known limitations — deliberate, revisit triggers listed
 

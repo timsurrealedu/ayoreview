@@ -1,3 +1,4 @@
+import { createHmac } from 'node:crypto';
 import { DeviceType } from './types';
 
 const BOT_PATTERNS = [
@@ -47,14 +48,28 @@ export function detectDeviceType(userAgent: string | null | undefined): DeviceTy
   return 'desktop';
 }
 
+/**
+ * Keyed hash of the visitor IP (HMAC-SHA-256, key = IP_HASH_SECRET).
+ * Reversible only with the secret — unlike the old 32-bit hash, IPs can't be
+ * recovered by enumerating IPv4. Stable across instances (same secret), so
+ * per-visitor analytics stay correct on serverless.
+ *
+ * PRD priority: redirect correctness beats analytics. If the secret is missing
+ * in production we degrade to 'anonymous' rather than fail the redirect.
+ */
 export function hashIp(ip: string | null | undefined): string {
   if (!ip) return 'anonymous';
-  // simple fast deterministic hash
-  let hash = 0;
-  for (let i = 0; i < ip.length; i++) {
-    const char = ip.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
+  // x-forwarded-for can carry "client, proxy1, proxy2" — hash the client only
+  const clientIp = ip.split(',')[0].trim();
+  if (!clientIp) return 'anonymous';
+
+  const secret = process.env.IP_HASH_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV !== 'production') {
+      return 'dev_' + createHmac('sha256', 'insecure-dev-key').update(clientIp).digest('hex').slice(0, 16);
+    }
+    console.error('[hashIp] IP_HASH_SECRET not set — recording anonymous instead of hashed IP');
+    return 'anonymous';
   }
-  return 'ip_' + Math.abs(hash).toString(16);
+  return createHmac('sha256', secret).update(clientIp).digest('hex');
 }
