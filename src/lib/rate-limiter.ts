@@ -1,7 +1,12 @@
 /**
- * Simple in-memory sliding-window rate limiter.
- * Suitable for single-instance deployments (Vercel, single Node process).
- * For multi-instance or production scale, replace with Redis-based limiter.
+ * In-memory sliding-window rate limiter — BEST-EFFORT ONLY, not a security control.
+ *
+ * State lives in a per-process Map. Vercel runs many concurrent lambdas plus cold
+ * starts, so the effective limit is roughly (max × instance count) and counters
+ * reset whenever an instance recycles. Treat this as abuse friction, not a guarantee.
+ *
+ * honey: acceptable for pilot scale; replace with Upstash Redis (edge-compatible,
+ * fits middleware runtime) before relying on it for anything security-relevant.
  *
  * Usage:
  *   const limiter = new RateLimiter({ windowMs: 60000, max: 60 });

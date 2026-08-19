@@ -45,6 +45,10 @@ export const config = {
     '/admin/:path*',
     '/login',
     '/signup',
+    // Public redirect endpoints — the most abuse-exposed surface (analytics inflation)
+    '/q/:path*',
+    '/n/:path*',
+    '/r/:path*',
     '/api/businesses/:path*',
     '/api/locations/:path*',
     '/api/cards/:path*',

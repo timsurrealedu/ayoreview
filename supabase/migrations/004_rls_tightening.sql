@@ -22,10 +22,11 @@ DROP POLICY IF EXISTS "Public insert for interactions" ON public.interactions;
 
 -- Replace with narrow policies for the anon path (if any future route needs it).
 -- Cards: only expose public_id for redirect resolution, nothing else.
+-- (No WITH CHECK here — Postgres rejects WITH CHECK on SELECT policies; that
+-- invalid clause made this migration fail and roll back on its first apply.)
 CREATE POLICY "Anonymous card redirect lookup"
 ON public.cards FOR SELECT
-USING (true)  -- minimal: only public_id and google_review_url are ever returned by getCardByPublicId
-WITH CHECK (false);  -- no anon writes
+USING (true);
 
 -- Locations: no public anon access needed (all code paths use service role).
 -- Re-create as no-op (deny all) to be explicit.

@@ -309,6 +309,13 @@ export const dbRepo = {
     },
     orgId?: string
   ): Promise<void> {
+    // PostgREST can't scope PATCH by joined tables, so org scoping is a
+    // pre-check: without it the orgId param would silently do nothing.
+    if (orgId !== undefined) {
+      const existing = await this.getLocationById(id, orgId);
+      if (!existing) throw new Error('Location not found');
+    }
+
     const updatePayload: any = { updated_at: new Date().toISOString() };
     if (data.name !== undefined) updatePayload.name = data.name;
     if (data.address !== undefined) updatePayload.address = data.address;
@@ -505,8 +512,13 @@ export const dbRepo = {
       placement?: CardPlacement;
       status?: CardStatus;
       location_id?: string | null;
-    }
+    },
+    orgId?: string
   ): Promise<void> {
+    if (orgId !== undefined) {
+      const existing = await this.getCardById(id, orgId);
+      if (!existing) throw new Error('Card not found');
+    }
     const supabase = getAdminClient();
     const updatePayload: any = { updated_at: new Date().toISOString() };
     if (data.name !== undefined) updatePayload.name = data.name;

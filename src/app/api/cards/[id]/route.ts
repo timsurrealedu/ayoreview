@@ -54,7 +54,7 @@ export async function PATCH(
       }
     }
 
-    await dbRepo.updateCard(id, body);
+    await dbRepo.updateCard(id, body, org.id);
     const updated = await dbRepo.getCardById(id, org.id);
 
     return NextResponse.json({ success: true, data: updated });

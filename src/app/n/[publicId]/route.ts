@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import { dbRepo } from '@/lib/db';
 import { isBotUserAgent, detectDeviceType, hashIp } from '@/lib/bot-filter';
 import { validateGoogleReviewUrl } from '@/lib/url-validator';
@@ -37,7 +37,7 @@ export async function GET(
       return NextResponse.redirect(new URL('/fallback/unconfigured', request.url), 302);
     }
 
-    // Fast asynchronous interaction recording
+    // Record interaction after the response is sent — see /q route for why after().
     if (!isTest) {
       const userAgent = request.headers.get('user-agent');
       const isBot = isBotUserAgent(userAgent) ? 1 : 0;
@@ -45,15 +45,19 @@ export async function GET(
       const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '127.0.0.1';
       const ipHash = hashIp(ip);
 
-      dbRepo.recordInteraction({
-        card_id: card.id,
-        source: 'nfc',
-        is_bot: isBot,
-        user_agent: userAgent,
-        ip_hash: ipHash,
-        device_type: deviceType,
-      }).catch((err) => {
-        Sentry.captureException(err);
+      after(async () => {
+        try {
+          await dbRepo.recordInteraction({
+            card_id: card.id,
+            source: 'nfc',
+            is_bot: isBot,
+            user_agent: userAgent,
+            ip_hash: ipHash,
+            device_type: deviceType,
+          });
+        } catch (err) {
+          Sentry.captureException(err);
+        }
       });
     }
 
