@@ -1,21 +1,16 @@
 import Link from 'next/link';
-import { 
-  ShieldCheck, 
-  Layers, 
-  CreditCard, 
-  Building2, 
-  Users, 
-  ArrowLeft,
-  Activity
-} from 'lucide-react';
+import { requirePlatformAdmin } from '@/lib/auth';
+import { ArrowLeft } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await requirePlatformAdmin();
+
   return (
     <div className="min-h-screen bg-[#070709] text-zinc-100 flex flex-col font-sans">
       {/* Admin Top Navigation */}

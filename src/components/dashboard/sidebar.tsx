@@ -121,7 +121,7 @@ export function DashboardSidebar({ organizationName }: { organizationName?: stri
           );
         })}
 
-        <div className="pt-2 px-2">
+        <div className="pt-2 px-2 space-y-1.5">
           <Link
             href="/onboarding"
             className="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-emerald-950/40 to-zinc-900 border border-emerald-500/30 text-emerald-400 text-xs font-medium hover:border-emerald-500/50 transition group"
@@ -131,6 +131,15 @@ export function DashboardSidebar({ organizationName }: { organizationName?: stri
             </span>
             <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition" />
           </Link>
+          <button
+            onClick={async () => {
+              await fetch('/api/auth/signout', { method: 'POST' });
+              window.location.href = '/login';
+            }}
+            className="w-full text-left px-3 py-2 rounded-xl text-xs text-zinc-500 hover:text-rose-400 hover:bg-zinc-900/50 transition cursor-pointer"
+          >
+            Sign Out
+          </button>
         </div>
       </div>
     </aside>

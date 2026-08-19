@@ -1,12 +1,11 @@
-import { dbRepo } from '@/lib/db';
+import { requireOrgMembership } from '@/lib/auth';
 import { DashboardHeader } from '@/components/dashboard/header';
-import { Store, User, Shield, Key, Bell, CheckCircle2 } from 'lucide-react';
+import { Store, User, Shield } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function SettingsPage() {
-  const org = dbRepo.getOrganization();
-  const user = dbRepo.getDemoUser();
+  const { user, org, role } = await requireOrgMembership();
 
   return (
     <div className="flex-1 flex flex-col">
@@ -51,20 +50,20 @@ export default async function SettingsPage() {
         <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-6 shadow-sm space-y-6">
           <div className="border-b border-zinc-800/80 pb-4">
             <h3 className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
-              <User className="w-4 h-4 text-emerald-400" /> Account Owner
+              <User className="w-4 h-4 text-emerald-400" /> Account & Role
             </h3>
             <p className="text-xs text-zinc-400 mt-0.5">
-              Primary contact for support, pilot reporting, and hardware deployment
+              Current authenticated session and permissions
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Owner Name</label>
+              <label className="block text-zinc-400 font-medium mb-1">User Name</label>
               <input
                 type="text"
                 disabled
-                value={user?.name || 'Timothy Surreal'}
+                value={user.name}
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-zinc-200"
               />
             </div>
@@ -73,8 +72,17 @@ export default async function SettingsPage() {
               <input
                 type="email"
                 disabled
-                value={user?.email || 'timothy@reviewtap.id'}
+                value={user.email}
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-zinc-200"
+              />
+            </div>
+            <div>
+              <label className="block text-zinc-400 font-medium mb-1">Organization Role</label>
+              <input
+                type="text"
+                disabled
+                value={role.toUpperCase()}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-zinc-200 font-mono"
               />
             </div>
           </div>
@@ -84,7 +92,7 @@ export default async function SettingsPage() {
           <div className="flex items-center gap-3 text-xs text-zinc-300">
             <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
             <div>
-              <span className="font-semibold text-white">ReviewTap V1 Redirect Security:</span> Active domain whitelisting and bot filtering enabled on all NFC and QR endpoints.
+              <span className="font-semibold text-white">ReviewTap V1.1 Security:</span> Supabase PostgreSQL storage with Row-Level Security, organization tenant isolation, and strict Google URL validation.
             </div>
           </div>
         </div>

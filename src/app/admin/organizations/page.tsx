@@ -1,10 +1,11 @@
 import { dbRepo } from '@/lib/db';
-import { Building2, Shield, CheckCircle } from 'lucide-react';
+import { requirePlatformAdmin } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminOrganizationsPage() {
-  const orgs = dbRepo.getAllOrganizations();
+  await requirePlatformAdmin();
+  const orgs = await dbRepo.getAllOrganizations();
 
   return (
     <main className="p-8 space-y-6 max-w-6xl w-full mx-auto text-xs">
@@ -46,6 +47,13 @@ export default async function AdminOrganizationsPage() {
                 </td>
               </tr>
             ))}
+            {orgs.length === 0 && (
+              <tr>
+                <td colSpan={4} className="py-8 text-center text-zinc-500 text-xs">
+                  No organizations registered yet.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -1,27 +1,28 @@
 import { dbRepo } from '@/lib/db';
+import { requireOrgMembership } from '@/lib/auth';
 import { DashboardHeader } from '@/components/dashboard/header';
 import { Receipt, Check, ShieldCheck, Zap } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function BillingPage() {
-  const org = dbRepo.getOrganization();
+  const { org } = await requireOrgMembership();
 
   return (
     <div className="flex-1 flex flex-col">
       <DashboardHeader
         title="Plan & Billing"
-        subtitle="ReviewTap pilot subscription and capacity limits"
+        subtitle={`ReviewTap subscription and capacity limits for ${org.name}`}
       />
 
       <main className="p-8 space-y-8 max-w-5xl w-full mx-auto">
         <div className="bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-900 border border-emerald-500/30 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
-              Active Commercial Pilot
+              Active Commercial Plan ({org.plan.toUpperCase()})
             </span>
             <h2 className="text-xl font-bold text-white tracking-tight mt-2">
-              ReviewTap Pilot Tier
+              ReviewTap {org.plan.toUpperCase()} Tier
             </h2>
             <p className="text-xs text-zinc-400 mt-1 max-w-md">
               Full access to dynamic review redirection, physical NFC / QR tracking, and real-time interaction analytics.
@@ -30,11 +31,11 @@ export default async function BillingPage() {
 
           <div className="text-right">
             <div className="text-2xl font-black text-white">Rp 0</div>
-            <div className="text-[11px] text-zinc-400">30-Day Pilot Evaluation</div>
+            <div className="text-[11px] text-zinc-400">Status: {org.status.toUpperCase()}</div>
           </div>
         </div>
 
-        {/* Tier Comparisons for Future Launch */}
+        {/* Tier Comparisons */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-[#121215] border border-emerald-500/40 rounded-2xl p-6 shadow-md relative">
             <div className="text-xs font-bold text-emerald-400 uppercase tracking-wide mb-1">

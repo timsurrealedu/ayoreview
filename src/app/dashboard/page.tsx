@@ -1,4 +1,5 @@
 import { dbRepo } from '@/lib/db';
+import { requireOrgMembership } from '@/lib/auth';
 import { DashboardHeader } from '@/components/dashboard/header';
 import { TrendChart } from '@/components/dashboard/trend-chart';
 import { SourceSplitCard } from '@/components/dashboard/source-split';
@@ -19,12 +20,14 @@ import {
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardOverviewPage() {
-  const org = dbRepo.getOrganization();
-  const overview = dbRepo.getAnalyticsOverview(org.id);
-  const trend = dbRepo.getDailyTrend(org.id, 30);
-  const topCards = dbRepo.getTopCards(org.id, 5);
-  const locations = dbRepo.getLocationsWithStats(org.id);
-  const businesses = dbRepo.getBusinesses(org.id);
+  const { org } = await requireOrgMembership();
+  const [overview, trend, topCards, locations, businesses] = await Promise.all([
+    dbRepo.getAnalyticsOverview(org.id),
+    dbRepo.getDailyTrend(org.id, 30),
+    dbRepo.getTopCards(org.id, 5),
+    dbRepo.getLocationsWithStats(org.id),
+    dbRepo.getBusinesses(org.id),
+  ]);
 
   return (
     <div className="flex-1 flex flex-col">
@@ -170,6 +173,11 @@ export default async function DashboardOverviewPage() {
                     </div>
                   </Link>
                 ))}
+                {locations.length === 0 && (
+                  <div className="text-center py-6 text-zinc-500 text-xs">
+                    No locations yet. Add your first store location above.
+                  </div>
+                )}
               </div>
             </div>
 

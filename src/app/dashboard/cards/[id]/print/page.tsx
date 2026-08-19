@@ -1,7 +1,8 @@
 import { dbRepo } from '@/lib/db';
+import { requireOrgMembership } from '@/lib/auth';
 import { generateQrPngDataUrl } from '@/lib/qr';
 import Link from 'next/link';
-import { Smartphone, Star, ArrowLeft } from 'lucide-react';
+import { Smartphone, ArrowLeft } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,14 +11,16 @@ export default async function PrintCardTemplatePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { org } = await requireOrgMembership();
   const { id } = await params;
-  const card = dbRepo.getCardById(id);
+  const card = await dbRepo.getCardById(id, org.id);
 
   if (!card) {
-    return <div className="p-8 text-black">Card not found.</div>;
+    return <div className="p-8 text-black">Card not found in your organization.</div>;
   }
 
-  const qrUrl = `https://reviewtap.id/q/${card.public_id}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://reviewtap.id';
+  const qrUrl = `${appUrl}/q/${card.public_id}`;
   const pngDataUrl = await generateQrPngDataUrl(qrUrl, { width: 800, margin: 1 });
 
   return (

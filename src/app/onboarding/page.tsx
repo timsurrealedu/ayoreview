@@ -24,24 +24,26 @@ export default function OnboardingPage() {
   const [loading, setLoading] = useState(false);
 
   // Form State
-  const [businessName, setBusinessName] = useState('Kopi Contoh');
+  const [businessName, setBusinessName] = useState('');
   const [category, setCategory] = useState('Cafe & Specialty Coffee');
-  const [city, setCity] = useState('Jakarta Barat');
+  const [city, setCity] = useState('');
   const [country, setCountry] = useState('Indonesia');
 
-  const [locationName, setLocationName] = useState('Kemanggisan Branch');
-  const [address, setAddress] = useState('Jl. Kemanggisan Raya No. 12');
-  const [googleMapsUrl, setGoogleMapsUrl] = useState('https://maps.google.com');
+  const [locationName, setLocationName] = useState('');
+  const [address, setAddress] = useState('');
+  const [googleMapsUrl, setGoogleMapsUrl] = useState('');
 
-  const [googleReviewUrl, setGoogleReviewUrl] = useState('https://g.page/r/example-kopi-kemanggisan/review');
+  const [googleReviewUrl, setGoogleReviewUrl] = useState('');
 
   const [cardName, setCardName] = useState('Kasir 01');
   const [placement, setPlacement] = useState<CardPlacement>('cashier');
 
   const [createdCard, setCreatedCard] = useState<any>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleFinishOnboarding = async () => {
     setLoading(true);
+    setErrorMsg(null);
     try {
       // 1. Create Business
       const bizRes = await fetch('/api/businesses', {
@@ -50,6 +52,9 @@ export default function OnboardingPage() {
         body: JSON.stringify({ name: businessName, category }),
       });
       const bizJson = await bizRes.json();
+      if (!bizJson.success) {
+        throw new Error(bizJson.error || 'Failed to create business profile');
+      }
       const businessId = bizJson.data?.id;
 
       // 2. Create Location
@@ -59,14 +64,17 @@ export default function OnboardingPage() {
         body: JSON.stringify({
           business_id: businessId,
           name: locationName,
-          address,
-          city,
-          country,
-          google_maps_url: googleMapsUrl,
+          address: address || 'Store Front',
+          city: city || 'Main City',
+          country: country || 'Indonesia',
+          google_maps_url: googleMapsUrl || undefined,
           google_review_url: googleReviewUrl,
         }),
       });
       const locJson = await locRes.json();
+      if (!locJson.success) {
+        throw new Error(locJson.error || 'Failed to create location or validate Google Review URL');
+      }
       const locationId = locJson.data?.id;
 
       // 3. Create Card
@@ -80,10 +88,14 @@ export default function OnboardingPage() {
         }),
       });
       const cardJson = await cardRes.json();
+      if (!cardJson.success) {
+        throw new Error(cardJson.error || 'Failed to create physical review card');
+      }
+
       setCreatedCard(cardJson.data);
       setStep(5);
-    } catch (err) {
-      console.error('Onboarding failed:', err);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Onboarding failed');
     } finally {
       setLoading(false);
     }

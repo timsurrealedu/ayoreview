@@ -3,21 +3,53 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Lock, Mail, User, Building2 } from 'lucide-react';
+import { ArrowRight, Lock, Mail, User, AlertCircle, Building2 } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState('');
+  const [organizationName, setOrganizationName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      router.push('/onboarding');
-    }, 600);
+    setError(null);
+
+    try {
+      const supabase = createClient();
+      const { data, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+            organization_name: organizationName || `${name}'s Hospitality Group`,
+          },
+        },
+      });
+
+      if (authError) {
+        setError(authError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (data.session) {
+        router.push('/onboarding');
+        router.refresh();
+      } else {
+        // Confirmation email required
+        router.push('/login?message=check_email');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred during registration');
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,6 +79,13 @@ export default function SignupPage() {
           </p>
         </div>
 
+        {error && (
+          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
             <label className="block text-zinc-300 font-semibold mb-1">
@@ -60,6 +99,22 @@ export default function SignupPage() {
                 placeholder="e.g. Timothy Surreal"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-zinc-300 font-semibold mb-1">
+              Business / Group Name
+            </label>
+            <div className="relative">
+              <Building2 className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="e.g. Surreal Hospitality Group"
+                value={organizationName}
+                onChange={(e) => setOrganizationName(e.target.value)}
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-emerald-500"
               />
             </div>
@@ -104,7 +159,7 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-50"
           >
-            {loading ? 'Setting up...' : 'Start 3-Minute Setup'}
+            {loading ? 'Creating account...' : 'Start ReviewTap Setup'}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

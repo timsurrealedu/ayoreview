@@ -1,21 +1,13 @@
 import { dbRepo } from '@/lib/db';
+import { requirePlatformAdmin } from '@/lib/auth';
 import Link from 'next/link';
-import { 
-  Building2, 
-  CreditCard, 
-  MapPin, 
-  Activity, 
-  Layers, 
-  Users, 
-  CheckCircle,
-  TrendingUp,
-  Plus
-} from 'lucide-react';
+import { CreditCard, Building2, Users } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminOverviewPage() {
-  const stats = dbRepo.getSystemOverview();
+  await requirePlatformAdmin();
+  const stats = await dbRepo.getSystemOverview();
 
   return (
     <main className="p-8 space-y-8 max-w-7xl w-full mx-auto">

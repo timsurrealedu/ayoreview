@@ -2,6 +2,7 @@ export type User = {
   id: string;
   email: string;
   name: string;
+  is_platform_admin?: boolean;
   created_at: string;
 };
 

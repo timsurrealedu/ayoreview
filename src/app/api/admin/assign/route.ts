@@ -1,24 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
+import { checkAdminApiAccess } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { inventory_code, location_id, name, placement } = body;
+  const adminCheck = await checkAdminApiAccess(request);
+  if (!adminCheck.authorized) {
+    return NextResponse.json({ success: false, error: adminCheck.error }, { status: 403 });
+  }
 
-    const card = dbRepo.getCardByInventoryCode(inventory_code);
-    if (!card) {
-      return NextResponse.json({ success: false, error: 'Inventory card not found' }, { status: 404 });
+  try {
+    const { inventory_code, location_id, placement } = await request.json();
+
+    if (!inventory_code || !location_id) {
+      return NextResponse.json(
+        { success: false, error: 'Inventory code and Location ID required' },
+        { status: 400 }
+      );
     }
 
-    dbRepo.updateCard(card.id, {
+    const card = await dbRepo.getCardByInventoryCode(inventory_code);
+    if (!card) {
+      return NextResponse.json({ success: false, error: 'Physical card not found' }, { status: 404 });
+    }
+
+    await dbRepo.updateCard(card.id, {
       location_id,
-      name: name || card.name,
-      placement: placement || card.placement,
+      placement: placement || 'cashier',
       status: 'active',
     });
 
-    const updated = dbRepo.getCardById(card.id);
+    const updated = await dbRepo.getCardById(card.id);
     return NextResponse.json({ success: true, data: updated });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
