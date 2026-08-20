@@ -62,15 +62,15 @@ export default function AnalyticsPage() {
   return (
     <div className="flex-1 flex flex-col">
       <DashboardHeader
-        title="Analytics & Interaction Insights"
-        subtitle="Detailed breakdown of customer touchpoint engagement across stores"
+        title="Analitik & Wawasan Interaksi"
+        subtitle="Rincian interaksi pelanggan di seluruh tempat usaha"
         actions={
           <button
             onClick={handleExportCsv}
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold border border-zinc-700 transition"
           >
             <Download className="w-3.5 h-3.5" />
-            Export CSV
+            Ekspor CSV
           </button>
         }
       />
@@ -80,7 +80,7 @@ export default function AnalyticsPage() {
         <div className="flex items-center justify-between bg-[#121215] border border-zinc-800/80 rounded-2xl p-4 shadow-sm">
           <div className="flex items-center gap-2 text-xs text-zinc-300 font-medium">
             <Calendar className="w-4 h-4 text-emerald-400" />
-            <span>Select Analytics Timeframe:</span>
+            <span>Pilih Rentang Waktu Analitik:</span>
           </div>
           <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800 text-xs">
             {[7, 30, 90].map((d) => (
@@ -93,7 +93,7 @@ export default function AnalyticsPage() {
                     : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                {d} Days
+                {d} Hari
               </button>
             ))}
           </div>
@@ -122,10 +122,10 @@ export default function AnalyticsPage() {
               <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-6 shadow-sm">
                 <h3 className="text-sm font-semibold text-white tracking-tight mb-1 flex items-center gap-2">
                   <Layers className="w-4 h-4 text-emerald-400" />
-                  Interaction by Placement Zone
+                  Interaksi berdasarkan Area Penempatan
                 </h3>
                 <p className="text-xs text-zinc-400 mb-5">
-                  Understand which physical spots in your venue drive the most Google review visits
+                  Ketahui titik fisik yang menghasilkan kunjungan ulasan Google terbanyak
                 </p>
 
                 <div className="space-y-3">
@@ -141,7 +141,7 @@ export default function AnalyticsPage() {
                         <div className="flex items-center justify-between text-xs font-semibold text-white mb-1.5">
                           <span className="capitalize">{p.placement}</span>
                           <span>
-                            {p.interactions.toLocaleString()} visits{' '}
+                            {p.interactions.toLocaleString()} kunjungan{' '}
                             <span className="text-zinc-400 font-normal">({p.card_count} cards)</span>
                           </span>
                         </div>
@@ -161,10 +161,10 @@ export default function AnalyticsPage() {
               <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-6 shadow-sm">
                 <h3 className="text-sm font-semibold text-white tracking-tight mb-1 flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-emerald-400" />
-                  Location Performance Ranking
+                  Peringkat Performa Lokasi
                 </h3>
                 <p className="text-xs text-zinc-400 mb-5">
-                  Review engagement ranked across multiple store branches
+                  Peringkat interaksi ulasan di berbagai cabang usaha
                 </p>
 
                 <div className="space-y-3">
@@ -178,14 +178,14 @@ export default function AnalyticsPage() {
                           {loc.name}
                         </div>
                         <div className="text-[11px] text-zinc-400">
-                          {loc.city} · {loc.active_card_count} active cards
+                          {loc.city} · {loc.active_card_count} kartu aktif
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-sm font-bold text-emerald-400">
                           {loc.total_interactions.toLocaleString()}
                         </div>
-                        <div className="text-[10px] text-zinc-400">Total Visits</div>
+                        <div className="text-[10px] text-zinc-400">Total Kunjungan</div>
                       </div>
                     </div>
                   ))}

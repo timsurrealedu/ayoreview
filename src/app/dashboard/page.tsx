@@ -27,7 +27,7 @@ export default async function DashboardOverviewPage({
 }) {
   const { org } = await requireOrgMembership();
   const params = await searchParams;
-  const adminError = params.error === 'unauthorized_admin_access' ? 'You do not have platform operator privileges.' : null;
+  const adminError = params.error === 'unauthorized_admin_access' ? 'Anda tidak memiliki hak akses operator platform.' : null;
   const [overview, trend, topCards, locations, businesses] = await Promise.all([
     dbRepo.getAnalyticsOverview(org.id),
     dbRepo.getDailyTrend(org.id, 30),
@@ -39,8 +39,8 @@ export default async function DashboardOverviewPage({
   return (
     <div className="flex-1 flex flex-col">
       <DashboardHeader
-        title="Dashboard Overview"
-        subtitle={`Real-time engagement metrics for ${org.name}`}
+        title="Ringkasan Dasbor"
+        subtitle={`Metrik interaksi waktu nyata untuk ${org.name}`}
         actions={
           <div className="flex items-center gap-2.5">
             <Link
@@ -48,14 +48,14 @@ export default async function DashboardOverviewPage({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition"
             >
               <CreditCard className="w-3.5 h-3.5" />
-              Manage Cards
+              Kelola Kartu
             </Link>
             <Link
               href="/dashboard/locations"
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-semibold shadow-lg shadow-emerald-500/20 transition active:scale-[0.98]"
             >
               <Plus className="w-4 h-4" />
-              Add Location
+              Tambah Lokasi
             </Link>
           </div>
         }
@@ -74,10 +74,10 @@ export default async function DashboardOverviewPage({
         <div className="bg-gradient-to-r from-emerald-950/30 to-[#111115] border border-emerald-500/20 rounded-2xl p-6 shadow-sm flex items-center justify-between gap-6">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
-              <Sparkles className="w-4 h-4" /> New Review Card
+              <Sparkles className="w-4 h-4" /> Kartu Ulasan Baru
             </div>
-            <h3 className="text-lg font-bold text-white tracking-tight">Create a new QR Code</h3>
-            <p className="text-xs text-zinc-400">Generate a fresh NFC + QR redirect for a new table, cashier, or entrance stand.</p>
+            <h3 className="text-lg font-bold text-white tracking-tight">Buat Kode QR baru</h3>
+            <p className="text-xs text-zinc-400">Buat pengalihan NFC + QR baru untuk meja, kasir, atau pintu masuk.</p>
           </div>
           <Link
             href="/dashboard/cards"
@@ -92,7 +92,7 @@ export default async function DashboardOverviewPage({
           {/* Today */}
           <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center justify-between text-zinc-400 text-xs font-medium mb-2">
-              <span>Today&apos;s Review Visits</span>
+              <span>Kunjungan Ulasan Hari Ini</span>
               <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded">
                 <TrendingUp className="w-3 h-3" /> +{overview.todayGrowthPct}%
               </span>
@@ -101,40 +101,40 @@ export default async function DashboardOverviewPage({
               {overview.today.toLocaleString()}
             </div>
             <div className="text-[11px] text-zinc-400 mt-1">
-              Google review destinations reached today
+              Tujuan ulasan Google yang dikunjungi hari ini
             </div>
           </div>
 
           {/* Last 7 Days */}
           <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
             <div className="text-zinc-400 text-xs font-medium mb-2">
-              Last 7 Days
+              7 Hari Terakhir
             </div>
             <div className="text-3xl font-black text-white tracking-tight">
               {overview.last7Days.toLocaleString()}
             </div>
             <div className="text-[11px] text-zinc-400 mt-1">
-              Weekly customer interactions
+              Interaksi pelanggan mingguan
             </div>
           </div>
 
           {/* Last 30 Days */}
           <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
             <div className="text-zinc-400 text-xs font-medium mb-2">
-              Last 30 Days
+              30 Hari Terakhir
             </div>
             <div className="text-3xl font-black text-white tracking-tight text-emerald-400">
               {overview.last30Days.toLocaleString()}
             </div>
             <div className="text-[11px] text-zinc-400 mt-1">
-              Monthly Review Page Visits (North Star)
+              Kunjungan Halaman Ulasan Bulanan (Metrik Utama)
             </div>
           </div>
 
           {/* All Time */}
           <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
             <div className="text-zinc-400 text-xs font-medium mb-2">
-              All-Time Total
+              Total Sepanjang Waktu
             </div>
             <div className="text-3xl font-black text-white tracking-tight">
               {overview.allTime.toLocaleString()}
@@ -177,11 +177,11 @@ export default async function DashboardOverviewPage({
                   href="/dashboard/locations"
                   className="text-xs text-emerald-400 hover:underline"
                 >
-                  Manage
+                  Kelola
                 </Link>
               </div>
               <p className="text-xs text-zinc-400 mb-4">
-                Active review destinations across your stores
+                Tujuan ulasan aktif di seluruh tempat usaha Anda
               </p>
 
               <div className="space-y-3">
@@ -196,18 +196,18 @@ export default async function DashboardOverviewPage({
                         {loc.name}
                       </span>
                       <span className="text-xs font-bold text-emerald-400">
-                        {loc.total_interactions} visits
+                        {loc.total_interactions} kunjungan
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-[11px] text-zinc-400">
                       <span>{loc.city}</span>
-                      <span>{loc.active_card_count} active cards</span>
+                      <span>{loc.active_card_count} kartu aktif</span>
                     </div>
                   </Link>
                 ))}
                 {locations.length === 0 && (
                   <div className="text-center py-6 text-zinc-500 text-xs">
-                    No locations yet. Add your first store location above.
+                    Belum ada lokasi. Tambahkan lokasi usaha pertama Anda di atas.
                   </div>
                 )}
               </div>

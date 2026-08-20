@@ -99,15 +99,15 @@ export default function LocationsPage() {
   return (
     <div className="flex-1 flex flex-col">
       <DashboardHeader
-        title="Business Locations"
-        subtitle="Manage physical branches and their bound Google Review destinations"
+        title="Lokasi Bisnis"
+        subtitle="Kelola cabang fisik dan tujuan Ulasan Google yang terhubung"
         actions={
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-semibold shadow-lg shadow-emerald-500/20 transition active:scale-[0.98]"
           >
             <Plus className="w-4 h-4" />
-            Add Location
+            Tambah Lokasi
           </button>
         }
       />
@@ -119,7 +119,7 @@ export default function LocationsPage() {
             <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search locations by name, city, or address..."
+              placeholder="Cari lokasi berdasarkan nama, kota, atau alamat..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-[#121215] border border-zinc-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/60 transition"
@@ -174,13 +174,13 @@ export default function LocationsPage() {
                 {/* Quick metrics */}
                 <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-zinc-900/80 border border-zinc-800 mb-5">
                   <div>
-                    <div className="text-[10px] text-zinc-400">Total Visits</div>
+                    <div className="text-[10px] text-zinc-400">Total Kunjungan</div>
                     <div className="text-base font-bold text-white">
                       {loc.total_interactions.toLocaleString()}
                     </div>
                   </div>
                   <div>
-                    <div className="text-[10px] text-zinc-400">Cards Deployed</div>
+                    <div className="text-[10px] text-zinc-400">Kartu Terpasang</div>
                     <div className="text-base font-bold text-emerald-400">
                       {loc.active_card_count} / {loc.card_count}
                     </div>
@@ -212,7 +212,7 @@ export default function LocationsPage() {
             <div className="bg-[#121215] border border-zinc-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-5">
               <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-white tracking-tight">
-                  Add New Location
+                  Tambah Lokasi Baru
                 </h3>
                 <button
                   onClick={() => setShowAddModal(false)}
@@ -225,7 +225,7 @@ export default function LocationsPage() {
               <form onSubmit={handleCreate} className="space-y-4 text-xs">
                 <div>
                   <label className="block text-zinc-300 font-medium mb-1">
-                    Business Entity
+                    Entitas Bisnis
                   </label>
                   <select
                     value={formData.business_id}
@@ -242,12 +242,12 @@ export default function LocationsPage() {
 
                 <div>
                   <label className="block text-zinc-300 font-medium mb-1">
-                    Location / Branch Name *
+                    Nama Lokasi / Cabang *
                   </label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Kemanggisan Flagship, Central Park Mall"
+                    placeholder="contoh: Cabang Utama Kemanggisan, Central Park Mall"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
@@ -257,12 +257,12 @@ export default function LocationsPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-zinc-300 font-medium mb-1">
-                      City *
+                      Kota *
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Jakarta Barat"
+                      placeholder="contoh: Jakarta Barat"
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                       className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
@@ -270,7 +270,7 @@ export default function LocationsPage() {
                   </div>
                   <div>
                     <label className="block text-zinc-300 font-medium mb-1">
-                      Country
+                      Negara
                     </label>
                     <input
                       type="text"
@@ -283,11 +283,11 @@ export default function LocationsPage() {
 
                 <div>
                   <label className="block text-zinc-300 font-medium mb-1">
-                    Street Address
+                    Alamat Jalan
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Jl. Kemanggisan Raya No. 12"
+                    placeholder="contoh: Jl. Kemanggisan Raya No. 12"
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
@@ -296,7 +296,7 @@ export default function LocationsPage() {
 
                 <div>
                   <label className="block text-zinc-300 font-medium mb-1">
-                    Google Review URL (Destination) *
+                    URL Ulasan Google (Tujuan) *
                   </label>
                   <input
                     type="url"
@@ -307,7 +307,7 @@ export default function LocationsPage() {
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500 font-mono text-[11px]"
                   />
                   <p className="text-[10px] text-zinc-400 mt-1">
-                    All physical NFC & QR cards linked to this branch will redirect here immediately.
+                    Semua kartu NFC & QR fisik yang terhubung ke cabang ini akan langsung dialihkan ke sini.
                   </p>
                 </div>
 
@@ -317,13 +317,13 @@ export default function LocationsPage() {
                     onClick={() => setShowAddModal(false)}
                     className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition"
                   >
-                    Cancel
+                    Batal
                   </button>
                   <button
                     type="submit"
                     className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-semibold shadow-lg shadow-emerald-500/20 transition"
                   >
-                    Create Location
+                    Buat Lokasi
                   </button>
                 </div>
               </form>

@@ -20,14 +20,14 @@ export function SourceSplitCard({
       <div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold text-white tracking-tight">
-            Interaction Source Ratio
+            Rasio Sumber Interaksi
           </h3>
           <span className="text-[11px] text-zinc-400 bg-zinc-800/60 px-2 py-0.5 rounded-full border border-zinc-700/50">
-            Hardware Breakdown
+            Rincian Perangkat
           </span>
         </div>
         <p className="text-xs text-zinc-400 mb-6">
-          Comparing physical customer interaction methods in your stores
+          Perbandingan cara pelanggan berinteraksi di tempat usaha Anda
         </p>
 
         {/* Visual Progress Bar */}
@@ -51,7 +51,7 @@ export function SourceSplitCard({
             <QrCode className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-[11px] text-zinc-400 font-medium">QR Scans</div>
+            <div className="text-[11px] text-zinc-400 font-medium">Pindaian QR</div>
             <div className="text-lg font-bold text-white tracking-tight">
               {qrTotal.toLocaleString()}{' '}
               <span className="text-xs font-normal text-emerald-400">({qrPercentage}%)</span>
@@ -64,7 +64,7 @@ export function SourceSplitCard({
             <Smartphone className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-[11px] text-zinc-400 font-medium">NFC Taps</div>
+            <div className="text-[11px] text-zinc-400 font-medium">Ketukan NFC</div>
             <div className="text-lg font-bold text-white tracking-tight">
               {nfcTotal.toLocaleString()}{' '}
               <span className="text-xs font-normal text-sky-400">({nfcPercentage}%)</span>

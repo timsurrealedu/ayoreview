@@ -17,18 +17,18 @@ import {
 import clsx from 'clsx';
 
 const navItems = [
-  { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Locations', href: '/dashboard/locations', icon: MapPin },
-  { label: 'Review Cards', href: '/dashboard/cards', icon: CreditCard },
-  { label: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
+  { label: 'Ringkasan', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'Lokasi', href: '/dashboard/locations', icon: MapPin },
+  { label: 'Kartu Ulasan', href: '/dashboard/cards', icon: CreditCard },
+  { label: 'Analitik', href: '/dashboard/analytics', icon: BarChart3 },
 ];
 
 const bottomNavItems = [
-  { label: 'Account & Settings', href: '/dashboard/settings', icon: Settings },
-  { label: 'Plan & Billing', href: '/dashboard/billing', icon: Receipt },
+  { label: 'Akun & Pengaturan', href: '/dashboard/settings', icon: Settings },
+  { label: 'Paket & Tagihan', href: '/dashboard/billing', icon: Receipt },
 ];
 
-const adminNavItem = { label: 'Platform Admin', href: '/admin', icon: ShieldCheck };
+const adminNavItem = { label: 'Admin Platform', href: '/admin', icon: ShieldCheck };
 
 export function DashboardSidebar({ organizationName, isPlatformAdmin }: { organizationName?: string; isPlatformAdmin?: boolean }) {
   const pathname = usePathname();
@@ -39,15 +39,15 @@ export function DashboardSidebar({ organizationName, isPlatformAdmin }: { organi
         {/* Brand Header */}
         <div className="h-16 flex items-center px-6 border-b border-zinc-800/80">
           <Link href="/dashboard" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-zinc-950 font-black text-sm">
-              RT
+            <div className="w-8 h-8 rounded-full bg-[conic-gradient(from_25deg,#ea4335_0_25%,#fbbc04_0_50%,#34a853_0_75%,#1a73e8_0)] flex items-center justify-center text-white font-black text-sm ring-4 ring-white/30 ring-inset">
+              R
             </div>
             <div>
               <span className="font-bold text-white tracking-tight text-base block leading-none">
                 ReviewTap
               </span>
               <span className="text-[10px] font-medium text-emerald-400 tracking-wide uppercase">
-                Hardware SaaS V1
+                Konsol Pengalihan
               </span>
             </div>
           </Link>
@@ -63,7 +63,7 @@ export function DashboardSidebar({ organizationName, isPlatformAdmin }: { organi
               <div className="text-xs font-semibold text-zinc-200 truncate">
                 {organizationName || 'Timothy Hospitality'}
               </div>
-              <div className="text-[10px] text-zinc-400">Pilot Organization</div>
+              <div className="text-[10px] text-zinc-400">Organisasi Percontohan</div>
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@ export function DashboardSidebar({ organizationName, isPlatformAdmin }: { organi
         {/* Main Navigation */}
         <div className="px-3 py-2">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 px-3 mb-2">
-            Merchant Workspace
+            Ruang Kerja Bisnis
           </div>
           <nav className="space-y-1">
             {navItems.map((item) => {
@@ -100,7 +100,7 @@ export function DashboardSidebar({ organizationName, isPlatformAdmin }: { organi
       {/* Footer Nav & Admin Shortcut */}
       <div className="p-3 border-t border-zinc-800/80 space-y-1">
         <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 px-3 mb-1">
-          System & Settings
+          Sistem & Pengaturan
         </div>
         {bottomNavItems.map((item) => {
           const Icon = item.icon;
@@ -149,7 +149,7 @@ export function DashboardSidebar({ organizationName, isPlatformAdmin }: { organi
             className="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r from-emerald-950/40 to-zinc-900 border border-emerald-500/30 text-emerald-400 text-xs font-medium hover:border-emerald-500/50 transition group"
           >
             <span className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" /> Setup Wizard
+              <Sparkles className="w-3.5 h-3.5" /> Panduan Pengaturan
             </span>
             <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 transition" />
           </Link>
@@ -160,7 +160,7 @@ export function DashboardSidebar({ organizationName, isPlatformAdmin }: { organi
             }}
             className="w-full text-left px-3 py-2 rounded-xl text-xs text-zinc-500 hover:text-rose-400 hover:bg-zinc-900/50 transition cursor-pointer"
           >
-            Sign Out
+            Keluar
           </button>
         </div>
       </div>

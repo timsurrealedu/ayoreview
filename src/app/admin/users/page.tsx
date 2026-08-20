@@ -11,7 +11,7 @@ export default async function AdminUsersPage() {
     <main className="p-8 space-y-6 max-w-6xl w-full mx-auto text-xs">
       <div>
         <h1 className="text-xl font-bold text-white tracking-tight">
-          Platform User Directory
+          Direktori Pengguna Platform
         </h1>
         <p className="text-zinc-400 mt-0.5">
           Account registrations and authentication credentials
@@ -22,10 +22,10 @@ export default async function AdminUsersPage() {
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px] bg-zinc-900/60">
-              <th className="py-3 px-5">User Name</th>
+              <th className="py-3 px-5">Nama Pengguna</th>
               <th className="py-3 px-4">Email</th>
-              <th className="py-3 px-4">Role</th>
-              <th className="py-3 px-4">Created Date</th>
+              <th className="py-3 px-4">Peran</th>
+              <th className="py-3 px-4">Tanggal Dibuat</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-800/60">
@@ -39,9 +39,9 @@ export default async function AdminUsersPage() {
                 </td>
                 <td className="py-4 px-4 font-mono text-zinc-400">
                   {u.is_platform_admin ? (
-                    <span className="text-amber-400 font-bold">Platform Admin</span>
+                    <span className="text-amber-400 font-bold">Admin Platform</span>
                   ) : (
-                    <span>Merchant User</span>
+                    <span>Pengguna Bisnis</span>
                   )}
                 </td>
                 <td className="py-4 px-4 text-zinc-400">
@@ -52,7 +52,7 @@ export default async function AdminUsersPage() {
             {users.length === 0 && (
               <tr>
                 <td colSpan={4} className="py-8 text-center text-zinc-500 text-xs">
-                  No users found.
+                  Pengguna tidak ditemukan.
                 </td>
               </tr>
             )}

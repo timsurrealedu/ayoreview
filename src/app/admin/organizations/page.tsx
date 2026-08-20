@@ -11,10 +11,10 @@ export default async function AdminOrganizationsPage() {
     <main className="p-8 space-y-6 max-w-6xl w-full mx-auto text-xs">
       <div>
         <h1 className="text-xl font-bold text-white tracking-tight">
-          Pilot Organizations & Subscriptions
+          Organisasi & Langganan Percontohan
         </h1>
         <p className="text-zinc-400 mt-0.5">
-          Manage merchant accounts and commercial pilot tiers
+          Kelola akun bisnis dan paket komersial percontohan
         </p>
       </div>
 
@@ -22,10 +22,10 @@ export default async function AdminOrganizationsPage() {
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px] bg-zinc-900/60">
-              <th className="py-3 px-5">Organization Name</th>
-              <th className="py-3 px-4">Plan Tier</th>
+              <th className="py-3 px-5">Nama Organisasi</th>
+              <th className="py-3 px-4">Paket</th>
               <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Created Date</th>
+              <th className="py-3 px-4">Tanggal Dibuat</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-800/60">
@@ -50,7 +50,7 @@ export default async function AdminOrganizationsPage() {
             {orgs.length === 0 && (
               <tr>
                 <td colSpan={4} className="py-8 text-center text-zinc-500 text-xs">
-                  No organizations registered yet.
+                  Belum ada organisasi terdaftar.
                 </td>
               </tr>
             )}

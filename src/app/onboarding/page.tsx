@@ -12,7 +12,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [businessName, setBusinessName] = useState('');
-  const [category, setCategory] = useState('Cafe & Specialty Coffee');
+  const [category, setCategory] = useState('Kafe & Kopi Spesialti');
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('Indonesia');
   const [locationName, setLocationName] = useState('');
@@ -29,7 +29,7 @@ export default function OnboardingPage() {
     try {
       const biz = await (await fetch('/api/businesses', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: businessName, category }) })).json();
       if (!biz.success) throw new Error(biz.error);
-      const loc = await (await fetch('/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ business_id: biz.data.id, name: locationName, address: address || 'Store Front', city: city || 'Main City', country: country || 'Indonesia', google_maps_url: googleMapsUrl || undefined, google_review_url: googleReviewUrl }) })).json();
+      const loc = await (await fetch('/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ business_id: biz.data.id, name: locationName, address: address || 'Bagian Depan Toko', city: city || 'Kota Utama', country: country || 'Indonesia', google_maps_url: googleMapsUrl || undefined, google_review_url: googleReviewUrl }) })).json();
       if (!loc.success) throw new Error(loc.error);
       const card = await (await fetch('/api/cards', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location_id: loc.data.id, name: cardName, placement }) })).json();
       if (!card.success) throw new Error(card.error);
@@ -66,11 +66,11 @@ export default function OnboardingPage() {
             <div style={{ width: `${(step / 5) * 100}%` }} className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500 rounded-full" />
           </div>
           <div className="flex justify-between text-[10px] text-zinc-500 mt-1.5 font-medium">
-            <span className={step >= 1 ? 'text-emerald-400' : ''}>Business</span>
-            <span className={step >= 2 ? 'text-emerald-400' : ''}>Location</span>
-            <span className={step >= 3 ? 'text-emerald-400' : ''}>Review Link</span>
-            <span className={step >= 4 ? 'text-emerald-400' : ''}>Card Setup</span>
-            <span className={step >= 5 ? 'text-emerald-400' : ''}>Your QR Code</span>
+            <span className={step >= 1 ? 'text-emerald-400' : ''}>Bisnis</span>
+            <span className={step >= 2 ? 'text-emerald-400' : ''}>Lokasi</span>
+            <span className={step >= 3 ? 'text-emerald-400' : ''}>Tautan Ulasan</span>
+            <span className={step >= 4 ? 'text-emerald-400' : ''}>Pengaturan Kartu</span>
+            <span className={step >= 5 ? 'text-emerald-400' : ''}>Kode QR Anda</span>
           </div>
         </div>
 
@@ -85,35 +85,35 @@ export default function OnboardingPage() {
           <div className="w-full bg-[#111115] border border-zinc-800/80 rounded-2xl p-7 shadow-xl space-y-6">
             <div>
               <div className="inline-flex p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 mb-3"><Building2 className="w-5 h-5" /></div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Name your business</h2>
-              <p className="text-xs text-zinc-400 mt-1">This will be the brand your review cards belong to.</p>
+              <h2 className="text-xl font-bold text-white tracking-tight">Beri nama bisnis Anda</h2>
+              <p className="text-xs text-zinc-400 mt-1">Nama ini akan tampil sebagai merek pada kartu ulasan Anda.</p>
             </div>
             <div className="space-y-4 text-xs">
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">Business Name *</label>
-                <input type="text" required placeholder="e.g. Kopi Contoh, Salon Cantik" value={businessName} onChange={(e) => setBusinessName(e.target.value)}
+                <label className="block text-zinc-300 font-semibold mb-1">Nama bisnis *</label>
+                <input type="text" required placeholder="contoh: Kopi Contoh, Salon Cantik" value={businessName} onChange={(e) => setBusinessName(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
               </div>
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">Category</label>
+                <label className="block text-zinc-300 font-semibold mb-1">Kategori</label>
                 <select value={category} onChange={(e) => setCategory(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500">
-                  <option value="Cafe & Specialty Coffee">Cafe &amp; Specialty Coffee</option>
-                  <option value="Restaurant & Dining">Restaurant &amp; Dining</option>
+                  <option value="Kafe & Kopi Spesialti">Kafe &amp; Kopi Spesialti</option>
+                  <option value="Restoran & Kuliner">Restoran &amp; Kuliner</option>
                   <option value="Barbershop & Salon">Barbershop &amp; Salon</option>
-                  <option value="Dental & Medical Clinic">Dental &amp; Medical Clinic</option>
-                  <option value="Retail Boutique">Retail Boutique</option>
-                  <option value="Other Local Business">Other Local Business</option>
+                  <option value="Klinik Gigi & Medis">Klinik Gigi &amp; Medis</option>
+                  <option value="Butik Ritel">Butik Ritel</option>
+                  <option value="Bisnis Lokal Lainnya">Bisnis Lokal Lainnya</option>
                 </select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">City *</label>
+                  <label className="block text-zinc-300 font-semibold mb-1">Kota *</label>
                   <input type="text" required value={city} onChange={(e) => setCity(e.target.value)}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
                 </div>
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">Country</label>
+                  <label className="block text-zinc-300 font-semibold mb-1">Negara</label>
                   <input type="text" value={country} onChange={(e) => setCountry(e.target.value)}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
                 </div>
@@ -122,7 +122,7 @@ export default function OnboardingPage() {
             <div className="flex justify-end pt-4 border-t border-zinc-800">
               <button onClick={() => setStep(2)} disabled={!businessName}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/25 disabled:opacity-50">
-                Continue <ArrowRight className="w-4 h-4" />
+                Lanjutkan <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -133,26 +133,26 @@ export default function OnboardingPage() {
           <div className="w-full bg-[#111115] border border-zinc-800/80 rounded-2xl p-7 shadow-xl space-y-6">
             <div>
               <div className="inline-flex p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 mb-3"><MapPin className="w-5 h-5" /></div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Add your location</h2>
-              <p className="text-xs text-zinc-400 mt-1">Where will your physical review cards be placed?</p>
+              <h2 className="text-xl font-bold text-white tracking-tight">Tambahkan lokasi Anda</h2>
+              <p className="text-xs text-zinc-400 mt-1">Di mana kartu ulasan fisik Anda akan ditempatkan?</p>
             </div>
             <div className="space-y-4 text-xs">
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">Branch Name *</label>
-                <input type="text" required placeholder="e.g. Kemanggisan Flagship" value={locationName} onChange={(e) => setLocationName(e.target.value)}
+                <label className="block text-zinc-300 font-semibold mb-1">Nama cabang *</label>
+                <input type="text" required placeholder="contoh: Cabang Utama Kemanggisan" value={locationName} onChange={(e) => setLocationName(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
               </div>
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">Address</label>
-                <input type="text" placeholder="e.g. Jl. Kemanggisan Raya No. 12" value={address} onChange={(e) => setAddress(e.target.value)}
+                <label className="block text-zinc-300 font-semibold mb-1">Alamat</label>
+                <input type="text" placeholder="contoh: Jl. Kemanggisan Raya No. 12" value={address} onChange={(e) => setAddress(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
               </div>
             </div>
             <div className="flex justify-between pt-4 border-t border-zinc-800">
-              <button onClick={() => setStep(1)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium"><ArrowLeft className="w-3.5 h-3.5" /> Back</button>
+              <button onClick={() => setStep(1)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium"><ArrowLeft className="w-3.5 h-3.5" /> Kembali</button>
               <button onClick={() => setStep(3)} disabled={!locationName}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/25 disabled:opacity-50">
-                Continue <ArrowRight className="w-4 h-4" />
+                Lanjutkan <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -163,27 +163,27 @@ export default function OnboardingPage() {
           <div className="w-full bg-[#111115] border border-zinc-800/80 rounded-2xl p-7 shadow-xl space-y-6">
             <div>
               <div className="inline-flex p-2.5 rounded-xl bg-emerald-500/10 text-amber-400 mb-3"><Star className="w-5 h-5" /></div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Paste your Google Review link</h2>
-              <p className="text-xs text-zinc-400 mt-1">This is the destination customers reach when they tap or scan your card. You can change this later.</p>
+              <h2 className="text-xl font-bold text-white tracking-tight">Tempel tautan Ulasan Google Anda</h2>
+              <p className="text-xs text-zinc-400 mt-1">Pelanggan akan menuju tautan ini saat mengetuk atau memindai kartu. Anda dapat mengubahnya nanti.</p>
             </div>
             <div className="space-y-4 text-xs">
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">Google Review URL *</label>
+                <label className="block text-zinc-300 font-semibold mb-1">URL Ulasan Google *</label>
                 <input type="url" required placeholder="https://g.page/r/.../review" value={googleReviewUrl} onChange={(e) => setGoogleReviewUrl(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs focus:outline-none focus:border-emerald-500" />
                 <div className="p-3 bg-zinc-900/80 border border-zinc-800 rounded-xl mt-3 text-[11px] text-zinc-400 space-y-1">
-                  <div className="font-semibold text-zinc-300">How to get your link:</div>
-                  <div>1. Open Google Maps → find your business</div>
-                  <div>2. Click &quot;Share&quot; → &quot;Copy link&quot;</div>
-                  <div>3. Paste above. You can change it anytime!</div>
+                <div className="font-semibold text-zinc-300">Cara mendapatkan tautan:</div>
+                  <div>1. Buka Google Maps → cari bisnis Anda</div>
+                  <div>2. Klik &quot;Bagikan&quot; → &quot;Salin tautan&quot;</div>
+                  <div>3. Tempel di atas. Anda dapat mengubahnya kapan saja.</div>
                 </div>
               </div>
             </div>
             <div className="flex justify-between pt-4 border-t border-zinc-800">
-              <button onClick={() => setStep(2)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium"><ArrowLeft className="w-3.5 h-3.5" /> Back</button>
+              <button onClick={() => setStep(2)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium"><ArrowLeft className="w-3.5 h-3.5" /> Kembali</button>
               <button onClick={() => setStep(4)} disabled={!googleReviewUrl}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/25 disabled:opacity-50">
-                Continue <ArrowRight className="w-4 h-4" />
+                Lanjutkan <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -194,33 +194,33 @@ export default function OnboardingPage() {
           <div className="w-full bg-[#111115] border border-zinc-800/80 rounded-2xl p-7 shadow-xl space-y-6">
             <div>
               <div className="inline-flex p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 mb-3"><CreditCard className="w-5 h-5" /></div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Create your first review card</h2>
-              <p className="text-xs text-zinc-400 mt-1">Name it after where it sits in your venue.</p>
+              <h2 className="text-xl font-bold text-white tracking-tight">Buat kartu ulasan pertama Anda</h2>
+              <p className="text-xs text-zinc-400 mt-1">Beri nama sesuai tempat kartu diletakkan.</p>
             </div>
             <div className="space-y-4 text-xs">
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">Card Name *</label>
-                <input type="text" required placeholder="e.g. Kasir 01, Table 04" value={cardName} onChange={(e) => setCardName(e.target.value)}
+                <label className="block text-zinc-300 font-semibold mb-1">Nama kartu *</label>
+                <input type="text" required placeholder="contoh: Kasir 01, Meja 04" value={cardName} onChange={(e) => setCardName(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500" />
               </div>
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">Placement</label>
+                <label className="block text-zinc-300 font-semibold mb-1">Penempatan</label>
                 <select value={placement} onChange={(e) => setPlacement(e.target.value as CardPlacement)}
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500">
-                  <option value="cashier">Cashier / POS (Highest Conversion)</option>
-                  <option value="table">Dining Table / Booth</option>
-                  <option value="entrance">Main Entrance / Host Stand</option>
-                  <option value="counter">Barista / Service Counter</option>
-                  <option value="waiting_area">Waiting Lounge</option>
-                  <option value="receipt">Bill Clip</option>
+                  <option value="cashier">Kasir / POS (Konversi Tertinggi)</option>
+                  <option value="table">Meja makan / Bilik</option>
+                  <option value="entrance">Pintu masuk utama / Meja penerima</option>
+                  <option value="counter">Barista / Konter layanan</option>
+                  <option value="waiting_area">Ruang tunggu</option>
+                  <option value="receipt">Penjepit tagihan</option>
                 </select>
               </div>
             </div>
             <div className="flex justify-between pt-4 border-t border-zinc-800">
-              <button onClick={() => setStep(3)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium"><ArrowLeft className="w-3.5 h-3.5" /> Back</button>
+              <button onClick={() => setStep(3)} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium"><ArrowLeft className="w-3.5 h-3.5" /> Kembali</button>
               <button onClick={handleFinish} disabled={loading || !cardName}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-xs transition shadow-lg shadow-emerald-500/25 disabled:opacity-50">
-                {loading ? 'Generating...' : 'Generate QR Code'}
+                {loading ? 'Membuat...' : 'Buat Kode QR'}
                 <Sparkles className="w-4 h-4" />
               </button>
             </div>
@@ -234,9 +234,9 @@ export default function OnboardingPage() {
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <div>
-              <h2 className="text-2xl font-black text-white tracking-tight">Your QR Code is ready!</h2>
+              <h2 className="text-2xl font-black text-white tracking-tight">Kode QR Anda siap!</h2>
               <p className="text-xs text-zinc-400 mt-1 max-w-md mx-auto">
-                Your first review card has been provisioned. Download the QR code below and print it for your acrylic stand.
+                Kartu ulasan pertama Anda sudah dibuat. Unduh kode QR di bawah lalu cetak untuk dudukan akrilik Anda.
               </p>
             </div>
             <div className="py-2">
@@ -250,11 +250,11 @@ export default function OnboardingPage() {
             <div className="pt-4 flex justify-center gap-3">
               <Link href="/dashboard"
                 className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm transition shadow-lg shadow-emerald-500/25">
-                Go to Dashboard
+                Buka Dasbor
               </Link>
               <Link href="/dashboard/cards"
                 className="px-6 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-semibold text-sm border border-zinc-800 transition-colors">
-                View All Cards
+                Lihat Semua Kartu
               </Link>
             </div>
           </div>

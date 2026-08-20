@@ -116,25 +116,25 @@ export default function AdminCardsInventoryPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">
-            Physical Card Inventory Management
+            Pengelolaan Inventaris Kartu Fisik
           </h1>
           <p className="text-zinc-400 mt-0.5">
-            Pre-manufacture blank NFC/QR cards with RT-inventory codes and assign to merchants on-site
+            Siapkan kartu NFC/QR kosong berkode inventaris RT dan tetapkan ke bisnis di lokasi
           </p>
         </div>
 
         {/* Batch Generator */}
         <div className="flex items-center gap-2 bg-[#121215] border border-zinc-800 p-2 rounded-xl">
-          <span className="text-zinc-400 font-medium">Batch Generate:</span>
+          <span className="text-zinc-400 font-medium">Buat Massal:</span>
           <select
             value={batchCount}
             onChange={(e) => setBatchCount(parseInt(e.target.value, 10))}
             className="bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-white"
           >
-            <option value="5">5 cards</option>
-            <option value="10">10 cards</option>
-            <option value="25">25 cards</option>
-            <option value="50">50 cards</option>
+            <option value="5">5 kartu</option>
+            <option value="10">10 kartu</option>
+            <option value="25">25 kartu</option>
+            <option value="50">50 kartu</option>
           </select>
           <button
             onClick={handleBatchGenerate}
@@ -142,7 +142,7 @@ export default function AdminCardsInventoryPage() {
             className="flex items-center gap-1 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold rounded-lg transition disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
-            {generating ? 'Generating...' : 'Create Blank'}
+            {generating ? 'Membuat...' : 'Buat Kartu Kosong'}
           </button>
         </div>
       </div>
@@ -152,7 +152,7 @@ export default function AdminCardsInventoryPage() {
         <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
         <input
           type="text"
-          placeholder="Filter by inventory code (e.g. RT-000101), ID, or venue..."
+          placeholder="Saring berdasarkan kode inventaris (contoh RT-000101), ID, atau lokasi..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full bg-[#121215] border border-zinc-800 rounded-xl pl-9 pr-4 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
@@ -165,14 +165,14 @@ export default function AdminCardsInventoryPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px] bg-zinc-900/60">
-                <th className="py-3 px-5">Inventory Code</th>
-                <th className="py-3 px-4">Public ID</th>
-                <th className="py-3 px-4">Card Name</th>
-                <th className="py-3 px-4">Assigned Location</th>
-                <th className="py-3 px-4">Placement</th>
+                <th className="py-3 px-5">Kode Inventaris</th>
+                <th className="py-3 px-4">ID Publik</th>
+                <th className="py-3 px-4">Nama Kartu</th>
+                <th className="py-3 px-4">Lokasi yang Ditetapkan</th>
+                <th className="py-3 px-4">Penempatan</th>
                 <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Interactions</th>
-                <th className="py-3 px-5 text-right">Actions</th>
+                <th className="py-3 px-4 text-right">Interaksi</th>
+                <th className="py-3 px-5 text-right">Tindakan</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/60">
@@ -191,7 +191,7 @@ export default function AdminCardsInventoryPage() {
                     {c.location_name ? (
                       <span>{c.location_name}</span>
                     ) : (
-                      <span className="text-amber-400/80 font-medium">Unassigned (Blank)</span>
+                      <span className="text-amber-400/80 font-medium">Belum ditetapkan (Kosong)</span>
                     )}
                   </td>
                   <td className="py-3.5 px-4 capitalize text-zinc-400">
@@ -221,7 +221,7 @@ export default function AdminCardsInventoryPage() {
                       }}
                       className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium border border-zinc-700 transition"
                     >
-                      Assign Venue
+                      Tetapkan Lokasi
                     </button>
                     <Link
                       href={`/dashboard/cards/${c.id}/print`}
@@ -244,7 +244,7 @@ export default function AdminCardsInventoryPage() {
           <div className="bg-[#121215] border border-zinc-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <h3 className="text-sm font-bold text-white">
-                Assign Hardware {assigningCard.inventory_code}
+                Tetapkan Perangkat {assigningCard.inventory_code}
               </h3>
               <button
                 onClick={() => setAssigningCard(null)}
@@ -257,7 +257,7 @@ export default function AdminCardsInventoryPage() {
             <form onSubmit={handleAssign} className="space-y-4">
               <div>
                 <label className="block text-zinc-300 font-semibold mb-1">
-                  Target Location Branch
+                  Cabang Tujuan
                 </label>
                 <select
                   value={selectedLocationId}
@@ -274,19 +274,19 @@ export default function AdminCardsInventoryPage() {
 
               <div>
                 <label className="block text-zinc-300 font-semibold mb-1">
-                  Physical Placement
+                  Penempatan Fisik
                 </label>
                 <select
                   value={assignedPlacement}
                   onChange={(e) => setAssignedPlacement(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500"
                 >
-                  <option value="cashier">Cashier / POS</option>
-                  <option value="table">Table / Dining Booth</option>
-                  <option value="entrance">Main Entrance</option>
-                  <option value="counter">Barista Counter</option>
-                  <option value="waiting_area">Waiting Lounge</option>
-                  <option value="receipt">Bill Clip</option>
+                  <option value="cashier">Kasir / POS</option>
+                  <option value="table">Meja / Bilik makan</option>
+                  <option value="entrance">Pintu masuk utama</option>
+                  <option value="counter">Konter barista</option>
+                  <option value="waiting_area">Ruang tunggu</option>
+                  <option value="receipt">Penjepit tagihan</option>
                 </select>
               </div>
 
@@ -296,13 +296,13 @@ export default function AdminCardsInventoryPage() {
                   onClick={() => setAssigningCard(null)}
                   className="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 font-medium"
                 >
-                  Cancel
+                  Batal
                 </button>
                 <button
                   type="submit"
                   className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold transition shadow"
                 >
-                  Confirm Assignment
+                  Konfirmasi Penetapan
                 </button>
               </div>
             </form>

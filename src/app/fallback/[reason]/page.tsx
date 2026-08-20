@@ -8,31 +8,31 @@ export default async function FallbackPage({
 }) {
   const { reason } = await params;
 
-  let title = 'Review Link Unavailable';
-  let message = 'This ReviewTap link is currently inactive or being updated.';
+  let title = 'Tautan Ulasan Tidak Tersedia';
+  let message = 'Tautan ReviewTap ini sedang tidak aktif atau sedang diperbarui.';
   let icon = <AlertCircle className="w-12 h-12 text-amber-500" />;
 
   if (reason === 'not-found') {
-    title = 'Card Not Found';
-    message = 'We could not locate this ReviewTap card in our system. Please check with the business staff.';
+    title = 'Kartu Tidak Ditemukan';
+    message = 'Kartu ReviewTap ini tidak ditemukan dalam sistem kami. Silakan hubungi staf bisnis.';
     icon = <HelpCircle className="w-12 h-12 text-zinc-400" />;
   } else if (reason === 'unconfigured') {
-    title = 'Setup Incomplete';
-    message = 'This review card is registered but the Google review destination has not been configured yet.';
+    title = 'Pengaturan Belum Selesai';
+    message = 'Kartu ulasan ini sudah terdaftar, tetapi tujuan ulasan Google belum diatur.';
     icon = <AlertCircle className="w-12 h-12 text-sky-500" />;
   }
 
   return (
-    <div className="min-h-[100dvh] bg-zinc-950 text-zinc-100 flex flex-col items-center justify-between p-6 sm:p-12 font-sans">
+    <div className="min-h-[100dvh] bg-[#f8f9fa] text-zinc-100 flex flex-col items-center justify-between p-6 sm:p-12 font-sans">
       <div className="w-full max-w-md flex justify-between items-center text-xs tracking-wider uppercase text-zinc-400">
         <span className="font-bold tracking-tight text-white flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           ReviewTap
         </span>
-        <span className="text-[11px] bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700">Protected Redirect</span>
+        <span className="text-[11px] bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700">Pengalihan Terlindungi</span>
       </div>
 
-      <main className="w-full max-w-md my-auto text-center py-12 px-6 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 backdrop-blur-xl shadow-2xl">
+      <main className="w-full max-w-md my-auto text-center py-12 px-6 rounded-2xl bg-white border border-zinc-800/80 shadow-2xl">
         <div className="inline-flex p-4 rounded-2xl bg-zinc-800/50 mb-6 ring-1 ring-zinc-700/50">
           {icon}
         </div>
@@ -48,7 +48,7 @@ export default async function FallbackPage({
             href="/"
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white text-zinc-950 font-medium text-sm hover:bg-zinc-100 active:scale-[0.98] transition-all"
           >
-            Learn About ReviewTap
+            Pelajari ReviewTap
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -56,7 +56,7 @@ export default async function FallbackPage({
 
       <footer className="w-full max-w-md text-center text-xs text-zinc-400 flex items-center justify-center gap-2">
         <ShieldCheck className="w-3.5 h-3.5" />
-        <span>Hardware-Enabled Customer Touchpoints</span>
+        <span>Titik Interaksi Pelanggan Berbasis Perangkat</span>
       </footer>
     </div>
   );

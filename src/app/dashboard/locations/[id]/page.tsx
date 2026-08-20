@@ -96,18 +96,18 @@ export default function LocationDetailPage() {
   };
 
   if (loading) {
-    return <div className="p-8 text-zinc-400 text-xs">Loading location configuration...</div>;
+    return <div className="p-8 text-zinc-400 text-xs">Memuat pengaturan lokasi...</div>;
   }
 
   if (!location) {
-    return <div className="p-8 text-zinc-400 text-xs">Location not found.</div>;
+    return <div className="p-8 text-zinc-400 text-xs">Lokasi tidak ditemukan.</div>;
   }
 
   return (
     <div className="flex-1 flex flex-col">
       <DashboardHeader
         title={location.name}
-        subtitle="Location settings and instant review destination management"
+        subtitle="Pengaturan lokasi dan pengelolaan tujuan ulasan secara langsung"
         actions={
           <Link
             href="/dashboard/locations"
@@ -125,15 +125,15 @@ export default function LocationDetailPage() {
             <div>
               <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
                 <Star className="w-4 h-4 text-amber-400" />
-                Google Review Destination URL
+                URL Tujuan Ulasan Google
               </h3>
               <p className="text-xs text-zinc-400 mt-0.5">
-                Modifying this URL immediately redirects all {cards.length} attached NFC & QR cards without reprinting.
+                Mengubah URL ini langsung mengalihkan semua {cards.length} kartu NFC & QR yang terhubung tanpa mencetak ulang.
               </p>
             </div>
             {saved && (
               <span className="flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
-                <Check className="w-3.5 h-3.5" /> Saved & Deployed Live
+                <Check className="w-3.5 h-3.5" /> Tersimpan & Langsung Aktif
               </span>
             )}
           </div>
@@ -141,7 +141,7 @@ export default function LocationDetailPage() {
           <form onSubmit={handleUpdate} className="space-y-4 text-xs">
             <div>
               <label className="block text-zinc-300 font-semibold mb-1">
-                Active Google Review URL (Destination)
+                URL Ulasan Google Aktif (Tujuan)
               </label>
               <div className="flex gap-2">
                 <input
@@ -155,11 +155,11 @@ export default function LocationDetailPage() {
                   type="submit"
                   className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
                 >
-                  <Save className="w-4 h-4" /> Save Destination
+                  <Save className="w-4 h-4" /> Simpan Tujuan
                 </button>
               </div>
               <div className="flex items-center justify-between text-[11px] text-zinc-400 mt-2">
-                <span>Must begin with https:// (e.g. https://g.page/r/.../review)</span>
+                <span>Harus diawali https:// (contoh: https://g.page/r/.../review)</span>
                 <a
                   href={reviewUrl}
                   target="_blank"
@@ -173,7 +173,7 @@ export default function LocationDetailPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-zinc-800/80">
               <div>
-                <label className="block text-zinc-400 font-medium mb-1">Branch Name</label>
+                <label className="block text-zinc-400 font-medium mb-1">Nama Cabang</label>
                 <input
                   type="text"
                   value={locName}
@@ -182,7 +182,7 @@ export default function LocationDetailPage() {
                 />
               </div>
               <div>
-                <label className="block text-zinc-400 font-medium mb-1">City</label>
+                <label className="block text-zinc-400 font-medium mb-1">Kota</label>
                 <input
                   type="text"
                   value={city}
@@ -191,7 +191,7 @@ export default function LocationDetailPage() {
                 />
               </div>
               <div>
-                <label className="block text-zinc-400 font-medium mb-1">Address</label>
+                <label className="block text-zinc-400 font-medium mb-1">Alamat</label>
                 <input
                   type="text"
                   value={address}
@@ -208,10 +208,10 @@ export default function LocationDetailPage() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-bold text-white tracking-tight">
-                Review Cards Associated with {location.name}
+                Kartu Ulasan yang Terhubung ke {location.name}
               </h3>
               <p className="text-xs text-zinc-400 mt-0.5">
-                Physical stands and cards deployed in this branch ({cards.length} total)
+                Dudukan dan kartu fisik yang terpasang di cabang ini (total {cards.length})
               </p>
             </div>
             <Link
@@ -226,11 +226,11 @@ export default function LocationDetailPage() {
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px]">
-                  <th className="pb-3 pt-2">Card Name</th>
-                  <th className="pb-3 pt-2">Placement</th>
-                  <th className="pb-3 pt-2">Inventory Code</th>
-                  <th className="pb-3 pt-2 text-right">30D Visits</th>
-                  <th className="pb-3 pt-2 text-right">Actions</th>
+                  <th className="pb-3 pt-2">Nama Kartu</th>
+                  <th className="pb-3 pt-2">Penempatan</th>
+                  <th className="pb-3 pt-2">Kode Inventaris</th>
+                  <th className="pb-3 pt-2 text-right">Kunjungan 30 Hari</th>
+                  <th className="pb-3 pt-2 text-right">Tindakan</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60">
@@ -261,7 +261,7 @@ export default function LocationDetailPage() {
                         href={`/dashboard/cards/${c.id}`}
                         className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-[11px] font-medium border border-emerald-500/20 transition"
                       >
-                        Card Detail
+                        Detail Kartu
                       </Link>
                     </td>
                   </tr>
@@ -280,7 +280,7 @@ export default function LocationDetailPage() {
                   onClick={() => setSelectedCardForQr(null)}
                   className="text-zinc-400 hover:text-white text-xs bg-zinc-800 px-3 py-1 rounded-lg border border-zinc-700"
                 >
-                  Close
+                  Tutup
                 </button>
               </div>
               <QrPreviewModal

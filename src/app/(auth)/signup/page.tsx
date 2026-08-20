@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Lock, Mail, User, AlertCircle, Building2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Lock, Mail, User, AlertCircle, Building2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function SignupPage() {
@@ -28,7 +28,7 @@ export default function SignupPage() {
         options: {
           data: {
             name,
-            organization_name: organizationName || `${name}'s Hospitality Group`,
+            organization_name: organizationName || `Grup ${name}`,
           },
         },
       });
@@ -47,7 +47,7 @@ export default function SignupPage() {
         router.push('/login?message=check_email');
       }
     } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred during registration');
+      setError(err.message || 'Terjadi kesalahan saat mendaftar');
       setLoading(false);
     }
   };
@@ -65,17 +65,21 @@ export default function SignupPage() {
           href="/login"
           className="text-xs text-zinc-400 hover:text-emerald-400 transition"
         >
-          Sign in instead
+          Sudah punya akun?
         </Link>
       </header>
 
-      <main className="w-full max-w-md mx-auto my-auto bg-[#121215] border border-zinc-800/80 rounded-2xl p-8 shadow-2xl space-y-6">
+      <div className="w-full max-w-md mx-auto my-auto space-y-4">
+        <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-emerald-500 transition-colors">
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Kembali ke beranda
+        </Link>
+        <main className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-8 shadow-2xl space-y-6">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">
-            Create your ReviewTap account
+            Buat akun ReviewTap
           </h1>
           <p className="text-xs text-zinc-400 mt-1">
-            Deploy smart NFC & QR review stands in your local venue
+            Pasang kartu ulasan NFC & QR pintar di tempat usaha Anda
           </p>
         </div>
 
@@ -89,7 +93,7 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
             <label className="block text-zinc-300 font-semibold mb-1">
-              Full Name *
+              Nama lengkap *
             </label>
             <div className="relative">
               <User className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -106,7 +110,7 @@ export default function SignupPage() {
 
           <div>
             <label className="block text-zinc-300 font-semibold mb-1">
-              Business / Group Name
+              Nama bisnis / grup
             </label>
             <div className="relative">
               <Building2 className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -122,7 +126,7 @@ export default function SignupPage() {
 
           <div>
             <label className="block text-zinc-300 font-semibold mb-1">
-              Email Address *
+              Alamat email *
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -139,7 +143,7 @@ export default function SignupPage() {
 
           <div>
             <label className="block text-zinc-300 font-semibold mb-1">
-              Password *
+              Kata sandi *
             </label>
             <div className="relative">
               <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -159,15 +163,12 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-50"
           >
-            {loading ? 'Creating account...' : 'Start ReviewTap Setup'}
+            {loading ? 'Membuat akun...' : 'Mulai Pengaturan ReviewTap'}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
-      </main>
-
-      <footer className="w-full max-w-md mx-auto text-center text-xs text-zinc-500">
-        ReviewTap · Physical-to-Digital Review Infrastructure
-      </footer>
+        </main>
+      </div>
     </div>
   );
 }

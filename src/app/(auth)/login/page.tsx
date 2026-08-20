@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Lock, Mail, AlertCircle } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 function LoginForm() {
@@ -18,7 +18,29 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    searchParams.get('error') === 'oauth_callback'
+      ? 'Login Google gagal. Silakan coba lagi.'
+      : null
+  );
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError(null);
+
+    const supabase = createClient();
+    const { error: authError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(sanitizedRedirect)}`,
+      },
+    });
+
+    if (authError) {
+      setError(authError.message);
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,13 +65,13 @@ function LoginForm() {
         router.refresh();
       }
     } catch (err: any) {
-      setError(err.message || 'An unexpected login error occurred');
+      setError(err.message || 'Terjadi kesalahan saat masuk');
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+    <div className="space-y-4 text-xs">
       {error && (
         <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
@@ -57,9 +79,26 @@ function LoginForm() {
         </div>
       )}
 
+      <button
+        type="button"
+        onClick={handleGoogleSignIn}
+        disabled={loading}
+        className="w-full min-h-12 flex items-center justify-center gap-3 rounded-xl border border-zinc-800 bg-white text-zinc-200 font-bold hover:bg-zinc-900 transition disabled:opacity-50"
+      >
+        <span className="grid size-6 place-items-center rounded-full bg-white text-sm font-black text-[#1a73e8] shadow-sm" aria-hidden="true">G</span>
+        Lanjutkan dengan Google
+      </button>
+
+      <div className="flex items-center gap-3 text-zinc-500" aria-hidden="true">
+        <span className="h-px flex-1 bg-zinc-800" />
+        <span>atau gunakan email</span>
+        <span className="h-px flex-1 bg-zinc-800" />
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-zinc-300 font-semibold mb-1">
-          Email Address
+          Alamat email
         </label>
         <div className="relative">
           <Mail className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -76,7 +115,7 @@ function LoginForm() {
 
       <div>
         <div className="flex justify-between items-center mb-1">
-          <label className="text-zinc-300 font-semibold">Password</label>
+          <label className="text-zinc-300 font-semibold">Kata sandi</label>
         </div>
         <div className="relative">
           <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -96,10 +135,11 @@ function LoginForm() {
         disabled={loading}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-50"
       >
-        {loading ? 'Signing in...' : 'Sign In to Dashboard'}
+        {loading ? 'Sedang masuk...' : 'Masuk ke Dasbor'}
         <ArrowRight className="w-4 h-4" />
       </button>
-    </form>
+      </form>
+    </div>
   );
 }
 
@@ -117,28 +157,29 @@ export default function LoginPage() {
           href="/signup"
           className="text-xs text-zinc-400 hover:text-emerald-400 transition"
         >
-          Create account
+          Buat akun
         </Link>
       </header>
 
-      <main className="w-full max-w-md mx-auto my-auto bg-[#121215] border border-zinc-800/80 rounded-2xl p-8 shadow-2xl space-y-6">
-        <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
-            Sign in to ReviewTap
-          </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Access your merchant dashboard and review card analytics
-          </p>
-        </div>
+      <div className="w-full max-w-md mx-auto my-auto space-y-4">
+        <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-emerald-500 transition-colors">
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Kembali ke beranda
+        </Link>
+        <main className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-8 shadow-2xl space-y-6">
+          <div>
+            <h1 className="text-xl font-bold text-white tracking-tight">
+              Masuk ke ReviewTap
+            </h1>
+            <p className="text-xs text-zinc-400 mt-1">
+              Akses dasbor bisnis dan analitik kartu ulasan Anda
+            </p>
+          </div>
 
-        <Suspense fallback={<div className="text-xs text-zinc-500 py-4 text-center">Loading...</div>}>
-          <LoginForm />
-        </Suspense>
-      </main>
-
-      <footer className="w-full max-w-md mx-auto text-center text-xs text-zinc-500">
-        ReviewTap Hardware SaaS V1.1 · Production Edition
-      </footer>
+          <Suspense fallback={<div className="text-xs text-zinc-500 py-4 text-center">Memuat...</div>}>
+            <LoginForm />
+          </Suspense>
+        </main>
+      </div>
     </div>
   );
 }

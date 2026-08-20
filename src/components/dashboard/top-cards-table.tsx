@@ -10,17 +10,17 @@ export function TopCardsTable({ cards }: { cards: CardWithStats[] }) {
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-sm font-semibold text-white tracking-tight">
-            Top Performing Review Cards
+            Kartu Ulasan dengan Performa Terbaik
           </h3>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Cards driving the highest Google review destination visits (Last 30 Days)
+            Kartu dengan kunjungan tujuan ulasan Google tertinggi dalam 30 hari terakhir
           </p>
         </div>
         <Link
           href="/dashboard/cards"
           className="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1 hover:underline"
         >
-          View All Cards <ArrowUpRight className="w-3.5 h-3.5" />
+          Lihat Semua Kartu <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
@@ -28,11 +28,11 @@ export function TopCardsTable({ cards }: { cards: CardWithStats[] }) {
         <table className="w-full text-left text-xs">
           <thead>
             <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px]">
-              <th className="pb-3 pt-2">Card & Placement</th>
-              <th className="pb-3 pt-2">Location</th>
-              <th className="pb-3 pt-2 text-right">30D Visits</th>
+              <th className="pb-3 pt-2">Kartu & Penempatan</th>
+              <th className="pb-3 pt-2">Lokasi</th>
+              <th className="pb-3 pt-2 text-right">Kunjungan 30 Hari</th>
               <th className="pb-3 pt-2 text-right">QR / NFC</th>
-              <th className="pb-3 pt-2 text-right">Actions</th>
+              <th className="pb-3 pt-2 text-right">Tindakan</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-800/60">
@@ -50,7 +50,7 @@ export function TopCardsTable({ cards }: { cards: CardWithStats[] }) {
                   </div>
                 </td>
                 <td className="py-3.5 text-zinc-400">
-                  {c.location_name || 'Unassigned'}
+                  {c.location_name || 'Belum ditetapkan'}
                 </td>
                 <td className="py-3.5 text-right font-bold text-white text-sm">
                   {c.stats.last30Days.toLocaleString()}
@@ -64,7 +64,7 @@ export function TopCardsTable({ cards }: { cards: CardWithStats[] }) {
                     href={`/dashboard/cards/${c.id}`}
                     className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium border border-zinc-700 transition"
                   >
-                    Details
+                    Detail
                   </Link>
                 </td>
               </tr>
@@ -72,7 +72,7 @@ export function TopCardsTable({ cards }: { cards: CardWithStats[] }) {
             {cards.length === 0 && (
               <tr>
                 <td colSpan={5} className="py-8 text-center text-zinc-400">
-                  No active cards found. Create your first card in Setup Wizard.
+                  Belum ada kartu aktif. Buat kartu pertama melalui Panduan Pengaturan.
                 </td>
               </tr>
             )}

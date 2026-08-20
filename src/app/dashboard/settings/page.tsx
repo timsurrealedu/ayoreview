@@ -10,8 +10,8 @@ export default async function SettingsPage() {
   return (
     <div className="flex-1 flex flex-col">
       <DashboardHeader
-        title="Settings & Organization Profile"
-        subtitle="Manage merchant credentials and platform preferences"
+        title="Pengaturan & Profil Organisasi"
+        subtitle="Kelola kredensial bisnis dan preferensi platform"
       />
 
       <main className="p-8 space-y-6 max-w-4xl w-full mx-auto">
@@ -21,13 +21,13 @@ export default async function SettingsPage() {
               <Store className="w-4 h-4 text-emerald-400" /> Organization Profile
             </h3>
             <p className="text-xs text-zinc-400 mt-0.5">
-              Primary business identity for all locations and review cards
+              Identitas utama bisnis untuk semua lokasi dan kartu ulasan
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Organization Name</label>
+              <label className="block text-zinc-400 font-medium mb-1">Nama Organisasi</label>
               <input
                 type="text"
                 disabled
@@ -36,7 +36,7 @@ export default async function SettingsPage() {
               />
             </div>
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Subscription Plan</label>
+              <label className="block text-zinc-400 font-medium mb-1">Paket Langganan</label>
               <input
                 type="text"
                 disabled
@@ -53,13 +53,13 @@ export default async function SettingsPage() {
               <User className="w-4 h-4 text-emerald-400" /> Account & Role
             </h3>
             <p className="text-xs text-zinc-400 mt-0.5">
-              Current authenticated session and permissions
+              Sesi terautentikasi dan izin saat ini
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">User Name</label>
+              <label className="block text-zinc-400 font-medium mb-1">Nama Pengguna</label>
               <input
                 type="text"
                 disabled
@@ -68,7 +68,7 @@ export default async function SettingsPage() {
               />
             </div>
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Email Address</label>
+              <label className="block text-zinc-400 font-medium mb-1">Alamat Email</label>
               <input
                 type="email"
                 disabled
@@ -77,7 +77,7 @@ export default async function SettingsPage() {
               />
             </div>
             <div>
-              <label className="block text-zinc-400 font-medium mb-1">Organization Role</label>
+              <label className="block text-zinc-400 font-medium mb-1">Peran Organisasi</label>
               <input
                 type="text"
                 disabled
@@ -92,7 +92,7 @@ export default async function SettingsPage() {
           <div className="flex items-center gap-3 text-xs text-zinc-300">
             <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
             <div>
-              <span className="font-semibold text-white">ReviewTap V1.1 Security:</span> Supabase PostgreSQL storage with Row-Level Security, organization tenant isolation, and strict Google URL validation.
+              <span className="font-semibold text-white">Keamanan ReviewTap V1.1:</span> Penyimpanan Supabase PostgreSQL dengan Keamanan Tingkat Baris, isolasi organisasi, dan validasi URL Google yang ketat.
             </div>
           </div>
         </div>

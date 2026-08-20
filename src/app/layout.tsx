@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
+import { Archivo, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 
+const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', display: 'swap' });
+const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-plex-mono', display: 'swap' });
+
 export const metadata: Metadata = {
-  title: 'ReviewTap — Smart NFC & QR Review Infrastructure',
-  description: 'Turn happy in-store customers into 5-star Google reviews with physical NFC tap and dynamic QR cards.',
+  title: 'ReviewTap — Infrastruktur Ulasan NFC & QR Pintar',
+  description: 'Ubah pelanggan yang puas menjadi ulasan Google bintang lima melalui kartu NFC dan QR dinamis.',
 };
 
 export default function RootLayout({
@@ -12,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-[100dvh] bg-[#09090b] text-[#fafafa] antialiased selection:bg-emerald-500/20 selection:text-emerald-400">
+    <html lang="id" className={`${archivo.variable} ${plexMono.variable}`}>
+      <body className="min-h-[100dvh] bg-[#09090b] text-[#fafafa] antialiased">
         {children}
       </body>
     </html>

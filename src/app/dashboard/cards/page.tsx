@@ -108,15 +108,15 @@ function CardsListPage() {
   return (
     <div className="flex-1 flex flex-col">
       <DashboardHeader
-        title="Review Cards"
-        subtitle="Manage all physical NFC & QR cards deployed across your venues"
+        title="Kartu Ulasan"
+        subtitle="Kelola semua kartu NFC & QR fisik di tempat usaha Anda"
         actions={
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-bold shadow-lg shadow-emerald-500/25 transition-all active:scale-[0.97]"
           >
             <QrCode className="w-4 h-4" />
-            Create New QR Code
+            Buat Kode QR Baru
           </button>
         }
       />
@@ -128,7 +128,7 @@ function CardsListPage() {
             <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search by card name, RT-code, or public ID..."
+              placeholder="Cari berdasarkan nama kartu, kode RT, atau ID publik..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-[#121215] border border-zinc-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/60 transition"
@@ -158,13 +158,13 @@ function CardsListPage() {
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px] bg-zinc-900/40">
-                  <th className="py-3 px-5">Card Name & IDs</th>
-                  <th className="py-3 px-4">Location</th>
-                  <th className="py-3 px-4">Placement</th>
+                  <th className="py-3 px-5">Nama Kartu & ID</th>
+                  <th className="py-3 px-4">Lokasi</th>
+                  <th className="py-3 px-4">Penempatan</th>
                   <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">30D Visits</th>
+                  <th className="py-3 px-4 text-right">Kunjungan 30 Hari</th>
                   <th className="py-3 px-4 text-right">QR / NFC</th>
-                  <th className="py-3 px-5 text-right">Actions</th>
+                  <th className="py-3 px-5 text-right">Tindakan</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60">
@@ -190,7 +190,7 @@ function CardsListPage() {
                           {c.location_name}
                         </Link>
                       ) : (
-                        <span className="text-amber-400 text-xs">Unassigned</span>
+                        <span className="text-amber-400 text-xs">Belum ditetapkan</span>
                       )}
                     </td>
                     <td className="py-4 px-4">
@@ -237,7 +237,7 @@ function CardsListPage() {
                 {filteredCards.length === 0 && (
                   <tr>
                     <td colSpan={7} className="py-12 text-center text-zinc-400 text-xs">
-                      No cards match your filter. Create a new card above.
+                      Tidak ada kartu yang sesuai filter. Buat kartu baru di atas.
                     </td>
                   </tr>
                 )}
@@ -252,7 +252,7 @@ function CardsListPage() {
             <div className="bg-[#121215] border border-zinc-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-5">
               <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
                 <h3 className="text-base font-bold text-white tracking-tight">
-                  Add Review Card
+                  Tambah Kartu Ulasan
                 </h3>
                 <button
                   onClick={() => setShowAddModal(false)}
@@ -265,12 +265,12 @@ function CardsListPage() {
               <form onSubmit={handleCreate} className="space-y-4 text-xs">
                 <div>
                   <label className="block text-zinc-300 font-medium mb-1">
-                    Card Name / Descriptor *
+                    Nama / Keterangan Kartu *
                   </label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Kasir 01, Table 04, Entrance Stand"
+                    placeholder="contoh: Kasir 01, Meja 04, Pintu Masuk"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
@@ -279,7 +279,7 @@ function CardsListPage() {
 
                 <div>
                   <label className="block text-zinc-300 font-medium mb-1">
-                    Assigned Location
+                    Lokasi yang Ditetapkan
                   </label>
                   <select
                     value={formData.location_id}
@@ -296,20 +296,20 @@ function CardsListPage() {
 
                 <div>
                   <label className="block text-zinc-300 font-medium mb-1">
-                    Placement Type
+                    Jenis Penempatan
                   </label>
                   <select
                     value={formData.placement}
                     onChange={(e) => setFormData({ ...formData, placement: e.target.value as CardPlacement })}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
                   >
-                    <option value="cashier">Cashier / POS Counter</option>
-                    <option value="table">Dining Table / Booth</option>
-                    <option value="entrance">Main Entrance / Host Stand</option>
-                    <option value="counter">Barista / Service Counter</option>
-                    <option value="waiting_area">Waiting Lounge / Queue</option>
-                    <option value="receipt">Bill Folder / Receipt Clip</option>
-                    <option value="custom">Custom Area</option>
+                    <option value="cashier">Kasir / Konter POS</option>
+                    <option value="table">Meja makan / Bilik</option>
+                    <option value="entrance">Pintu masuk utama / Meja penerima</option>
+                    <option value="counter">Barista / Konter layanan</option>
+                    <option value="waiting_area">Ruang tunggu / Antrean</option>
+                    <option value="receipt">Map tagihan / Penjepit struk</option>
+                    <option value="custom">Area khusus</option>
                   </select>
                 </div>
 
@@ -319,7 +319,7 @@ function CardsListPage() {
                   </label>
                   <input
                     type="text"
-                    placeholder="Leave blank to auto-generate"
+                    placeholder="Kosongkan untuk membuat otomatis"
                     value={formData.inventory_code}
                     onChange={(e) => setFormData({ ...formData, inventory_code: e.target.value })}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white font-mono text-[11px] focus:outline-none focus:border-emerald-500"
@@ -332,13 +332,13 @@ function CardsListPage() {
                     onClick={() => setShowAddModal(false)}
                     className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium transition"
                   >
-                    Cancel
+                    Batal
                   </button>
                   <button
                     type="submit"
                     className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-semibold shadow-lg shadow-emerald-500/20 transition"
                   >
-                    Create Card
+                    Buat Kartu
                   </button>
                 </div>
               </form>
@@ -355,7 +355,7 @@ function CardsListPage() {
                   onClick={() => setSelectedCardForQr(null)}
                   className="text-zinc-400 hover:text-white text-xs bg-zinc-800 px-3 py-1 rounded-lg border border-zinc-700"
                 >
-                  Close
+                  Tutup
                 </button>
               </div>
               <QrPreviewModal
@@ -374,7 +374,7 @@ function CardsListPage() {
           className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-2xl shadow-emerald-500/30 transition-all active:scale-[0.95] hover:shadow-emerald-500/50"
         >
           <QrCode className="w-4 h-4" />
-          Create QR Code
+          Buat Kode QR
         </button>
       </main>
     </div>
@@ -384,7 +384,7 @@ function CardsListPage() {
 // Wrapped export to satisfy Next.js App Router Suspense boundary requirement for useSearchParams()
 export default function CardsListPageWrapper() {
   return (
-    <Suspense fallback={<div className="flex-1 flex flex-col"><main className="p-8 text-zinc-400 text-xs">Loading cards...</main></div>}>
+    <Suspense fallback={<div className="flex-1 flex flex-col"><main className="p-8 text-zinc-400 text-xs">Memuat kartu...</main></div>}>
       <CardsListPage />
     </Suspense>
   );

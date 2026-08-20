@@ -17,7 +17,7 @@ export default async function PrintCardTemplatePage({
   const card = await dbRepo.getCardById(id, org.id);
 
   if (!card) {
-    return <div className="p-8 text-black">Card not found in your organization.</div>;
+    return <div className="p-8 text-black">Kartu tidak ditemukan di organisasi Anda.</div>;
   }
 
   // Derive base URL from request origin with env override — never hardcode a domain
@@ -43,7 +43,7 @@ export default async function PrintCardTemplatePage({
           onClick={() => window.print()}
           className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold rounded-xl shadow cursor-pointer"
         >
-          Print Stand Card
+          Cetak Kartu Dudukan
         </button>
       </div>
 
@@ -62,25 +62,25 @@ export default async function PrintCardTemplatePage({
           </div>
 
           <h2 className="text-2xl font-black text-zinc-900 tracking-tight leading-tight">
-            Enjoyed your visit?
+            Puas dengan kunjungan Anda?
           </h2>
 
           <p className="text-zinc-600 text-xs font-medium max-w-[220px]">
-            Tap phone on stand or scan QR code to leave us a Google review
+            Ketuk ponsel pada dudukan atau pindai kode QR untuk memberi ulasan Google
           </p>
 
           {/* High-DPI QR Container */}
           <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded-2xl shadow-inner mt-2">
             <img
               src={pngDataUrl}
-              alt="Scan for Google Review"
+              alt="Pindai untuk memberi Ulasan Google"
               className="w-44 h-44 object-contain"
             />
           </div>
 
           <div className="flex items-center gap-2 text-zinc-800 text-xs font-bold pt-1">
             <Smartphone className="w-4 h-4 text-emerald-600 animate-pulse" />
-            <span>NFC Tap Enabled</span>
+            <span>Ketukan NFC Aktif</span>
           </div>
         </div>
 

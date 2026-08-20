@@ -17,12 +17,12 @@ export default async function AdminLayout({
       <header className="h-16 border-b border-zinc-800 bg-[#0c0c0e] px-8 flex items-center justify-between sticky top-0 z-20">
         <div className="flex items-center gap-6">
           <Link href="/admin" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-amber-500 flex items-center justify-center text-zinc-950 font-black text-xs">
-              RT
+            <div className="w-7 h-7 rounded-full bg-[conic-gradient(from_25deg,#ea4335_0_25%,#fbbc04_0_50%,#34a853_0_75%,#1a73e8_0)] flex items-center justify-center text-white font-black text-xs ring-4 ring-white/30 ring-inset">
+              R
             </div>
             <div>
-              <span className="font-bold text-white tracking-tight text-sm">ReviewTap Operator</span>
-              <span className="text-[10px] text-amber-400 block font-mono">Platform Admin Portal</span>
+              <span className="font-bold text-white tracking-tight text-sm">Operator ReviewTap</span>
+              <span className="text-[10px] text-amber-400 block font-mono">Portal Admin Platform</span>
             </div>
           </Link>
 
@@ -31,25 +31,25 @@ export default async function AdminLayout({
               href="/admin"
               className="px-3 py-1.5 rounded-lg text-zinc-300 hover:text-white hover:bg-zinc-800 transition"
             >
-              Overview
+              Ringkasan
             </Link>
             <Link
               href="/admin/cards"
               className="px-3 py-1.5 rounded-lg text-zinc-300 hover:text-white hover:bg-zinc-800 transition"
             >
-              Physical Inventory & Cards
+              Inventaris & Kartu Fisik
             </Link>
             <Link
               href="/admin/organizations"
               className="px-3 py-1.5 rounded-lg text-zinc-300 hover:text-white hover:bg-zinc-800 transition"
             >
-              Organizations
+              Organisasi
             </Link>
             <Link
               href="/admin/users"
               className="px-3 py-1.5 rounded-lg text-zinc-300 hover:text-white hover:bg-zinc-800 transition"
             >
-              Users
+              Pengguna
             </Link>
           </nav>
         </div>
@@ -58,7 +58,7 @@ export default async function AdminLayout({
           href="/dashboard"
           className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-200 bg-zinc-800/80 px-3 py-1.5 rounded-lg border border-zinc-700 transition"
         >
-          <ArrowLeft className="w-3.5 h-3.5" /> Return to Merchant Dashboard
+          <ArrowLeft className="w-3.5 h-3.5" /> Kembali ke Dasbor Bisnis
         </Link>
       </header>
 

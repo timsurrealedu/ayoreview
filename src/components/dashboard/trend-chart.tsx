@@ -24,13 +24,13 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <div>
           <h3 className="text-sm font-semibold text-white tracking-tight flex items-center gap-2">
-            Review Page Visits Trend
+            Tren Kunjungan Halaman Ulasan
             <span className="text-[11px] font-normal text-zinc-400 bg-zinc-800/60 px-2 py-0.5 rounded-full border border-zinc-700/50">
-              30 Days
+              30 Hari
             </span>
           </h3>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Daily Google review destination redirects across all physical cards
+            Pengalihan harian ke ulasan Google dari semua kartu fisik
           </p>
         </div>
 
@@ -44,7 +44,7 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            All Visits
+            Semua Kunjungan
           </button>
           <button
             onClick={() => setFilter('qr')}
@@ -54,7 +54,7 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            QR Scans
+            Pindaian QR
           </button>
           <button
             onClick={() => setFilter('nfc')}
@@ -64,7 +64,7 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            NFC Taps
+            Ketukan NFC
           </button>
         </div>
       </div>
@@ -116,7 +116,7 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
               <Area
                 type="monotone"
                 dataKey="total"
-                name="Total Visits"
+                name="Total Kunjungan"
                 stroke="#10b981"
                 strokeWidth={2.5}
                 fillOpacity={1}
@@ -127,7 +127,7 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
               <Area
                 type="monotone"
                 dataKey="qr"
-                name="QR Scans"
+                name="Pindaian QR"
                 stroke="#34d399"
                 strokeWidth={2.5}
                 fillOpacity={1}
@@ -138,7 +138,7 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
               <Area
                 type="monotone"
                 dataKey="nfc"
-                name="NFC Taps"
+                name="Ketukan NFC"
                 stroke="#38bdf8"
                 strokeWidth={2.5}
                 fillOpacity={1}

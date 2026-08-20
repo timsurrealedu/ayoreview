@@ -65,10 +65,10 @@ export function QrPreviewModal({
           {'★'.repeat(5)}
         </div>
         <h4 className="text-white font-bold text-sm tracking-tight mb-1">
-          Enjoyed your visit?
+          Puas dengan kunjungan Anda?
         </h4>
         <p className="text-zinc-400 text-xs mb-4">
-          Tap phone or scan code to leave a review
+          Ketuk ponsel atau pindai kode untuk memberi ulasan
         </p>
 
         {/* QR Code Frame */}
@@ -76,12 +76,12 @@ export function QrPreviewModal({
           {pngUrl ? (
             <img
               src={pngUrl}
-              alt="QR Code"
+              alt="Kode QR"
               className="w-40 h-40 object-contain rounded-lg"
             />
           ) : (
             <div className="w-40 h-40 flex items-center justify-center bg-zinc-100 text-zinc-400 text-xs">
-              Generating...
+              Membuat...
             </div>
           )}
         </div>
@@ -90,7 +90,7 @@ export function QrPreviewModal({
         <div className="w-full flex items-center justify-between text-[10px] text-zinc-500 font-mono pt-2 border-t border-zinc-800">
           <span>{inventoryCode || 'RT-000000'}</span>
           <span className="text-emerald-400 flex items-center gap-1 font-sans">
-            <Smartphone className="w-3 h-3" /> NFC Active
+            <Smartphone className="w-3 h-3" /> NFC Aktif
           </span>
         </div>
       </div>
@@ -103,14 +103,14 @@ export function QrPreviewModal({
             className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition"
           >
             <Download className="w-3.5 h-3.5" />
-            Download PNG
+            Unduh PNG
           </button>
           <button
             onClick={handleDownloadSvg}
             className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition"
           >
             <Download className="w-3.5 h-3.5" />
-            Vector SVG
+            Vektor SVG
           </button>
         </div>
 
@@ -123,7 +123,7 @@ export function QrPreviewModal({
             <button
               onClick={() => handleCopy(qrRedirectUrl, 'qr')}
               className="text-zinc-400 hover:text-white p-1"
-              title="Copy QR URL"
+              title="Salin URL QR"
             >
               {copiedUrl === 'qr' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
@@ -137,7 +137,7 @@ export function QrPreviewModal({
             <button
               onClick={() => handleCopy(nfcRedirectUrl, 'nfc')}
               className="text-zinc-400 hover:text-white p-1"
-              title="Copy NFC URL"
+              title="Salin URL NFC"
             >
               {copiedUrl === 'nfc' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
@@ -151,7 +151,7 @@ export function QrPreviewModal({
           className="w-full flex items-center justify-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 hover:underline pt-1"
         >
           <ExternalLink className="w-3.5 h-3.5" />
-          Test live redirect in new tab (bypasses analytics)
+          Uji pengalihan langsung di tab baru (tanpa analitik)
         </a>
       </div>
     </div>

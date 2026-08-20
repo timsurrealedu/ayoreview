@@ -39,8 +39,8 @@ Merchant scenes use documentary product photography with cool daylight, pale sto
 
 Quotes, logos, and pilot metrics remain visibly marked with `data-placeholder` until the evidence, attribution, timeframe, sample size, and usage permission are approved. Placeholder content must never resemble a shipped claim.
 
-## Legacy product surfaces
+## Product surfaces
 
-Dashboard, authentication, onboarding, admin, fallback, and print layouts retain the legacy near-black zinc and emerald system. Their existing global behavior and components remain unchanged until separately migrated.
+Dashboard, authentication, onboarding, admin, and fallback routes extend the landing page's visual language in **Operate** mode. They share Archivo and IBM Plex Mono, cool-paper canvases, white surfaces, navy ink, blue actions, crisp rules, restrained shadows, and visible yellow focus rings. Existing route behavior and information hierarchy remain intact.
 
-Legacy traits include emerald primary actions, zinc surfaces, 12px corners, dark cards, and system sans/mono typography. New landing tokens stay scoped beneath `.landing` and must not be promoted to global tokens during this phase.
+Operational screens use signal colors semantically: blue for actions and active routing state, green for success, yellow for attention, and red for destructive or failed states. Dense product views may retain compact type and layouts, but use the same browser surfaces, controls, and 4px corner system. The physical-card print route remains optimized for print fidelity.
