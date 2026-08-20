@@ -1,227 +1,65 @@
-// THESIS: ReviewTap decouples physical hardware from its digital destination.
-// OWN-WORLD: Near-black canvas, emerald-amber-teal palette, tight tracking on display type.
-// STORY: A venue owner tired of reprinting QR codes discovers they can print once and update forever.
-// FIRST VIEWPORT: Left headline "Print once. Update forever." + CTAs. Right: live card preview.
-// FORM: surface concept for a Persuade landing, seed 7c3f, built code-led.
-// FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review.
-'use client';
-
-import { useState, useCallback } from 'react';
+import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Check, RefreshCw, QrCode, Smartphone, Store, MapPin, TrendingUp, Zap, Edit3 } from 'lucide-react';
+import { Archivo, IBM_Plex_Mono } from 'next/font/google';
+import { ArrowRight, BarChart3, MapPin, QrCode, RefreshCw, ScanLine } from 'lucide-react';
+import { RoutingDemo } from './routing-demo';
+import './landing.css';
+
+const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', display: 'swap' });
+const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-plex-mono', display: 'swap' });
+
+export const metadata: Metadata = {
+  title: 'ReviewTap — Kartu Ulasan NFC & QR Dinamis',
+  description: 'Ubah tautan ulasan Google di balik perangkat QR dan NFC ReviewTap tanpa mencetak ulang.',
+  keywords: ['ulasan Google', 'kode QR dinamis', 'perangkat ulasan NFC', 'ulasan bisnis lokal'],
+};
+
+const destinations = [
+  { id: 'jakarta', label: 'Jakarta — Ulasan Google', url: 'https://g.page/r/contoh-jakarta/review' },
+  { id: 'bandung', label: 'Bandung — Ulasan Google', url: 'https://g.page/r/contoh-bandung/review' },
+  { id: 'surabaya', label: 'Surabaya — Ulasan Google', url: 'https://g.page/r/contoh-surabaya/review' },
+];
 
 export default function LandingPage() {
-  const [demoUrl, setDemoUrl] = useState('https://g.page/r/your-business/review');
-  const [showUrlInput, setShowUrlInput] = useState(false);
-  const [demoCount, setDemoCount] = useState(128);
-  const simulateTap = useCallback(() => { setDemoCount((p) => p + 1); }, []);
+  return <main lang="id" className={`landing ${archivo.variable} ${plexMono.variable}`}>
+    {/* THESIS: The managed redirect decouples the physical card from its destination and refuses generic SaaS card grids.
+        OWN-WORLD: Cool paper or night-dispatch navy, orange signals, thermal labels, routing rules, and 4px corners.
+        STORY: A merchant understands the fixed public ID, tests a destination change, then creates a free QR.
+        FIRST VIEWPORT: Direct promise and actions lead beside a merchant scene with its stable-route overlay.
+        FORM: Routing Exchange, code-led, selected in the prior planning round; seed key selected-routing-exchange-plan.
+        FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance. */}
+    <span hidden data-direction-contract="selected-routing-exchange-plan">Routing Exchange direction contract</span>
+    <nav className="landing-nav" aria-label="Navigasi utama"><div className="nav-inner">
+      <Link href="/" className="wordmark" aria-label="Beranda ReviewTap"><span aria-hidden="true">RT</span>ReviewTap</Link>
+      <div className="nav-links"><a href="#how-it-works">Cara kerja</a><a href="#placements">Penempatan</a><a href="#dynamic">Tautan dinamis</a><a href="#proof">Bukti</a></div>
+      <div className="nav-actions"><Link href="/login" className="login-link">Masuk</Link><Link href="/signup" className="button button-small">Buat QR gratis</Link></div>
+    </div></nav>
 
-  return (
-    <div className="min-h-screen bg-[#08080b] text-zinc-100 font-sans selection:bg-emerald-500/20 selection:text-emerald-400">
-      {/* Nav */}
-      <nav className="h-16 border-b border-zinc-800/60 bg-[#08080b]/90 backdrop-blur-md px-6 sm:px-10 flex items-center justify-between sticky top-0 z-50">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center text-zinc-950 font-black text-sm shadow-lg shadow-emerald-500/25 group-hover:shadow-emerald-500/40 transition-shadow">RT</div>
-          <span className="font-bold text-white tracking-tight text-base">ReviewTap</span>
-        </Link>
-        <div className="hidden md:flex items-center gap-8 text-xs font-medium text-zinc-400">
-          <a href="#how-it-works" className="hover:text-white">How It Works</a>
-          <a href="#dynamic" className="hover:text-white">Dynamic Redirect</a>
-          <a href="#placements" className="hover:text-white">Placements</a>
-          <a href="#pilot" className="hover:text-white">Pilot Program</a>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="text-xs font-medium text-zinc-300 hover:text-white px-3 py-1.5">Sign In</Link>
-          <Link href="/signup" className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-bold shadow-lg shadow-emerald-500/25 transition-all active:scale-[0.97]">
-            Start Free <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      </nav>
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="hero-copy"><h1 id="hero-title">Ubah tautannya,<br />bukan kartunya.</h1><p className="hero-deck">Satu perangkat QR dan NFC. Perbarui tujuan ulasan Google kapan pun bisnis Anda berubah.</p><div className="hero-actions"><Link href="/signup" className="button">Buat QR gratis <ArrowRight aria-hidden="true" /></Link><a href="#route-demo" className="text-action">Lihat cara kerjanya <ScanLine aria-hidden="true" /></a></div><p className="hero-note">Buat akun untuk menghasilkan QR terkelola Anda.</p></div>
+      <div className="hero-scene"><Image src="/images/countertop.webp" alt="Perangkat QR dan NFC ReviewTap di samping kasir kafe" fill priority sizes="(max-width: 900px) 100vw, 58vw" /><div className="route-ticket" aria-label="Contoh rute ReviewTap"><span className="sample-flag">CONTOH RUTE</span><div><small>ID PUBLIK TETAP</small><strong>reviewtap.id/q/RT-J7K2</strong></div><i aria-hidden="true" /><div><small>TUJUAN DAPAT DIUBAH</small><strong>Ulasan Google · Jakarta</strong></div></div></div>
+    </section>
 
-      {/* HERO */}
-      <section className="pt-20 pb-24 px-6 sm:px-10 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-              <Zap className="w-3.5 h-3.5" /> <span>Physical-to-Digital Review Infrastructure</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-[-0.03em] leading-[1.06]">
-              Print once.<br />
-              <span className="text-emerald-400">Update forever.</span>
-            </h1>
-            <p className="text-base sm:text-lg text-zinc-400 max-w-lg leading-relaxed">
-              One NFC or QR card for your venue — change the Google Review destination anytime from your phone. No reprinting, no wasted hardware.
-            </p>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-              <Link href="/signup" className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm shadow-xl shadow-emerald-500/25 transition-all active:scale-[0.97]">
-                Create Free QR Code <ArrowRight className="w-4 h-4" />
-              </Link>
-              <a href="#how-it-works" className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-semibold text-sm border border-zinc-800">See How It Works</a>
-            </div>
-            <div className="flex items-center gap-4 pt-4 text-xs text-zinc-500">
-              <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-400" /> No app install</span>
-              <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-400" /> 3-minute setup</span>
-              <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-400" /> Free pilot</span>
-            </div>
-          </div>
+    <section className="route-demo-wrap" id="route-demo" aria-labelledby="demo-title"><div className="section-intro"><h2 id="demo-title">Satu rute publik.<br />Tujuan bebas diperbarui.</h2><p>Kode yang tercetak mempertahankan identitasnya. Anda mengubah tujuan pelanggan dari dasbor.</p></div><RoutingDemo publicId="RT-J7K2" destinations={destinations} /></section>
 
-          {/* Live Demo */}
-          <div className="bg-[#111115] border border-zinc-800/80 rounded-3xl p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-center justify-between mb-5">
-              <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">Live Demo</span>
-              <span className="text-[10px] text-zinc-500 font-mono">{demoCount} redirects today</span>
-            </div>
-            <div className="w-full max-w-[260px] mx-auto bg-gradient-to-b from-zinc-900 to-zinc-950 border-2 border-zinc-700/80 rounded-2xl p-5 shadow-2xl flex flex-col items-center text-center mb-5">
-              <div className="flex items-center gap-1 text-amber-400 text-sm mb-2">★★★★★</div>
-              <h4 className="text-white font-bold text-xs tracking-tight mb-1">Enjoyed your visit?</h4>
-              <p className="text-zinc-400 text-[10px] mb-4">Tap phone or scan code</p>
-              <div className="p-3 bg-white rounded-xl shadow-inner mb-3">
-                <div className="w-32 h-32 bg-zinc-950 rounded-lg p-2 flex flex-col items-center justify-center">
-                  <QrCode className="w-16 h-16 text-white" />
-                  <span className="text-[8px] text-zinc-400 font-mono mt-1">Scan Me</span>
-                </div>
-              </div>
-              <div className="w-full flex items-center justify-between text-[9px] text-zinc-500 font-mono pt-2 border-t border-zinc-800">
-                <span>RT-000101</span>
-                <span className="text-emerald-400 flex items-center gap-1 font-sans"><Smartphone className="w-3 h-3" /> NFC</span>
-              </div>
-            </div>
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between bg-zinc-900/90 px-3 py-2 rounded-lg border border-zinc-800">
-                <span className="text-zinc-500 font-mono text-[10px]">reviewtap.id/q/a7Xk29</span>
-                <span className="text-emerald-400 text-[10px] font-semibold flex items-center gap-1"><Zap className="w-3 h-3" /> 302 → Google</span>
-              </div>
-              <div className="bg-zinc-900/60 px-3 py-2.5 rounded-lg border border-zinc-800 space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-zinc-400 flex items-center gap-1"><Edit3 className="w-3 h-3" /> Destination</span>
-                  <button onClick={() => setShowUrlInput(!showUrlInput)} className="text-[10px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
-                    <RefreshCw className="w-3 h-3" /> Change
-                  </button>
-                </div>
-                {showUrlInput ? (
-                  <input type="url" value={demoUrl} onChange={(e) => setDemoUrl(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-white font-mono text-[10px] focus:outline-none focus:border-emerald-500" placeholder="https://g.page/r/..." />
-                ) : (
-                  <div className="text-[10px] font-mono text-zinc-300 truncate">{demoUrl}</div>
-                )}
-                {showUrlInput && <div className="text-[10px] text-emerald-400 flex items-center gap-1"><Check className="w-3 h-3" /> Cards update instantly</div>}
-              </div>
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <button onClick={simulateTap} className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 font-bold text-xs transition active:scale-[0.97]">
-                  <Smartphone className="w-4 h-4" /> Tap (NFC)
-                </button>
-                <button onClick={simulateTap} className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs transition active:scale-[0.97]">
-                  <QrCode className="w-4 h-4" /> Scan (QR)
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section className="route-stops" id="how-it-works" aria-labelledby="works-title"><div className="section-intro"><h2 id="works-title">Dari pengaturan<br />hingga insight.</h2><p>Satu rute menghubungkan pekerjaan sebelum, selama, dan setelah perangkat ditempatkan.</p></div><ol>
+      <li><span><QrCode /></span><div><h3>Buat rutenya</h3><p>Tambahkan bisnis dan URL ulasan Google. ReviewTap membuat tujuan QR dan NFC terkelola.</p></div></li>
+      <li className="long-stop"><span><MapPin /></span><div><h3>Tempatkan di akhir layanan</h3><p>Gunakan ID publik yang sama di kasir, meja makan, atau area pintu masuk.</p></div></li>
+      <li><span><BarChart3 /></span><div><h3>Ukur interaksi</h3><p>Lihat tren interaksi serta perbandingan pemindaian QR dan ketukan NFC di dasbor.</p></div></li>
+    </ol></section>
 
-      {/* DYNAMIC ADVANTAGE */}
-      <section id="dynamic" className="py-20 px-6 sm:px-10 max-w-5xl mx-auto">
-        <div className="bg-gradient-to-br from-[#0f1215] to-[#111115] border border-zinc-800/80 rounded-3xl p-8 sm:p-12 shadow-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div className="space-y-5">
-              <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.15em]">The Dynamic Advantage</div>
-              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-[-0.02em]">
-                Change destinations remotely.{' '}
-                <span className="text-emerald-400">Never reprint cards.</span>
-              </h2>
-              <p className="text-sm text-zinc-400 leading-relaxed">
-                Traditional printed QR codes break if you change review profiles or URLs. ReviewTap routes every tap through our sub-second redirect infrastructure so you can update destinations anytime from your phone.
-              </p>
-              <ul className="space-y-2.5 text-sm text-zinc-300">
-                <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" /> Remotely reassign cards to new branches or URLs</li>
-                <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" /> Measure which table, cashier, or entrance performs best</li>
-                <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-emerald-400 mt-0.5 shrink-0" /> High-durability acrylic stands — waterproof and restaurant-grade</li>
-              </ul>
-            </div>
-            <div className="p-6 rounded-2xl bg-zinc-950 border border-zinc-800 text-center w-full sm:w-80 mx-auto shadow-xl space-y-4">
-              <div className="flex justify-center text-amber-400 text-xl">★★★★★</div>
-              <div className="text-xs font-mono text-zinc-400">reviewtap.id/q/X8W91K</div>
-              <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800 text-[11px] text-zinc-300">⚡ Instant 302 Redirect &lt; 100ms</div>
-              <Link href="/signup" className="w-full inline-block py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition text-center">Create Your Free QR Code</Link>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section className="placements" id="placements" aria-labelledby="placements-title"><div className="placements-head"><h2 id="placements-title">Hadir di momen yang tepat.</h2><p>Pilih titik yang sesuai dengan alur layanan Anda. Uji performa penempatan melalui dasbor.</p></div>
+      <article className="placement placement-cashier"><Image src="/images/cashier.webp" alt="Perangkat ReviewTap di samping terminal kasir kafe" fill sizes="(max-width: 760px) 100vw, 50vw" /><div><span>Kasir</span><h3>Manfaatkan jeda yang alami.</h3><p>Tempatkan perangkat di dekat area pembayaran atau penyerahan struk.</p></div></article>
+      <article className="placement placement-table"><Image src="/images/table.webp" alt="Perangkat ReviewTap di atas meja restoran" fill sizes="(max-width: 760px) 100vw, 25vw" /><div><span>Meja</span><h3>Selalu mudah dijangkau.</h3></div></article>
+      <article className="placement placement-entrance"><Image src="/images/entrance.webp" alt="Perangkat ReviewTap di dekat pintu masuk butik" fill sizes="(max-width: 760px) 100vw, 25vw" /><div><span>Pintu masuk</span><h3>Sambut momen kepulangan.</h3></div></article>
+    </section>
 
-      {/* PLACEMENTS */}
-      <section id="placements" className="py-20 px-6 sm:px-10 border-t border-zinc-800/60 bg-[#0c0c10]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.15em] mb-3">Placement Guide</div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-[-0.02em]">Where to put your review cards</h2>
-            <p className="text-sm text-zinc-400 mt-2">Based on empirical pilot data across Indonesian restaurants, barbershops, and clinics.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-[#111115] border border-zinc-800 space-y-2">
-              <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">Rank #1 · Highest Conversion</div>
-              <h3 className="text-lg font-bold text-white">Cashier &amp; POS Counter</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">Customers wait 15-45 seconds while paying or receiving their receipt. Staff can naturally say "Feel free to tap for a review!"</p>
-            </div>
-            <div className="p-6 rounded-2xl bg-[#111115] border border-zinc-800 space-y-2">
-              <div className="text-xs font-bold text-sky-400 uppercase tracking-wider">Rank #2 · Long Dwell Time</div>
-              <h3 className="text-lg font-bold text-white">Dining Tables &amp; Booths</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">Placed next to the condiment rack or napkin holder. Customers browse and tap while relaxing after their meal.</p>
-            </div>
-            <div className="p-6 rounded-2xl bg-[#111115] border border-zinc-800 space-y-2">
-              <div className="text-xs font-bold text-amber-400 uppercase tracking-wider">Rank #3 · First Impression</div>
-              <h3 className="text-lg font-bold text-white">Entrance / Host Stand</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">Great for salons, dental clinics, and boutiques as customers exit or wait for their appointment.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section className="dynamic" id="dynamic" aria-labelledby="dynamic-title"><div className="section-intro"><h2 id="dynamic-title">Perangkat tetap.<br />Rute bergerak.</h2><p>ReviewTap berada di antara perangkat fisik dan tujuan Anda, jadi mengganti tautan tidak berarti mengganti hardware.</p></div><div className="route-diagram" aria-label="Alur pengalihan terkelola ReviewTap"><div><QrCode /><span>QR atau NFC</span></div><b aria-hidden="true">→</b><div className="route-core"><ScanLine /><span>ID publik terkelola</span><small>reviewtap.id/q/RT-J7K2</small></div><b aria-hidden="true">→</b><div><RefreshCw /><span>URL ulasan Google</span></div></div><div className="capabilities"><article><h3>Ubah tujuan</h3><p>Perbarui URL yang terhubung ke perangkat melalui dasbor merchant.</p></article><article><h3>Lihat tren interaksi</h3><p>Tinjau tren 30 hari, perbandingan QR dan NFC, serta performa penempatan.</p></article><article><h3>Pertahankan rute yang ringkas</h3><p>Pelanggan mengetuk atau memindai rute publik yang meneruskan mereka ke tujuan terpilih.</p></article></div></section>
 
-      {/* PILOT CTA */}
-      <footer id="pilot" className="py-16 px-6 sm:px-10 border-t border-zinc-800/60 bg-zinc-950 text-center">
-        <div className="max-w-2xl mx-auto space-y-6">
-          <h2 className="text-2xl sm:text-3xl font-black text-white tracking-[-0.02em]">Ready to grow your Google reviews?</h2>
-          <p className="text-sm text-zinc-400">Join the ReviewTap commercial pilot program. Start collecting measurable in-store reviews in 3 minutes.</p>
-          <div className="flex justify-center gap-3">
-            <Link href="/signup" className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm shadow-lg shadow-emerald-500/25 transition-all active:scale-[0.97]">
-              Create Free QR Code
-            </Link>
-            <Link href="/login" className="px-6 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-semibold text-sm border border-zinc-800 transition-colors">
-              Merchant Login
-            </Link>
-          </div>
-          <div className="text-[11px] text-zinc-500 pt-8 border-t border-zinc-900">© 2026 ReviewTap. Smart NFC &amp; QR Review Infrastructure.</div>
-        </div>
-      </footer>
-    </div>
-  );
+    <section className="proof" id="proof" aria-labelledby="proof-title"><div className="proof-head"><h2 id="proof-title">Bukti akan hadir di sini.</h2><p>Slot ini sengaja dikosongkan sampai bukti pilot yang terverifikasi disetujui.</p></div><div className="proof-grid"><div data-placeholder="kutipan-merchant"><strong>Kutipan merchant</strong><span>Ganti dengan kutipan, nama, peran, dan bisnis yang telah disetujui.</span></div><div data-placeholder="logo-pelanggan"><strong>Logo pelanggan</strong><span>Ganti dengan file logo dan izin penggunaan yang telah disetujui.</span></div><div data-placeholder="metrik-pilot"><strong>Metrik pilot</strong><span>Ganti dengan periode, jumlah sampel, dan definisi metrik yang bersumber jelas.</span></div></div></section>
+    <section className="closing"><div><h2>Perubahan tautan berikutnya cukup beberapa detik.</h2><p>Buat rutenya sekarang. Tambahkan perangkat fisik saat Anda siap.</p></div><Link href="/signup" className="button button-inverse">Buat QR gratis <ArrowRight /></Link></section>
+    <footer><Link href="/" className="wordmark"><span aria-hidden="true">RT</span>ReviewTap</Link><p>Infrastruktur ulasan NFC &amp; QR yang cerdas.</p><div><Link href="/login">Masuk sebagai merchant</Link><Link href="/signup">Buat QR gratis</Link></div><small>© 2026 ReviewTap. Hak cipta dilindungi.</small></footer>
+    <p className="image-provenance">Visual dibuat dengan OpenAI untuk ReviewTap, Agustus 2026.</p>
+  </main>;
 }
-
-      {/* HOW IT WORKS */}
-      <section id="how-it-works" className="py-20 px-6 sm:px-10 border-t border-zinc-800/60 bg-[#0c0c10]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.15em] mb-3">Three Steps</div>
-            <h2 className="text-2xl sm:text-4xl font-black text-white tracking-[-0.02em]">From box to 5-star review in 3 minutes</h2>
-            <p className="text-sm text-zinc-400 mt-2">No developer, no design skills. Just your Google Review link and a physical stand.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { num: '01', icon: Store, title: 'Create Your Card', desc: 'Sign up, name your venue, paste your Google Review link. We generate a unique QR + NFC redirect instantly.' },
-              { num: '02', icon: MapPin, title: 'Place the Stand', desc: 'Print or order acrylic stands for your cashier, tables, or entrance. The QR encodes a managed redirect — not a static URL.' },
-              { num: '03', icon: TrendingUp, title: 'Watch Reviews Roll In', desc: 'Customers tap or scan and land on your Google Review page in under 100ms. Track every interaction in your dashboard.' },
-            ].map((s) => {
-              const Icon = s.icon;
-              return (
-                <div key={s.num} className="bg-[#111115] border border-zinc-800/80 rounded-2xl p-6 shadow-sm hover:border-zinc-700/80 transition-colors group">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-[11px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">{s.num}</span>
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500/20 transition-colors"><Icon className="w-4 h-4" /></div>
-                  </div>
-                  <h3 className="font-bold text-white text-base tracking-tight mb-2">{s.title}</h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{s.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>

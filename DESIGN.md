@@ -1,42 +1,46 @@
 # ReviewTap Design System
 
-## Platform
-Web (Next.js 15 + TailwindCSS v4)
+## Platform and modes
 
-## Mode
-Landing: **Persuade** — the visitor decides and acts; design is the product.
-Dashboard: **Operate** — the visitor completes a task.
+Web on Next.js 15 and Tailwind CSS v4. The landing page is **Persuade**; authenticated product surfaces are **Operate**.
 
-## Palette
-- Canvas: `#08080b` (near-black), cards `#111115`
-- Primary: emerald-500 (`#10b981`) — CTAs, active states, key metrics
-- Accent: teal-400 (`#2dd4bf`) — secondary gradient element
-- Alert/rating: amber-400 (`#fbbf24`) — star ratings
-- Neutral: zinc-800 (`#27272a`) borders, zinc-400 (`#a1a1aa`) secondary text, zinc-300 (`#d4d4d8`) body
-- Text on emerald buttons: zinc-950 (`#09090b`)
-- Bg surfaces: zinc-900 (`#18181b`), zinc-950 (`#0a0a0b`)
+## Landing: Routing Exchange
 
-## Typography
-- Display: font-black (900), tracking-[-0.03em], sizes 4xl-6xl
-- Body: text-sm to text-lg, text-zinc-400, relaxed leading
-- Labels/meta: text-[10px] to text-xs, uppercase tracking-[0.15em] for section headers
-- Mono: font-mono for URLs, codes, technical data
+The `/` route uses the managed redirect as its visual and narrative system: stable identifiers, replaceable destinations, routing lines, thermal labels, adhesive edges, and dispatch notation. The central promise is “change the link, not the card.”
 
-## Components
-- **Cards**: rounded-2xl (12px), 1px border zinc-800/80, bg-[#111115]
-- **Buttons**: rounded-xl, emerald-500 bg, text-zinc-950 font-bold, shadow-lg shadow-emerald-500/25, active:scale-[0.97]
-- **Secondary buttons**: bg-zinc-900, border zinc-800, text-zinc-300
-- **Badges/pills**: rounded-full, bg-emerald-500/10, border emerald-500/20, text-emerald-400 text-xs
-- **Inputs**: bg-zinc-900, border zinc-800, rounded-xl, focus:border-emerald-500
-- **Progress**: gradient from emerald-500 to teal-400
+### Palette
 
-## Layout
-- Max content width: max-w-6xl (landing), max-w-7xl (dashboard)
-- Section padding: py-20 px-6 sm:px-10
-- Grid gaps: gap-6 (cards), gap-12 (hero columns)
-- Card padding: p-6 to p-8
+- Canvas: cool paper `#F1F3F5`
+- Ink: dispatch navy `#13213C`
+- Muted text: `#667080`
+- Surface: white
+- Accent: signal orange `#F0441E`, used only for action and route state
+- Dark system preference: night-dispatch navy surfaces with off-white text
 
-## Key UX Patterns
-- Onboarding: 5-step wizard with circular progress indicators, gradient progress bar
-- Dashboard: sticky header with CTA buttons, floating FAB on cards page
-- Redirect demo: interactive "Change Destination" inline editor showing URL update
+### Type
+
+- Archivo for display and body copy
+- IBM Plex Mono for routes, IDs, sample-state flags, and operational labels
+- Display tracking never tighter than `-0.04em`; body copy stays within readable measures
+
+### Shape, layout, and motion
+
+- Consistent 4px corners; fine 1px rules; no pills, gradients, glows, or decorative glass
+- Unequal route stops and asymmetric photographic placement compositions replace repeated card grids
+- Motion communicates action or routing state through transform and opacity only
+- All motion becomes static under `prefers-reduced-motion`
+- Controls maintain 44px minimum targets and visible keyboard focus
+
+### Imagery
+
+Merchant scenes use documentary product photography with cool daylight, pale stone, navy details, and restrained signal-orange accents. Generated assets include useful alt text, explicit dimensions through `next/image`, responsive `sizes`, and provenance in the page footer.
+
+### Proof policy
+
+Quotes, logos, and pilot metrics remain visibly marked with `data-placeholder` until the evidence, attribution, timeframe, sample size, and usage permission are approved. Placeholder content must never resemble a shipped claim.
+
+## Legacy product surfaces
+
+Dashboard, authentication, onboarding, admin, fallback, and print layouts retain the legacy near-black zinc and emerald system. Their existing global behavior and components remain unchanged until separately migrated.
+
+Legacy traits include emerald primary actions, zinc surfaces, 12px corners, dark cards, and system sans/mono typography. New landing tokens stay scoped beneath `.landing` and must not be promoted to global tokens during this phase.
