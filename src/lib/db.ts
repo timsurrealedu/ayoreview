@@ -825,4 +825,224 @@ export const dbRepo = {
       todayInteractions: todayCount || 0,
     };
   },
+
+  // -------------------------------------------------------------
+  // Pre-Programmed Setup & Flat Subscription Flow
+  // -------------------------------------------------------------
+  async setupLinkCard(cardId: string, placeId: string, businessName: string, merchantEmail: string): Promise<Card> {
+    const supabase = getAdminClient();
+    const now = new Date().toISOString();
+    const { data, error } = await supabase
+      .from('cards')
+      .update({
+        place_id: placeId,
+        business_name: businessName,
+        merchant_email: merchantEmail.toLowerCase().trim(),
+        linked_at: now,
+        subscription_status: 'pending',
+        subscription_status_updated_at: now,
+        updated_at: now,
+      })
+      .eq('id', cardId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Card;
+  },
+
+  async setupUpdateSubscription(
+    cardId: string,
+    subscriptionId: string,
+    status: string,
+    options?: { statusUpdatedAt?: string; currentPeriodEnd?: string }
+  ): Promise<void> {
+    const supabase = getAdminClient();
+    const now = new Date().toISOString();
+    const updatePayload: any = {
+      subscription_id: subscriptionId,
+      subscription_status: status,
+      subscription_status_updated_at: options?.statusUpdatedAt || now,
+      updated_at: now,
+    };
+    if (options?.currentPeriodEnd) {
+      updatePayload.subscription_current_period_end = options.currentPeriodEnd;
+    }
+    await supabase.from('cards').update(updatePayload).eq('id', cardId);
+  },
+
+  async setupUpdateSubscriptionByStripeId(
+    subscriptionId: string,
+    status: string,
+    options?: { statusUpdatedAt?: string; currentPeriodEnd?: string }
+  ): Promise<void> {
+    const supabase = getAdminClient();
+    const now = new Date().toISOString();
+    const updatePayload: any = {
+      subscription_status: status,
+      subscription_status_updated_at: options?.statusUpdatedAt || now,
+      updated_at: now,
+    };
+    if (options?.currentPeriodEnd) {
+      updatePayload.subscription_current_period_end = options.currentPeriodEnd;
+    }
+    await supabase.from('cards').update(updatePayload).eq('subscription_id', subscriptionId);
+  },
+
+  async setupGetCardByPublicId(publicId: string): Promise<(Card & { google_review_url?: string; location_status?: string }) | null> {
+    const supabase = getAdminClient();
+    const { data } = await supabase
+      .from('cards')
+      .select('*, locations(google_review_url, status)')
+      .eq('public_id', publicId)
+      .single();
+
+    if (!data) return null;
+
+    return {
+      id: data.id,
+      location_id: data.location_id,
+      public_id: data.public_id,
+      inventory_code: data.inventory_code,
+      name: data.name,
+      placement: data.placement,
+      status: data.status,
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+      place_id: data.place_id,
+      business_name: data.business_name,
+      merchant_email: data.merchant_email,
+      subscription_status: data.subscription_status,
+      subscription_id: data.subscription_id,
+      linked_at: data.linked_at,
+      subscription_status_updated_at: data.subscription_status_updated_at,
+      subscription_current_period_end: data.subscription_current_period_end,
+      google_review_url: (data as any).locations?.google_review_url,
+      location_status: (data as any).locations?.status,
+    };
+  },
+
+  async setupSearchCardsByEmail(email: string): Promise<CardWithStats[]> {
+    const supabase = getAdminClient();
+    const { data } = await supabase
+      .from('cards')
+      .select(`
+        *,
+        interactions (
+          id,
+          source,
+          timestamp,
+          is_bot
+        )
+      `)
+      .ilike('merchant_email', email.toLowerCase().trim())
+      .order('created_at', { ascending: false });
+
+    if (!data) return [];
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterdayStart = todayStart - 86400000;
+    const d7Start = now.getTime() - 7 * 86400000;
+    const d30Start = now.getTime() - 30 * 86400000;
+
+    return data.map((c: any) => {
+      const validInts = (c.interactions || []).filter((i: any) => i.is_bot === 0);
+      let today = 0;
+      let yesterday = 0;
+      let last7Days = 0;
+      let last30Days = 0;
+      let qr = 0;
+      let nfc = 0;
+
+      validInts.forEach((i: any) => {
+        const time = new Date(i.timestamp).getTime();
+        if (time >= todayStart) today++;
+        else if (time >= yesterdayStart) yesterday++;
+        if (time >= d7Start) last7Days++;
+        if (time >= d30Start) last30Days++;
+        if (i.source === 'qr') qr++;
+        if (i.source === 'nfc') nfc++;
+      });
+
+      return {
+        id: c.id,
+        location_id: c.location_id,
+        public_id: c.public_id,
+        inventory_code: c.inventory_code,
+        name: c.business_name || c.name,
+        placement: c.placement,
+        status: c.status,
+        created_at: c.created_at,
+        updated_at: c.updated_at,
+        place_id: c.place_id,
+        business_name: c.business_name,
+        merchant_email: c.merchant_email,
+        subscription_status: c.subscription_status,
+        subscription_id: c.subscription_id,
+        linked_at: c.linked_at,
+        subscription_status_updated_at: c.subscription_status_updated_at,
+        subscription_current_period_end: c.subscription_current_period_end,
+        stats: {
+          today,
+          yesterday,
+          last7Days,
+          last30Days,
+          allTime: validInts.length,
+          qr,
+          nfc,
+        },
+      };
+    });
+  },
+
+  async setupGetCardAnalytics(cardId: string): Promise<AnalyticsOverview> {
+    const supabase = getAdminClient();
+    const { data: ints } = await supabase
+      .from('interactions')
+      .select('*')
+      .eq('card_id', cardId)
+      .eq('is_bot', 0);
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterdayStart = todayStart - 86400000;
+    const d7Start = now.getTime() - 7 * 86400000;
+    const d30Start = now.getTime() - 30 * 86400000;
+
+    let today = 0;
+    let yesterday = 0;
+    let last7Days = 0;
+    let last30Days = 0;
+    let qrTotal = 0;
+    let nfcTotal = 0;
+
+    (ints || []).forEach((i: any) => {
+      const time = new Date(i.timestamp).getTime();
+      if (time >= todayStart) today++;
+      else if (time >= yesterdayStart) yesterday++;
+      if (time >= d7Start) last7Days++;
+      if (time >= d30Start) last30Days++;
+      if (i.source === 'qr') qrTotal++;
+      if (i.source === 'nfc') nfcTotal++;
+    });
+
+    const allTime = (ints || []).length;
+    const totalSources = qrTotal + nfcTotal || 1;
+    const qrPercentage = Math.round((qrTotal / totalSources) * 100);
+    const nfcPercentage = 100 - qrPercentage;
+    const todayGrowthPct = Math.round(((today - yesterday) / (yesterday || 1)) * 100);
+
+    return {
+      today,
+      last7Days,
+      last30Days,
+      allTime,
+      qrTotal,
+      nfcTotal,
+      qrPercentage,
+      nfcPercentage,
+      todayGrowthPct,
+    };
+  },
 };

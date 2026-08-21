@@ -62,6 +62,7 @@ export type CardPlacement =
   | 'custom';
 
 export type CardStatus = 'active' | 'inactive' | 'lost' | 'replaced';
+export type CardSetupState = 'pending' | 'configured' | 'active' | 'past_due' | 'suspended' | 'cancelled';
 
 export type Card = {
   id: string;
@@ -73,6 +74,37 @@ export type Card = {
   status: CardStatus;
   created_at: string;
   updated_at: string;
+  // Flat model fields for pre-programmed setup flow
+  place_id?: string | null;
+  business_name?: string | null;
+  merchant_email?: string | null;
+  subscription_status?: CardSetupState | string | null;
+  subscription_id?: string | null;
+  linked_at?: string | null;
+  subscription_status_updated_at?: string | null;
+  subscription_current_period_end?: string | null;
+};
+
+export type SetupCard = Card & {
+  place_id: string;
+  business_name: string;
+  merchant_email: string;
+  subscription_status: CardSetupState;
+  linked_at: string;
+};
+
+export type PlaceSearchResult = {
+  place_id: string;
+  name: string;
+  address: string;
+  google_maps_url?: string | null;
+};
+
+export type PlaceDetail = {
+  place_id: string;
+  name: string;
+  address: string;
+  google_maps_uri?: string | null;
 };
 
 export type InteractionSource = 'qr' | 'nfc' | 'direct';

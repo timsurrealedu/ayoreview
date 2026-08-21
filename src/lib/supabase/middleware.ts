@@ -40,8 +40,8 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  // Protect /dashboard
-  if (path.startsWith('/dashboard') && !user) {
+  // Protect /dashboard and /my
+  if ((path.startsWith('/dashboard') || path.startsWith('/my')) && !user) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     url.searchParams.set('redirectTo', path);

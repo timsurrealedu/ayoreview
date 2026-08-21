@@ -103,13 +103,21 @@ export default function AdminCardsInventoryPage() {
     }
   };
 
-  const filteredCards = cards.filter(
-    (c) =>
+  const [filterTab, setFilterTab] = useState<'all' | 'pre_pro' | 'linked'>('all');
+
+  const filteredCards = cards.filter((c) => {
+    const matchesSearch =
       c.inventory_code.toLowerCase().includes(search.toLowerCase()) ||
       c.public_id.toLowerCase().includes(search.toLowerCase()) ||
       c.name.toLowerCase().includes(search.toLowerCase()) ||
-      (c.location_name && c.location_name.toLowerCase().includes(search.toLowerCase()))
-  );
+      (c.business_name && c.business_name.toLowerCase().includes(search.toLowerCase())) ||
+      (c.location_name && c.location_name.toLowerCase().includes(search.toLowerCase()));
+
+    if (!matchesSearch) return false;
+    if (filterTab === 'pre_pro') return !c.place_id && !c.location_id;
+    if (filterTab === 'linked') return Boolean(c.place_id || c.location_id);
+    return true;
+  });
 
   return (
     <main className="p-8 space-y-6 max-w-7xl w-full mx-auto text-xs">
@@ -119,7 +127,7 @@ export default function AdminCardsInventoryPage() {
             Pengelolaan Inventaris Kartu Fisik
           </h1>
           <p className="text-zinc-400 mt-0.5">
-            Siapkan kartu NFC/QR kosong berkode inventaris RT dan tetapkan ke bisnis di lokasi
+            Buat kartu kosong Pre-Programmed atau tetapkan ke lokasi bisnis
           </p>
         </div>
 
@@ -147,16 +155,45 @@ export default function AdminCardsInventoryPage() {
         </div>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-md">
-        <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-        <input
-          type="text"
-          placeholder="Saring berdasarkan kode inventaris (contoh RT-000101), ID, atau lokasi..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-[#121215] border border-zinc-800 rounded-xl pl-9 pr-4 py-2 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
-        />
+      {/* Tabs & Search */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 p-1 rounded-xl">
+          <button
+            onClick={() => setFilterTab('all')}
+            className={`px-3 py-1 rounded-lg font-medium transition ${
+              filterTab === 'all' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            Semua ({cards.length})
+          </button>
+          <button
+            onClick={() => setFilterTab('pre_pro')}
+            className={`px-3 py-1 rounded-lg font-medium transition ${
+              filterTab === 'pre_pro' ? 'bg-amber-500/20 text-amber-300' : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            Pre-Pro Siap Kirim ({cards.filter((c) => !c.place_id && !c.location_id).length})
+          </button>
+          <button
+            onClick={() => setFilterTab('linked')}
+            className={`px-3 py-1 rounded-lg font-medium transition ${
+              filterTab === 'linked' ? 'bg-emerald-500/20 text-emerald-300' : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            Tertaut ({cards.filter((c) => Boolean(c.place_id || c.location_id)).length})
+          </button>
+        </div>
+
+        <div className="relative w-full sm:max-w-xs">
+          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Saring kode RT, ID, bisnis..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-[#121215] border border-zinc-800 rounded-xl pl-9 pr-4 py-1.5 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+          />
+        </div>
       </div>
 
       {/* Inventory Table */}
@@ -185,13 +222,18 @@ export default function AdminCardsInventoryPage() {
                     {c.public_id}
                   </td>
                   <td className="py-3.5 px-4 font-semibold text-white">
-                    {c.name}
+                    {c.business_name || c.name}
                   </td>
                   <td className="py-3.5 px-4 text-zinc-300">
-                    {c.location_name ? (
+                    {c.place_id ? (
+                      <div>
+                        <span className="text-emerald-400 font-medium">Tertaut ke Google Places</span>
+                        <div className="text-[10px] text-zinc-400 font-mono truncate max-w-[160px]">{c.place_id}</div>
+                      </div>
+                    ) : c.location_name ? (
                       <span>{c.location_name}</span>
                     ) : (
-                      <span className="text-amber-400/80 font-medium">Belum ditetapkan (Kosong)</span>
+                      <span className="text-amber-400/80 font-medium">Pre-Pro (Belum ditautkan)</span>
                     )}
                   </td>
                   <td className="py-3.5 px-4 capitalize text-zinc-400">

@@ -3,6 +3,8 @@ import { dbRepo } from '@/lib/db';
 import { isBotUserAgent, detectDeviceType, hashIp } from '@/lib/bot-filter';
 import { validateGoogleReviewUrl } from '@/lib/url-validator';
 import { isAuthenticatedRequest } from '@/lib/session-check';
+import { buildReviewUrl } from '@/lib/places';
+import { checkCardSubscriptionStatus } from '@/lib/subscription';
 import * as Sentry from '@sentry/nextjs';
 
 export const dynamic = 'force-dynamic';
@@ -16,19 +18,37 @@ export async function GET(
     const rawTest = request.nextUrl.searchParams.get('test') === 'true';
     const isTest = rawTest && await isAuthenticatedRequest(request);
 
-    const card = await dbRepo.getCardByPublicId(publicId);
+    const card = await dbRepo.setupGetCardByPublicId(publicId);
 
     if (!card) {
       return NextResponse.redirect(new URL('/fallback/not-found', request.url), 302);
+    }
+
+    // Unlinked card → redirect to setup flow
+    if (!card.place_id && !card.location_id) {
+      return NextResponse.redirect(new URL(`/s/${publicId}`, request.url), 302);
     }
 
     if (card.status !== 'active' || (card.location_id && card.location_status !== 'active')) {
       return NextResponse.redirect(new URL('/fallback/inactive', request.url), 302);
     }
 
-    const destination = card.google_review_url;
+    // Subscription & 7-day grace period check
+    const subCheck = checkCardSubscriptionStatus(card);
+    if (!subCheck.allowed) {
+      return NextResponse.redirect(new URL('/fallback/inactive', request.url), 302);
+    }
+
+    // Resolve Google Review Destination
+    let destination = '';
+    if (card.place_id) {
+      destination = buildReviewUrl(card.place_id);
+    } else if (card.google_review_url) {
+      destination = card.google_review_url;
+    }
+
     if (!destination) {
-      return NextResponse.redirect(new URL('/fallback/unconfigured', request.url), 302);
+      return NextResponse.redirect(new URL(`/s/${publicId}`, request.url), 302);
     }
 
     // Strict Google URL validation
@@ -37,7 +57,7 @@ export async function GET(
       return NextResponse.redirect(new URL('/fallback/unconfigured', request.url), 302);
     }
 
-    // Record interaction after the response is sent — see /q route for why after().
+    // Record interaction asynchronously
     if (!isTest) {
       const userAgent = request.headers.get('user-agent');
       const isBot = isBotUserAgent(userAgent) ? 1 : 0;
