@@ -55,105 +55,105 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col justify-between p-6 sm:p-12 font-sans">
       <header className="w-full max-w-md mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-zinc-950 font-black text-sm shadow-lg shadow-emerald-500/20">
-            RT
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30">
+            AR
           </div>
-          <span className="font-bold text-white tracking-tight">ReviewTap</span>
+          <span className="font-bold text-white tracking-tight text-base">AyoReview</span>
         </Link>
         <Link
           href="/login"
-          className="text-xs text-zinc-400 hover:text-emerald-400 transition"
+          className="text-xs font-medium text-zinc-300 hover:text-[#1a73e8] transition"
         >
           Sudah punya akun?
         </Link>
       </header>
 
       <div className="w-full max-w-md mx-auto my-auto space-y-4">
-        <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-emerald-500 transition-colors">
+        <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-[#1a73e8] transition-colors">
           <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Kembali ke beranda
         </Link>
-        <main className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-8 shadow-2xl space-y-6">
+        <main className="bg-[#121215] border border-zinc-800 rounded-2xl p-8 shadow-2xl space-y-6">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">
-            Buat akun ReviewTap
+            Buat akun AyoReview
           </h1>
           <p className="text-xs text-zinc-400 mt-1">
-            Pasang kartu ulasan NFC & QR pintar di tempat usaha Anda
+            Pasang kartu ulasan Google NFC & QR pintar di tempat usaha Anda
           </p>
         </div>
 
         {error && (
-          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
             <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block text-zinc-300 font-semibold mb-1">
+            <label className="block text-zinc-200 font-semibold mb-1.5">
               Nama lengkap *
             </label>
             <div className="relative">
-              <User className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 required
-                placeholder="e.g. Timothy Surreal"
+                placeholder="contoh: Budi Pratama"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-zinc-300 font-semibold mb-1">
-              Nama bisnis / grup
+            <label className="block text-zinc-200 font-semibold mb-1.5">
+              Nama bisnis / grup usaha
             </label>
             <div className="relative">
-              <Building2 className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Building2 className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="e.g. Surreal Hospitality Group"
+                placeholder="contoh: Kopi Kenangan Group"
                 value={organizationName}
                 onChange={(e) => setOrganizationName(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-zinc-300 font-semibold mb-1">
+            <label className="block text-zinc-200 font-semibold mb-1.5">
               Alamat email *
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
-                placeholder="you@yourbusiness.com"
+                placeholder="nama@bisnis.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-zinc-300 font-semibold mb-1">
+            <label className="block text-zinc-200 font-semibold mb-1.5">
               Kata sandi *
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 required
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
               />
             </div>
           </div>
@@ -161,9 +161,9 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
           >
-            {loading ? 'Membuat akun...' : 'Mulai Pengaturan ReviewTap'}
+            {loading ? 'Membuat akun...' : 'Mulai Pengaturan AyoReview'}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>

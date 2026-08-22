@@ -93,14 +93,21 @@ export default function CardDetailPage() {
   };
 
   if (loading) {
-    return <div className="p-8 text-zinc-400 text-xs">Memuat detail kartu...</div>;
+    return <div className="p-8 text-zinc-300 text-xs">Memuat detail kartu...</div>;
   }
 
   if (!card) {
-    return <div className="p-8 text-zinc-400 text-xs">Kartu tidak ditemukan.</div>;
+    return <div className="p-8 text-zinc-300 text-xs">Kartu tidak ditemukan.</div>;
   }
 
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://reviewtap.id';
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://ayoreview.id';
+
+  const statusLabels: Record<CardStatus, string> = {
+    active: 'Aktif',
+    inactive: 'Non-aktif',
+    lost: 'Hilang',
+    replaced: 'Diganti',
+  };
 
   return (
     <div className="flex-1 flex flex-col">
@@ -112,16 +119,16 @@ export default function CardDetailPage() {
             <Link
               href={`/dashboard/cards/${card.id}/print`}
               target="_blank"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white text-xs font-semibold shadow-sm transition"
             >
               <Printer className="w-3.5 h-3.5" />
               Cetak Templat Dudukan Akrilik
             </Link>
             <Link
               href="/dashboard/cards"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium border border-zinc-700 transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition"
             >
-              <ArrowLeft className="w-3.5 h-3.5" /> Back
+              <ArrowLeft className="w-3.5 h-3.5" /> Kembali
             </Link>
           </div>
         }
@@ -130,26 +137,26 @@ export default function CardDetailPage() {
       <main className="p-8 space-y-8 max-w-6xl w-full mx-auto">
         {/* KPI Row for this Card */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-            <div className="text-zinc-400 text-xs font-medium mb-1">Hari Ini</div>
+          <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-5 shadow-sm">
+            <div className="text-zinc-300 text-xs font-semibold mb-1">Hari Ini</div>
             <div className="text-2xl font-black text-white">{card.stats.today}</div>
-            <div className="text-[11px] text-zinc-400 mt-1">Kunjungan halaman ulasan hari ini</div>
+            <div className="text-[11px] text-zinc-400 mt-1">Kunjungan ulasan hari ini</div>
           </div>
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-            <div className="text-zinc-400 text-xs font-medium mb-1">7 Hari Terakhir</div>
+          <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-5 shadow-sm">
+            <div className="text-zinc-300 text-xs font-semibold mb-1">7 Hari Terakhir</div>
             <div className="text-2xl font-black text-white">{card.stats.last7Days}</div>
             <div className="text-[11px] text-zinc-400 mt-1">Interaksi kartu mingguan</div>
           </div>
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-            <div className="text-zinc-400 text-xs font-medium mb-1">30 Hari Terakhir</div>
-            <div className="text-2xl font-black text-emerald-400">{card.stats.last30Days}</div>
-            <div className="text-[11px] text-zinc-400 mt-1">Kunjungan halaman ulasan bulanan</div>
+          <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-5 shadow-sm">
+            <div className="text-zinc-300 text-xs font-semibold mb-1">30 Hari Terakhir</div>
+            <div className="text-2xl font-black text-[#34a853]">{card.stats.last30Days}</div>
+            <div className="text-[11px] text-zinc-400 mt-1">Kunjungan ulasan bulanan</div>
           </div>
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-            <div className="text-zinc-400 text-xs font-medium mb-1">QR vs NFC</div>
+          <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-5 shadow-sm">
+            <div className="text-zinc-300 text-xs font-semibold mb-1">QR vs NFC</div>
             <div className="text-2xl font-black text-white">
-              <span className="text-emerald-400">{card.stats.qr}</span> /{' '}
-              <span className="text-sky-400">{card.stats.nfc}</span>
+              <span className="text-[#fbbc04]">{card.stats.qr}</span> /{' '}
+              <span className="text-[#1a73e8]">{card.stats.nfc}</span>
             </div>
             <div className="text-[11px] text-zinc-400 mt-1">Pindaian QR dibanding ketukan NFC</div>
           </div>
@@ -158,18 +165,18 @@ export default function CardDetailPage() {
         {/* Configuration and Live QR Simulator Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Card Configuration Form */}
-          <div className="lg:col-span-2 bg-[#121215] border border-zinc-800/80 rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4 mb-5">
+          <div className="lg:col-span-2 bg-[#121215] border border-zinc-800 rounded-2xl p-6 shadow-sm">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-4 mb-5">
               <div>
                 <h3 className="text-base font-bold text-white tracking-tight">
                   Pengaturan & Penempatan Kartu
                 </h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
+                <p className="text-xs text-zinc-300 mt-0.5">
                   Perbarui detail kartu, pindahkan lokasi fisik, atau ubah status operasional
                 </p>
               </div>
               {saved && (
-                <span className="flex items-center gap-1 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+                <span className="flex items-center gap-1 text-xs font-semibold text-[#34a853] bg-[#34a853]/10 px-2.5 py-1 rounded-lg border border-[#34a853]/30">
                   <Check className="w-3.5 h-3.5" /> Tersimpan
                 </span>
               )}
@@ -177,7 +184,7 @@ export default function CardDetailPage() {
 
             <form onSubmit={handleUpdate} className="space-y-4 text-xs">
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">
+                <label className="block text-zinc-200 font-semibold mb-1.5">
                   Nama / Label Kartu *
                 </label>
                 <input
@@ -185,19 +192,19 @@ export default function CardDetailPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label className="block text-zinc-200 font-semibold mb-1.5">
                     Lokasi yang Ditetapkan
                   </label>
                   <select
                     value={locationId}
                     onChange={(e) => setLocationId(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                   >
                     <option value="">Belum ditetapkan</option>
                     {locations.map((l) => (
@@ -209,13 +216,13 @@ export default function CardDetailPage() {
                 </div>
 
                 <div>
-                  <label className="block text-zinc-300 font-semibold mb-1">
+                  <label className="block text-zinc-200 font-semibold mb-1.5">
                     Area Penempatan
                   </label>
                   <select
                     value={placement}
                     onChange={(e) => setPlacement(e.target.value as CardPlacement)}
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                   >
                     <option value="cashier">Kasir / POS</option>
                     <option value="table">Meja / Bilik</option>
@@ -229,7 +236,7 @@ export default function CardDetailPage() {
               </div>
 
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">
+                <label className="block text-zinc-200 font-semibold mb-1.5">
                   Status Operasional
                 </label>
                 <div className="grid grid-cols-4 gap-2">
@@ -238,28 +245,28 @@ export default function CardDetailPage() {
                       type="button"
                       key={st}
                       onClick={() => setStatus(st)}
-                      className={`py-2 rounded-xl font-semibold capitalize transition ${
+                      className={`py-2 rounded-xl font-semibold transition ${
                         status === st
-                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 shadow-sm'
-                          : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
+                          ? 'bg-[#1a73e8]/20 text-[#4285f4] border border-[#1a73e8]/40 shadow-sm'
+                          : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-750'
                       }`}
                     >
-                      {st}
+                      {statusLabels[st]}
                     </button>
                   ))}
                 </div>
                 <p className="text-[10px] text-zinc-400 mt-1.5">
-                  Jika status tidak Aktif, pelanggan yang mengetuk atau memindai akan melihat halaman pemberitahuan ReviewTap.
+                  Jika status tidak Aktif, pelanggan yang mengetuk atau memindai akan melihat halaman pemberitahuan AyoReview.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
-                <div className="text-[11px] text-zinc-400 font-mono">
-                  Kode Inventaris: {card.inventory_code}
+              <div className="pt-4 border-t border-zinc-800 flex items-center justify-between">
+                <div className="text-[11px] text-zinc-300 font-mono">
+                  Kode Inventaris: <strong className="text-[#fbbc04]">{card.inventory_code}</strong>
                 </div>
                 <button
                   type="submit"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98]"
                 >
                   <Save className="w-4 h-4" /> Simpan Pengaturan Kartu
                 </button>

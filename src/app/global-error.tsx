@@ -18,16 +18,16 @@ export default function GlobalError({
     <html>
       <body className="bg-[#09090b] text-white flex items-center justify-center min-h-screen font-sans p-6">
         <div className="max-w-md w-full text-center space-y-4">
-          <div className="text-emerald-500 font-black text-2xl">ReviewTap</div>
-          <h2 className="text-xl font-bold">Terjadi kesalahan</h2>
-          <p className="text-xs text-zinc-400">
-            Kesalahan sistem telah dicatat. Silakan coba lagi.
+          <div className="text-[#1a73e8] font-black text-2xl">AyoReview</div>
+          <h2 className="text-xl font-bold">Terjadi kesalahan sistem</h2>
+          <p className="text-xs text-zinc-300">
+            Kesalahan sistem telah dicatat secara otomatis. Silakan muat ulang halaman.
           </p>
           <button
             onClick={() => reset()}
-            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs rounded-xl shadow transition"
+            className="px-5 py-2.5 bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs rounded-xl shadow transition cursor-pointer"
           >
-            Coba lagi
+            Coba Lagi
           </button>
         </div>
       </body>

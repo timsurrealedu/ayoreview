@@ -44,8 +44,8 @@ export async function createCheckoutSession(params: {
             price_data: {
               currency: 'idr',
               product_data: {
-                name: `ReviewTap Subscription (${card.business_name || card.name})`,
-                description: `Monthly active redirect & analytics for card ${card.inventory_code}`,
+                name: `AyoReview Subscription (${card.business_name || card.name})`,
+                description: `Langganan pengalihan ulasan & analitik aktif kartu ${card.inventory_code}`,
               },
               unit_amount: 4900000, // Rp 49.000 in smallest unit (IDR cents / whole)
               recurring: { interval: 'month' },
@@ -72,7 +72,7 @@ export async function createCheckoutSession(params: {
 }
 
 /**
- * Maps Stripe subscription statuses to ReviewTap internal card subscription statuses.
+ * Maps Stripe subscription statuses to AyoReview internal card subscription statuses.
  */
 export function mapStripeStatusToCardStatus(stripeStatus: Stripe.Subscription.Status): string {
   switch (stripeStatus) {

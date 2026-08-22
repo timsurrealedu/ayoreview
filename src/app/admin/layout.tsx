@@ -18,11 +18,11 @@ export default async function AdminLayout({
         <div className="flex items-center gap-6">
           <Link href="/admin" className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-full bg-[conic-gradient(from_25deg,#ea4335_0_25%,#fbbc04_0_50%,#34a853_0_75%,#1a73e8_0)] flex items-center justify-center text-white font-black text-xs ring-4 ring-white/30 ring-inset">
-              R
+              A
             </div>
             <div>
-              <span className="font-bold text-white tracking-tight text-sm">Operator ReviewTap</span>
-              <span className="text-[10px] text-amber-400 block font-mono">Portal Admin Platform</span>
+              <span className="font-bold text-white tracking-tight text-sm">Operator AyoReview</span>
+              <span className="text-[10px] text-[#fbbc04] block font-mono font-semibold">Portal Admin Platform</span>
             </div>
           </Link>
 

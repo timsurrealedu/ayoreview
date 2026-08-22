@@ -37,27 +37,27 @@ export default async function PrintCardTemplatePage({
           href={`/dashboard/cards/${card.id}`}
           className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-900 font-medium"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Card Settings
+          <ArrowLeft className="w-4 h-4" /> Kembali ke Pengaturan Kartu
         </Link>
         <button
           onClick={() => window.print()}
-          className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold rounded-xl shadow cursor-pointer"
+          className="px-4 py-2 bg-[#1a73e8] hover:bg-[#1557b0] text-white text-xs font-bold rounded-xl shadow cursor-pointer transition"
         >
           Cetak Kartu Dudukan
         </button>
       </div>
 
-      {/* Official ReviewTap 5-Star Acrylic Template (10 x 15 cm ratio) */}
+      {/* Official AyoReview 5-Star Acrylic Template (10 x 15 cm ratio) */}
       <div className="w-[360px] h-[520px] bg-white border-2 border-zinc-300 rounded-3xl p-8 flex flex-col items-center justify-between text-center shadow-2xl relative overflow-hidden">
         {/* Top subtle decorative strip */}
         <div className="w-full flex justify-between items-center text-[10px] text-zinc-400 font-mono">
           <span>{card.inventory_code}</span>
-          <span>{card.location_name || 'ReviewTap'}</span>
+          <span>{card.location_name || 'AyoReview'}</span>
         </div>
 
         {/* 5-Star Hospitality Visual */}
         <div className="flex flex-col items-center my-auto space-y-3">
-          <div className="flex items-center gap-1 text-amber-400 text-2xl tracking-wider">
+          <div className="flex items-center gap-1 text-[#fbbc04] text-2xl tracking-wider">
             ★★★★★
           </div>
 
@@ -79,16 +79,16 @@ export default async function PrintCardTemplatePage({
           </div>
 
           <div className="flex items-center gap-2 text-zinc-800 text-xs font-bold pt-1">
-            <Smartphone className="w-4 h-4 text-emerald-600 animate-pulse" />
+            <Smartphone className="w-4 h-4 text-[#1a73e8] animate-pulse" />
             <span>Ketukan NFC Aktif</span>
           </div>
         </div>
 
         {/* Bottom Logo & Inventory Bar */}
         <div className="w-full pt-3 border-t border-zinc-200 flex items-center justify-between text-[11px] text-zinc-500 font-medium">
-          <span className="font-bold text-zinc-900 tracking-tight flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-            ReviewTap
+          <span className="font-bold text-zinc-900 tracking-tight flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#1a73e8]"></span>
+            AyoReview
           </span>
           <span className="font-mono text-[10px] text-zinc-400">{card.public_id}</span>
         </div>

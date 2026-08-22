@@ -73,8 +73,8 @@ function LoginForm() {
   return (
     <div className="space-y-4 text-xs">
       {error && (
-        <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 shrink-0" />
+        <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
           <span>{error}</span>
         </div>
       )}
@@ -83,13 +83,13 @@ function LoginForm() {
         type="button"
         onClick={handleGoogleSignIn}
         disabled={loading}
-        className="w-full min-h-12 flex items-center justify-center gap-3 rounded-xl border border-zinc-800 bg-white text-zinc-200 font-bold hover:bg-zinc-900 transition disabled:opacity-50"
+        className="w-full min-h-12 flex items-center justify-center gap-3 rounded-xl border border-zinc-700 bg-white text-zinc-900 font-bold hover:bg-zinc-100 transition disabled:opacity-50 shadow-sm"
       >
         <span className="grid size-6 place-items-center rounded-full bg-white text-sm font-black text-[#1a73e8] shadow-sm" aria-hidden="true">G</span>
         Lanjutkan dengan Google
       </button>
 
-      <div className="flex items-center gap-3 text-zinc-500" aria-hidden="true">
+      <div className="flex items-center gap-3 text-zinc-400 font-medium" aria-hidden="true">
         <span className="h-px flex-1 bg-zinc-800" />
         <span>atau gunakan email</span>
         <span className="h-px flex-1 bg-zinc-800" />
@@ -97,35 +97,35 @@ function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-zinc-300 font-semibold mb-1">
+        <label className="block text-zinc-200 font-semibold mb-1.5">
           Alamat email
         </label>
         <div className="relative">
-          <Mail className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="email"
             required
-            placeholder="name@business.com"
+            placeholder="nama@bisnis.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+            className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
           />
         </div>
       </div>
 
       <div>
-        <div className="flex justify-between items-center mb-1">
-          <label className="text-zinc-300 font-semibold">Kata sandi</label>
+        <div className="flex justify-between items-center mb-1.5">
+          <label className="text-zinc-200 font-semibold">Kata sandi</label>
         </div>
         <div className="relative">
-          <Lock className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="password"
             required
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+            className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
           />
         </div>
       </div>
@@ -133,7 +133,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition shadow-lg shadow-emerald-500/20 active:scale-[0.98] disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
       >
         {loading ? 'Sedang masuk...' : 'Masuk ke Dasbor'}
         <ArrowRight className="w-4 h-4" />
@@ -147,35 +147,35 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col justify-between p-6 sm:p-12 font-sans">
       <header className="w-full max-w-md mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-zinc-950 font-black text-sm shadow-lg shadow-emerald-500/20">
-            RT
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30">
+            AR
           </div>
-          <span className="font-bold text-white tracking-tight">ReviewTap</span>
+          <span className="font-bold text-white tracking-tight text-base">AyoReview</span>
         </Link>
         <Link
           href="/signup"
-          className="text-xs text-zinc-400 hover:text-emerald-400 transition"
+          className="text-xs font-medium text-zinc-300 hover:text-[#1a73e8] transition"
         >
           Buat akun
         </Link>
       </header>
 
       <div className="w-full max-w-md mx-auto my-auto space-y-4">
-        <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-emerald-500 transition-colors">
+        <Link href="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-[#1a73e8] transition-colors">
           <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Kembali ke beranda
         </Link>
-        <main className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-8 shadow-2xl space-y-6">
+        <main className="bg-[#121215] border border-zinc-800 rounded-2xl p-8 shadow-2xl space-y-6">
           <div>
             <h1 className="text-xl font-bold text-white tracking-tight">
-              Masuk ke ReviewTap
+              Masuk ke AyoReview
             </h1>
             <p className="text-xs text-zinc-400 mt-1">
               Akses dasbor bisnis dan analitik kartu ulasan Anda
             </p>
           </div>
 
-          <Suspense fallback={<div className="text-xs text-zinc-500 py-4 text-center">Memuat...</div>}>
+          <Suspense fallback={<div className="text-xs text-zinc-400 py-4 text-center">Memuat...</div>}>
             <LoginForm />
           </Suspense>
         </main>

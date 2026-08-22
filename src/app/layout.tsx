@@ -6,8 +6,8 @@ const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', displa
 const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-plex-mono', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'ReviewTap — Infrastruktur Ulasan NFC & QR Pintar',
-  description: 'Ubah pelanggan yang puas menjadi ulasan Google bintang lima melalui kartu NFC dan QR dinamis.',
+  title: 'AyoReview — Infrastruktur Ulasan Google NFC & QR Pintar',
+  description: 'Ubah pelanggan yang puas menjadi ulasan Google bintang 5 instan melalui kartu NFC dan QR dinamis.',
 };
 
 export default function RootLayout({

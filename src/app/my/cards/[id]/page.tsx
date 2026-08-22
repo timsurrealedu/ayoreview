@@ -36,7 +36,7 @@ export default async function MyCardDetailPage({
     notFound();
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://reviewtap.id';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ayoreview.id';
   const qrTargetUrl = `${appUrl}/q/${card.public_id}`;
   const qrDataUrl = await generateQrPngDataUrl(qrTargetUrl, { width: 400 });
 
@@ -52,36 +52,36 @@ export default async function MyCardDetailPage({
       {/* Back Button */}
       <Link
         href="/my"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white transition"
       >
         <ArrowLeft className="w-4 h-4" /> Kembali ke Kartu Saya
       </Link>
 
       {/* Header Info */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#121215] border border-zinc-800/80 p-6 rounded-2xl shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#121215] border border-zinc-800 p-6 rounded-2xl shadow-sm">
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="text-xl font-bold text-white tracking-tight">
               {card.business_name || card.name}
             </h1>
             {subCheck.inGracePeriod ? (
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
                 Masa Tenggang 7 Hari ({subCheck.daysRemainingInGrace} hari tersisa)
               </span>
             ) : card.subscription_status === 'active' ? (
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#34a853]/10 text-[#34a853] border border-[#34a853]/30">
                 Aktif
               </span>
             ) : (
-              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+              <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
                 {card.subscription_status || 'Pending'}
               </span>
             )}
           </div>
-          <div className="flex items-center gap-3 text-xs text-zinc-400 mt-1 font-mono">
-            <span>Kode: <strong className="text-amber-400">{card.inventory_code}</strong></span>
+          <div className="flex items-center gap-3 text-xs text-zinc-300 mt-1 font-mono">
+            <span>Kode: <strong className="text-[#fbbc04] font-semibold">{card.inventory_code}</strong></span>
             <span>•</span>
-            <span>ID: <strong className="text-zinc-300">{card.public_id}</strong></span>
+            <span>ID: <strong className="text-white">{card.public_id}</strong></span>
           </div>
         </div>
 
@@ -100,22 +100,22 @@ export default async function MyCardDetailPage({
       {/* Main Grid: QR & Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* QR Preview Column */}
-        <div className="bg-[#121215] border border-zinc-800/80 p-6 rounded-2xl space-y-4 text-center">
+        <div className="bg-[#121215] border border-zinc-800 p-6 rounded-2xl space-y-4 text-center">
           <h2 className="text-sm font-bold text-white text-left flex items-center gap-2">
-            <QrCode className="w-4 h-4 text-emerald-400" /> Kode QR Kartu
+            <QrCode className="w-4 h-4 text-[#1a73e8]" /> Kode QR Kartu
           </h2>
 
           <div className="bg-white p-4 rounded-xl inline-block shadow-lg mx-auto">
-            <img src={qrDataUrl} alt="ReviewTap QR" className="w-48 h-48 mx-auto" />
+            <img src={qrDataUrl} alt="AyoReview QR" className="w-48 h-48 mx-auto" />
           </div>
 
-          <div className="text-[11px] font-mono text-zinc-400 truncate max-w-full px-2">
+          <div className="text-[11px] font-mono text-zinc-300 truncate max-w-full px-2">
             {qrTargetUrl}
           </div>
 
           <a
             href={qrDataUrl}
-            download={`reviewtap-${card.inventory_code}.png`}
+            download={`ayoreview-${card.inventory_code}.png`}
             className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold border border-zinc-700 transition"
           >
             <Download className="w-4 h-4" /> Unduh PNG Resolusi Tinggi
@@ -125,47 +125,47 @@ export default async function MyCardDetailPage({
         {/* Analytics & Configuration Column */}
         <div className="lg:col-span-2 space-y-6">
           {/* Interaction Overview */}
-          <div className="bg-[#121215] border border-zinc-800/80 p-6 rounded-2xl space-y-4">
+          <div className="bg-[#121215] border border-zinc-800 p-6 rounded-2xl space-y-4">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <Activity className="w-4 h-4 text-emerald-400" /> Metrik Interaksi Pelanggan
+              <Activity className="w-4 h-4 text-[#1a73e8]" /> Metrik Interaksi Pelanggan
             </h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-              <div className="bg-zinc-900/80 border border-zinc-800 p-3.5 rounded-xl">
-                <div className="text-[10px] text-zinc-400 uppercase font-medium">Hari Ini</div>
+              <div className="bg-zinc-900 border border-zinc-800 p-3.5 rounded-xl">
+                <div className="text-[10px] text-zinc-400 uppercase font-semibold">Hari Ini</div>
                 <div className="text-xl font-bold text-white mt-1">{analytics.today}</div>
               </div>
-              <div className="bg-zinc-900/80 border border-zinc-800 p-3.5 rounded-xl">
-                <div className="text-[10px] text-zinc-400 uppercase font-medium">7 Hari</div>
+              <div className="bg-zinc-900 border border-zinc-800 p-3.5 rounded-xl">
+                <div className="text-[10px] text-zinc-400 uppercase font-semibold">7 Hari</div>
                 <div className="text-xl font-bold text-white mt-1">{analytics.last7Days}</div>
               </div>
-              <div className="bg-zinc-900/80 border border-zinc-800 p-3.5 rounded-xl">
-                <div className="text-[10px] text-zinc-400 uppercase font-medium">30 Hari</div>
+              <div className="bg-zinc-900 border border-zinc-800 p-3.5 rounded-xl">
+                <div className="text-[10px] text-zinc-400 uppercase font-semibold">30 Hari</div>
                 <div className="text-xl font-bold text-white mt-1">{analytics.last30Days}</div>
               </div>
-              <div className="bg-zinc-900/80 border border-zinc-800 p-3.5 rounded-xl">
-                <div className="text-[10px] text-zinc-400 uppercase font-medium">Sepanjang Waktu</div>
-                <div className="text-xl font-bold text-emerald-400 mt-1">{analytics.allTime}</div>
+              <div className="bg-zinc-900 border border-zinc-800 p-3.5 rounded-xl">
+                <div className="text-[10px] text-zinc-400 uppercase font-semibold">Sepanjang Waktu</div>
+                <div className="text-xl font-bold text-[#34a853] mt-1">{analytics.allTime}</div>
               </div>
             </div>
 
             {/* Source Breakdown (NFC vs QR) */}
-            <div className="bg-zinc-900/60 border border-zinc-800/60 p-4 rounded-xl space-y-3">
+            <div className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl space-y-3">
               <div className="flex justify-between text-xs font-semibold">
-                <span className="text-zinc-300 flex items-center gap-1.5">
-                  <Radio className="w-3.5 h-3.5 text-sky-400" /> Tap NFC: {analytics.nfcTotal} ({analytics.nfcPercentage}%)
+                <span className="text-zinc-200 flex items-center gap-1.5">
+                  <Radio className="w-3.5 h-3.5 text-[#1a73e8]" /> Tap NFC: {analytics.nfcTotal} ({analytics.nfcPercentage}%)
                 </span>
-                <span className="text-zinc-300 flex items-center gap-1.5">
-                  <Smartphone className="w-3.5 h-3.5 text-amber-400" /> Scan QR: {analytics.qrTotal} ({analytics.qrPercentage}%)
+                <span className="text-zinc-200 flex items-center gap-1.5">
+                  <Smartphone className="w-3.5 h-3.5 text-[#fbbc04]" /> Scan QR: {analytics.qrTotal} ({analytics.qrPercentage}%)
                 </span>
               </div>
-              <div className="w-full bg-zinc-800 h-2 rounded-full overflow-hidden flex">
+              <div className="w-full bg-zinc-800 h-2.5 rounded-full overflow-hidden flex">
                 <div
-                  className="bg-sky-400 h-full transition-all"
+                  className="bg-[#1a73e8] h-full transition-all"
                   style={{ width: `${analytics.nfcPercentage}%` }}
                 />
                 <div
-                  className="bg-amber-400 h-full transition-all"
+                  className="bg-[#fbbc04] h-full transition-all"
                   style={{ width: `${analytics.qrPercentage}%` }}
                 />
               </div>
@@ -173,11 +173,11 @@ export default async function MyCardDetailPage({
           </div>
 
           {/* Place & Target Details */}
-          <div className="bg-[#121215] border border-zinc-800/80 p-6 rounded-2xl space-y-3 text-xs">
+          <div className="bg-[#121215] border border-zinc-800 p-6 rounded-2xl space-y-3 text-xs">
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-emerald-400" /> Konfigurasi Google Places
+              <MapPin className="w-4 h-4 text-[#1a73e8]" /> Konfigurasi Google Places
             </h2>
-            <div className="space-y-2 text-zinc-300 bg-zinc-900/80 border border-zinc-800 p-4 rounded-xl">
+            <div className="space-y-2 text-zinc-200 bg-zinc-900 border border-zinc-800 p-4 rounded-xl">
               <div>
                 <span className="text-zinc-400 block text-[10px] uppercase font-bold">Google Place ID</span>
                 <span className="font-mono text-white text-xs">{card.place_id || 'Tidak ditentukan'}</span>
@@ -188,7 +188,7 @@ export default async function MyCardDetailPage({
                   href={targetGoogleUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-emerald-400 hover:underline break-all block mt-0.5"
+                  className="text-[#1a73e8] hover:text-[#4285f4] hover:underline break-all block mt-0.5"
                 >
                   {targetGoogleUrl}
                 </a>
