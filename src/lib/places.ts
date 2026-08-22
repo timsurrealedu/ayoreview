@@ -115,8 +115,13 @@ export async function getPlaceDetails(placeId: string): Promise<PlaceDetail | nu
 }
 
 /**
- * Builds the direct Google Review URL from a Google Place ID.
+ * Builds the direct Google Review URL from a Google Place ID or direct Google URL.
  */
 export function buildReviewUrl(placeId: string): string {
-  return `https://search.google.com/local/writereview?placeid=${encodeURIComponent(placeId.trim())}`;
+  const trimmed = (placeId || '').trim();
+  if (!trimmed) return '';
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return trimmed;
+  }
+  return `https://search.google.com/local/writereview?placeid=${encodeURIComponent(trimmed)}`;
 }

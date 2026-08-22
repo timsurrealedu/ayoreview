@@ -31,10 +31,15 @@ export default function CardSetupPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Search state
+  const [setupMode, setSetupMode] = useState<'search' | 'direct'>('search');
   const [businessQuery, setBusinessQuery] = useState('');
   const [cityQuery, setCityQuery] = useState('');
   const [places, setPlaces] = useState<PlaceSearchResult[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<PlaceSearchResult | null>(null);
+
+  // Direct link state (no Places API credit card needed)
+  const [directName, setDirectName] = useState('');
+  const [directUrl, setDirectUrl] = useState('');
 
   // Account state
   const [user, setUser] = useState<any | null>(null);
@@ -94,6 +99,21 @@ export default function CardSetupPage() {
     } else {
       setStep(4);
     }
+  };
+
+  const handleDirectSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!directName.trim() || !directUrl.trim()) return;
+
+    const trimmedUrl = directUrl.trim();
+    const mockPlace: PlaceSearchResult = {
+      place_id: trimmedUrl,
+      name: directName.trim(),
+      address: 'Tautan Ulasan Google Langsung',
+      google_maps_url: trimmedUrl,
+    };
+
+    handleSelectPlace(mockPlace);
   };
 
   const handleAccountSubmit = async (e: React.FormEvent) => {
@@ -247,61 +267,137 @@ export default function CardSetupPage() {
             </div>
           )}
 
-          {/* STEP 2: Business Search */}
+          {/* STEP 2: Business Connection */}
           {step === 2 && (
             <div className="space-y-6">
               <div>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Cari Tempat Bisnis Anda
+                  Hubungkan Lokasi Google Bisnis
                 </h2>
                 <p className="text-xs text-zinc-300 mt-1">
-                  Ketik nama bisnis seperti yang tertera di Google Maps
+                  Pilih metode pencarian atau tempel tautan ulasan Google secara langsung
                 </p>
               </div>
 
-              <form onSubmit={handleSearch} className="space-y-4 text-xs">
-                <div>
-                  <label className="block text-zinc-200 font-semibold mb-1.5">
-                    Nama Bisnis *
-                  </label>
-                  <div className="relative">
-                    <Building2 className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      required
-                      placeholder="Contoh: Kopi Kenangan, Salon Indah"
-                      value={businessQuery}
-                      onChange={(e) => setBusinessQuery(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-zinc-200 font-semibold mb-1.5">
-                    Kota / Wilayah (Opsional)
-                  </label>
-                  <div className="relative">
-                    <MapPin className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      placeholder="Contoh: Jakarta Selatan, Surabaya"
-                      value={cityQuery}
-                      onChange={(e) => setCityQuery(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
-                    />
-                  </div>
-                </div>
-
+              {/* Mode Tabs */}
+              <div className="grid grid-cols-2 gap-1.5 p-1 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-semibold">
                 <button
-                  type="submit"
-                  disabled={loading || !businessQuery.trim()}
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                  type="button"
+                  onClick={() => setSetupMode('search')}
+                  className={`py-2 rounded-lg transition ${
+                    setupMode === 'search'
+                      ? 'bg-[#1a73e8] text-white shadow-sm'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
                 >
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                  {loading ? 'Mencari di Google Places...' : 'Cari Listing Google'}
+                  Cari di Google Maps
                 </button>
-              </form>
+                <button
+                  type="button"
+                  onClick={() => setSetupMode('direct')}
+                  className={`py-2 rounded-lg transition ${
+                    setupMode === 'direct'
+                      ? 'bg-[#1a73e8] text-white shadow-sm'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  Tempel Tautan Langsung
+                </button>
+              </div>
+
+              {setupMode === 'search' ? (
+                <form onSubmit={handleSearch} className="space-y-4 text-xs">
+                  <div>
+                    <label className="block text-zinc-200 font-semibold mb-1.5">
+                      Nama Bisnis *
+                    </label>
+                    <div className="relative">
+                      <Building2 className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="Contoh: Kopi Kenangan, Salon Indah"
+                        value={businessQuery}
+                        onChange={(e) => setBusinessQuery(e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-zinc-200 font-semibold mb-1.5">
+                      Kota / Wilayah (Opsional)
+                    </label>
+                    <div className="relative">
+                      <MapPin className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        placeholder="Contoh: Jakarta Selatan, Surabaya"
+                        value={cityQuery}
+                        onChange={(e) => setCityQuery(e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading || !businessQuery.trim()}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                  >
+                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                    {loading ? 'Mencari di Google Places...' : 'Cari Listing Google'}
+                  </button>
+                </form>
+              ) : (
+                <form onSubmit={handleDirectSubmit} className="space-y-4 text-xs">
+                  <div>
+                    <label className="block text-zinc-200 font-semibold mb-1.5">
+                      Nama Bisnis / Cabang *
+                    </label>
+                    <div className="relative">
+                      <Building2 className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="Contoh: Kopi Kenangan Senopati"
+                        value={directName}
+                        onChange={(e) => setDirectName(e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-zinc-200 font-semibold mb-1.5">
+                      Tautan Ulasan Google / Google Maps *
+                    </label>
+                    <input
+                      type="url"
+                      required
+                      placeholder="https://g.page/r/.../review atau https://maps.app.goo.gl/..."
+                      value={directUrl}
+                      onChange={(e) => setDirectUrl(e.target.value)}
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                    />
+                    <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl mt-2 text-[11px] text-zinc-300 space-y-1">
+                      <div className="font-semibold text-white">💡 Cara mendapatkan tautan gratis:</div>
+                      <div>1. Buka Google Maps di HP/Laptop $\rightarrow$ cari nama bisnis Anda.</div>
+                      <div>2. Klik tombol &quot;Bagikan&quot; atau &quot;Minta Ulasan&quot; $\rightarrow$ Salin Tautan.</div>
+                      <div>3. Tempel di atas. Tanpa perlu Google API Key / Kartu Kredit!</div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={!directName.trim() || !directUrl.trim()}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                  >
+                    Hubungkan Kartu Langsung
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </form>
+              )}
             </div>
           )}
 
