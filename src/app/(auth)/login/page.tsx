@@ -3,8 +3,9 @@
 import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Lock, Mail, AlertCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Lock, Mail, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { ErrorAlert } from '@/components/ui/alert';
 
 function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -88,19 +89,14 @@ function LoginForm() {
 
   return (
     <div className="space-y-5 text-xs">
-      {error && (
-        <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2.5">
-          <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-          <span className="font-semibold">{error}</span>
-        </div>
-      )}
+      {error && <ErrorAlert>{error}</ErrorAlert>}
 
       {/* Google OAuth Login Button */}
       <button
         type="button"
         onClick={handleGoogleSignIn}
         disabled={googleLoading || loading}
-        className="w-full min-h-12 flex items-center justify-center gap-3 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-100 text-zinc-900 font-bold text-sm shadow-md transition disabled:opacity-50 active:scale-[0.98] cursor-pointer"
+        className="w-full min-h-12 flex items-center justify-center gap-3 rounded border border-zinc-200 bg-white hover:bg-zinc-100 text-zinc-900 font-bold text-sm shadow-md transition disabled:opacity-50 active:scale-[0.98] cursor-pointer"
       >
         {googleLoading ? (
           <Loader2 className="w-4 h-4 animate-spin text-zinc-800" />
@@ -111,44 +107,44 @@ function LoginForm() {
       </button>
 
       {/* Divider */}
-      <div className="flex items-center gap-3 font-semibold text-zinc-300" aria-hidden="true">
-        <span className="h-px flex-1 bg-zinc-700" />
+      <div className="flex items-center gap-3 font-semibold text-ink" aria-hidden="true">
+        <span className="h-px flex-1 bg-subtle" />
         <span className="text-[11px] uppercase tracking-wider">atau gunakan email</span>
-        <span className="h-px flex-1 bg-zinc-700" />
+        <span className="h-px flex-1 bg-subtle" />
       </div>
 
       {/* Email / Password Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-zinc-100 font-bold mb-1.5 text-xs">
+          <label className="block text-ink font-bold mb-1.5 text-xs">
             Alamat Email *
           </label>
           <div className="relative">
-            <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Mail className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="email"
               required
               placeholder="nama@bisnis.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-zinc-900 border border-zinc-600 focus:border-[#1a73e8] rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-400 font-medium text-xs focus:outline-none focus:ring-1 focus:ring-[#1a73e8]"
+              className="w-full bg-surface border border-line focus:border-[#1a73e8] rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium text-xs focus:outline-none focus:ring-1 focus:ring-[#1a73e8]"
             />
           </div>
         </div>
 
         <div>
           <div className="flex justify-between items-center mb-1.5">
-            <label className="text-zinc-100 font-bold text-xs">Kata Sandi *</label>
+            <label className="text-ink font-bold text-xs">Kata Sandi *</label>
           </div>
           <div className="relative">
-            <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Lock className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="password"
               required
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-zinc-900 border border-zinc-600 focus:border-[#1a73e8] rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-400 font-medium text-xs focus:outline-none focus:ring-1 focus:ring-[#1a73e8]"
+              className="w-full bg-surface border border-line focus:border-[#1a73e8] rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium text-xs focus:outline-none focus:ring-1 focus:ring-[#1a73e8]"
             />
           </div>
         </div>
@@ -156,7 +152,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading || googleLoading}
-          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
           <span>{loading ? 'Sedang masuk...' : 'Masuk ke Dasbor'}</span>
@@ -168,13 +164,13 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-white flex flex-col justify-between p-4 sm:p-8 font-sans">
-      <header className="w-full max-w-md mx-auto flex items-center justify-between pb-4 border-b border-zinc-800">
+    <div className="min-h-screen bg-canvas text-ink flex flex-col justify-between p-4 sm:p-8 font-sans">
+      <header className="w-full max-w-md mx-auto flex items-center justify-between pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30 group-hover:scale-105 transition">
+          <div className="w-8 h-8 rounded bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30 group-hover:scale-105 transition">
             A
           </div>
-          <span className="font-bold text-white tracking-tight text-base">AyoReview</span>
+          <span className="font-bold text-ink tracking-tight text-base">AyoReview</span>
         </Link>
         <Link
           href="/signup"
@@ -185,26 +181,26 @@ export default function LoginPage() {
       </header>
 
       <div className="w-full max-w-md mx-auto my-auto space-y-3 py-6">
-        <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-300 hover:text-white transition-colors">
+        <Link href="/" className="inline-flex items-center gap-2 text-xs font-semibold text-ink hover:text-ink transition-colors">
           <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Kembali ke Beranda
         </Link>
-        <main className="bg-[#121215] border border-zinc-700 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <main className="bg-surface border border-line rounded p-6 sm:p-8 shadow-2xl space-y-6">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
               Masuk ke AyoReview
             </h1>
-            <p className="text-xs text-zinc-300 mt-1">
+            <p className="text-xs text-ink mt-1">
               Akses dasbor bisnis dan analitik kartu ulasan Anda
             </p>
           </div>
 
-          <Suspense fallback={<div className="text-xs text-zinc-300 py-4 text-center">Memuat...</div>}>
+          <Suspense fallback={<div className="text-xs text-ink py-4 text-center">Memuat...</div>}>
             <LoginForm />
           </Suspense>
         </main>
       </div>
 
-      <footer className="w-full max-w-md mx-auto text-center text-xs text-zinc-400 py-2">
+      <footer className="w-full max-w-md mx-auto text-center text-xs text-muted-ink py-2">
         © 2026 AyoReview · Platform Ulasan Google Cerdas
       </footer>
     </div>

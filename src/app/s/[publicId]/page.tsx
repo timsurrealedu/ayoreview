@@ -213,21 +213,21 @@ export default function CardSetupPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-white flex flex-col justify-between p-4 sm:p-8 font-sans">
+    <div className="min-h-screen bg-canvas text-ink flex flex-col justify-between p-4 sm:p-8 font-sans">
       {/* Header */}
-      <header className="w-full max-w-lg mx-auto flex items-center justify-between pb-4 border-b border-zinc-800">
+      <header className="w-full max-w-lg mx-auto flex items-center justify-between pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-xl bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30 group-hover:scale-105 transition">
+          <div className="w-8 h-8 rounded bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30 group-hover:scale-105 transition">
             A
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-white tracking-tight text-sm sm:text-base">AyoReview</span>
-            <span className="text-[10px] text-zinc-400 font-medium">Aktivasi Kartu Pintar</span>
+            <span className="font-bold text-ink tracking-tight text-sm sm:text-base">AyoReview</span>
+            <span className="text-[10px] text-muted-ink font-medium">Aktivasi Kartu Pintar</span>
           </div>
         </Link>
 
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-mono text-zinc-200 bg-zinc-800 px-3 py-1 rounded-lg border border-zinc-700 font-semibold shadow-sm">
+          <span className="text-[11px] font-mono text-ink bg-subtle px-3 py-1 rounded border border-line font-semibold shadow-sm">
             ID: {publicId}
           </span>
         </div>
@@ -236,12 +236,12 @@ export default function CardSetupPage() {
       {/* Main Container */}
       <main className="w-full max-w-lg mx-auto my-auto py-6">
         {/* Progress Tracker */}
-        <div className="mb-4 bg-zinc-900/90 border border-zinc-800 rounded-xl p-3">
-          <div className="flex justify-between items-center text-xs font-semibold text-zinc-300 mb-2">
+        <div className="mb-4 bg-surface/90 border border-line rounded p-3">
+          <div className="flex justify-between items-center text-xs font-semibold text-ink mb-2">
             <span>Langkah {step} dari 6</span>
             <span className="text-[#1a73e8]">{stepLabels[step - 1]}</span>
           </div>
-          <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-subtle h-1.5 rounded-full overflow-hidden">
             <div 
               className="bg-[#1a73e8] h-full transition-all duration-300 rounded-full"
               style={{ width: `${(step / 6) * 100}%` }}
@@ -249,10 +249,10 @@ export default function CardSetupPage() {
           </div>
         </div>
 
-        <div className="bg-[#121215] border border-zinc-700 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <div className="bg-surface border border-line rounded p-6 sm:p-8 shadow-2xl space-y-6">
           {error && (
-            <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-200 text-xs flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <div role="alert" aria-live="assertive" className="flex items-center gap-2.5 rounded border border-error/25 bg-error-soft p-3.5 text-xs font-semibold text-error">
+              <AlertCircle className="h-4 w-4 shrink-0" />
               <span className="font-medium">{error}</span>
             </div>
           )}
@@ -260,28 +260,28 @@ export default function CardSetupPage() {
           {/* STEP 1: Welcome */}
           {step === 1 && (
             <div className="space-y-6 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#1a73e8]/20 border border-[#1a73e8]/50 flex items-center justify-center text-[#1a73e8] mx-auto shadow-lg shadow-[#1a73e8]/20">
+              <div className="w-16 h-16 rounded bg-[#1a73e8]/20 border border-[#1a73e8]/50 flex items-center justify-center text-[#1a73e8] mx-auto shadow-lg shadow-[#1a73e8]/20">
                 <Sparkles className="w-8 h-8 text-[#4285f4]" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                <h1 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
                   Aktifkan Kartu AyoReview Anda
                 </h1>
-                <p className="text-xs sm:text-sm text-zinc-200 mt-2 leading-relaxed font-normal">
+                <p className="text-xs sm:text-sm text-ink mt-2 leading-relaxed font-normal">
                   Kartu fisik dengan ID <span className="font-mono text-[#fbbc04] font-bold">{publicId}</span> siap dihubungkan ke profil ulasan Google Maps tempat usaha Anda.
                 </p>
               </div>
 
-              <div className="bg-zinc-900 border border-zinc-700 p-4 rounded-xl text-left space-y-3">
-                <div className="flex items-center gap-2.5 text-xs font-semibold text-zinc-100">
+              <div className="bg-surface border border-line p-4 rounded text-left space-y-3">
+                <div className="flex items-center gap-2.5 text-xs font-semibold text-ink">
                   <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
                   Langsung terhubung ke Google Review Form
                 </div>
-                <div className="flex items-center gap-2.5 text-xs font-semibold text-zinc-100">
+                <div className="flex items-center gap-2.5 text-xs font-semibold text-ink">
                   <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
                   Mendukung Tap NFC dan Scan QR instan
                 </div>
-                <div className="flex items-center gap-2.5 text-xs font-semibold text-zinc-100">
+                <div className="flex items-center gap-2.5 text-xs font-semibold text-ink">
                   <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
                   Garansi masa tenggang 7 hari pembayaran
                 </div>
@@ -289,7 +289,7 @@ export default function CardSetupPage() {
 
               <button
                 onClick={() => setStep(2)}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98]"
               >
                 Mulai Hubungkan Bisnis
                 <ArrowRight className="w-4 h-4" />
@@ -302,17 +302,17 @@ export default function CardSetupPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-white tracking-tight">
+                  <h2 className="text-xl font-bold text-ink tracking-tight">
                     Hubungkan Lokasi Bisnis
                   </h2>
-                  <p className="text-xs text-zinc-300 mt-1">
+                  <p className="text-xs text-ink mt-1">
                     Pilih metode yang paling mudah bagi Anda
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-lg transition"
+                  className="flex items-center gap-1.5 text-xs font-semibold text-ink hover:text-ink bg-subtle hover:bg-subtle border border-line px-3 py-1.5 rounded transition"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Kembali
@@ -320,14 +320,14 @@ export default function CardSetupPage() {
               </div>
 
               {/* Mode Tabs */}
-              <div className="grid grid-cols-2 gap-2 p-1.5 bg-zinc-900 border border-zinc-700 rounded-xl text-xs font-bold">
+              <div className="grid grid-cols-2 gap-2 p-1.5 bg-surface border border-line rounded text-xs font-bold">
                 <button
                   type="button"
                   onClick={() => setSetupMode('direct')}
-                  className={`py-2.5 rounded-lg transition text-center ${
+                  className={`py-2.5 rounded transition text-center ${
                     setupMode === 'direct'
                       ? 'bg-[#1a73e8] text-white shadow-md'
-                      : 'text-zinc-300 hover:text-white hover:bg-zinc-800'
+                      : 'text-ink hover:text-ink hover:bg-subtle'
                   }`}
                 >
                   Tempel Tautan (Mudah & Gratis)
@@ -335,10 +335,10 @@ export default function CardSetupPage() {
                 <button
                   type="button"
                   onClick={() => setSetupMode('search')}
-                  className={`py-2.5 rounded-lg transition text-center ${
+                  className={`py-2.5 rounded transition text-center ${
                     setupMode === 'search'
                       ? 'bg-[#1a73e8] text-white shadow-md'
-                      : 'text-zinc-300 hover:text-white hover:bg-zinc-800'
+                      : 'text-ink hover:text-ink hover:bg-subtle'
                   }`}
                 >
                   Cari di Google Maps
@@ -348,24 +348,24 @@ export default function CardSetupPage() {
               {setupMode === 'direct' ? (
                 <form onSubmit={handleDirectSubmit} className="space-y-4 text-xs">
                   <div>
-                    <label className="block text-zinc-100 font-bold mb-1.5">
+                    <label className="block text-ink font-bold mb-1.5">
                       Nama Bisnis / Cabang *
                     </label>
                     <div className="relative">
-                      <Building2 className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Building2 className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         required
                         placeholder="Contoh: Kopi Kenangan Senopati"
                         value={directName}
                         onChange={(e) => setDirectName(e.target.value)}
-                        className="w-full bg-zinc-900 border border-zinc-600 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-zinc-100 font-bold mb-1.5">
+                    <label className="block text-ink font-bold mb-1.5">
                       Tautan Ulasan Google / Google Maps *
                     </label>
                     <input
@@ -374,16 +374,16 @@ export default function CardSetupPage() {
                       placeholder="https://g.page/r/.../review atau https://maps.app.goo.gl/..."
                       value={directUrl}
                       onChange={(e) => setDirectUrl(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-600 rounded-xl px-3.5 py-3 text-white font-mono text-xs placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      className="w-full bg-surface border border-line rounded px-3.5 py-3 text-ink font-mono text-xs placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                     />
-                    <div className="p-3.5 bg-zinc-900/90 border border-zinc-700 rounded-xl mt-2.5 text-xs text-zinc-200 space-y-1.5">
-                      <div className="font-bold text-white flex items-center gap-1.5">
+                    <div className="p-3.5 bg-surface/90 border border-line rounded mt-2.5 text-xs text-ink space-y-1.5">
+                      <div className="font-bold text-ink flex items-center gap-1.5">
                         <HelpCircle className="w-4 h-4 text-[#fbbc04]" />
                         Cara mendapatkan tautan gratis (10 Detik):
                       </div>
-                      <div className="text-zinc-300">1. Buka aplikasi Google Maps di HP $\rightarrow$ cari nama toko Anda.</div>
-                      <div className="text-zinc-300">2. Klik tombol <span className="font-semibold text-white">&quot;Bagikan&quot;</span> atau <span className="font-semibold text-white">&quot;Minta Ulasan&quot;</span> $\rightarrow$ Salin Link.</div>
-                      <div className="text-zinc-300">3. Tempel link tersebut di atas. Selesai!</div>
+                      <div className="text-ink">1. Buka aplikasi Google Maps di HP $\rightarrow$ cari nama toko Anda.</div>
+                      <div className="text-ink">2. Klik tombol <span className="font-semibold text-ink">&quot;Bagikan&quot;</span> atau <span className="font-semibold text-ink">&quot;Minta Ulasan&quot;</span> $\rightarrow$ Salin Link.</div>
+                      <div className="text-ink">3. Tempel link tersebut di atas. Selesai!</div>
                     </div>
                   </div>
 
@@ -391,14 +391,14 @@ export default function CardSetupPage() {
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="w-1/3 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs border border-zinc-700 transition"
+                      className="w-1/3 py-3 rounded bg-subtle hover:bg-subtle text-ink font-bold text-xs border border-line transition"
                     >
                       Kembali
                     </button>
                     <button
                       type="submit"
                       disabled={!directName.trim() || !directUrl.trim()}
-                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
                     >
                       Lanjutkan ke Akun
                       <ArrowRight className="w-4 h-4" />
@@ -408,34 +408,34 @@ export default function CardSetupPage() {
               ) : (
                 <form onSubmit={handleSearch} className="space-y-4 text-xs">
                   <div>
-                    <label className="block text-zinc-100 font-bold mb-1.5">
+                    <label className="block text-ink font-bold mb-1.5">
                       Nama Bisnis *
                     </label>
                     <div className="relative">
-                      <Building2 className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <Building2 className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         required
                         placeholder="Contoh: Kopi Kenangan, Salon Indah"
                         value={businessQuery}
                         onChange={(e) => setBusinessQuery(e.target.value)}
-                        className="w-full bg-zinc-900 border border-zinc-600 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-zinc-100 font-bold mb-1.5">
+                    <label className="block text-ink font-bold mb-1.5">
                       Kota / Wilayah (Opsional)
                     </label>
                     <div className="relative">
-                      <MapPin className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <MapPin className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         placeholder="Contoh: Jakarta Selatan, Surabaya"
                         value={cityQuery}
                         onChange={(e) => setCityQuery(e.target.value)}
-                        className="w-full bg-zinc-900 border border-zinc-600 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                       />
                     </div>
                   </div>
@@ -444,14 +444,14 @@ export default function CardSetupPage() {
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="w-1/3 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs border border-zinc-700 transition"
+                      className="w-1/3 py-3 rounded bg-subtle hover:bg-subtle text-ink font-bold text-xs border border-line transition"
                     >
                       Kembali
                     </button>
                     <button
                       type="submit"
                       disabled={loading || !businessQuery.trim()}
-                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
                     >
                       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                       {loading ? 'Mencari di Google Maps...' : 'Cari Listing Google'}
@@ -467,17 +467,17 @@ export default function CardSetupPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-white tracking-tight">
+                  <h2 className="text-xl font-bold text-ink tracking-tight">
                     Pilih Lokasi Google
                   </h2>
-                  <p className="text-xs text-zinc-300 mt-1">
+                  <p className="text-xs text-ink mt-1">
                     Pilih lokasi yang tepat dari hasil pencarian Google
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-lg transition"
+                  className="flex items-center gap-1.5 text-xs font-semibold text-ink hover:text-ink bg-subtle hover:bg-subtle border border-line px-3 py-1.5 rounded transition"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Ubah Pencarian
@@ -490,14 +490,14 @@ export default function CardSetupPage() {
                     key={place.place_id}
                     onClick={() => handleSelectPlace(place)}
                     disabled={loading}
-                    className="w-full text-left p-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-[#1a73e8] transition group flex items-start gap-3.5 shadow-sm"
+                    className="w-full text-left p-4 rounded bg-surface hover:bg-subtle border border-line hover:border-[#1a73e8] transition group flex items-start gap-3.5 shadow-sm"
                   >
                     <MapPin className="w-5 h-5 text-[#1a73e8] shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
-                      <div className="font-bold text-white text-sm group-hover:text-[#4285f4] truncate">
+                      <div className="font-bold text-ink text-sm group-hover:text-[#4285f4] truncate">
                         {place.name}
                       </div>
-                      <div className="text-xs text-zinc-300 mt-0.5 line-clamp-2">
+                      <div className="text-xs text-ink mt-0.5 line-clamp-2">
                         {place.address}
                       </div>
                     </div>
@@ -508,7 +508,7 @@ export default function CardSetupPage() {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="w-full py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs border border-zinc-700 transition"
+                className="w-full py-3 rounded bg-subtle hover:bg-subtle text-ink font-bold text-xs border border-line transition"
               >
                 ← Kembali ke Form Pencarian
               </button>
@@ -520,17 +520,17 @@ export default function CardSetupPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-white tracking-tight">
+                  <h2 className="text-xl font-bold text-ink tracking-tight">
                     Buat Akun Pemilik Bisnis
                   </h2>
-                  <p className="text-xs text-zinc-300 mt-1">
+                  <p className="text-xs text-ink mt-1">
                     Untuk mengelola kartu ulasan dan melihat analitik pelanggan
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setStep(setupMode === 'direct' ? 2 : 3)}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 px-3 py-1.5 rounded-lg transition"
+                  className="flex items-center gap-1.5 text-xs font-semibold text-ink hover:text-ink bg-subtle hover:bg-subtle border border-line px-3 py-1.5 rounded transition"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Kembali
@@ -538,60 +538,60 @@ export default function CardSetupPage() {
               </div>
 
               {selectedPlace && (
-                <div className="p-3.5 bg-zinc-900 border border-zinc-700 rounded-xl text-xs flex items-center gap-2.5">
+                <div className="p-3.5 bg-surface border border-line rounded text-xs flex items-center gap-2.5">
                   <Building2 className="w-4 h-4 text-[#1a73e8] shrink-0" />
-                  <span className="text-white truncate font-bold">{selectedPlace.name}</span>
+                  <span className="text-ink truncate font-bold">{selectedPlace.name}</span>
                 </div>
               )}
 
               <form onSubmit={handleAccountSubmit} className="space-y-4 text-xs">
                 <div>
-                  <label className="block text-zinc-100 font-bold mb-1.5">
+                  <label className="block text-ink font-bold mb-1.5">
                     Nama Anda *
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <User className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       required
                       placeholder="Nama pemilik / manajer"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-600 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-zinc-100 font-bold mb-1.5">
+                  <label className="block text-ink font-bold mb-1.5">
                     Alamat Email *
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       required
                       placeholder="email@bisnis.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-600 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-zinc-100 font-bold mb-1.5">
+                  <label className="block text-ink font-bold mb-1.5">
                     Kata Sandi *
                   </label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <Lock className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="password"
                       required
                       placeholder="Minimal 6 karakter"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-600 rounded-xl pl-10 pr-4 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                     />
                   </div>
                 </div>
@@ -600,14 +600,14 @@ export default function CardSetupPage() {
                   <button
                     type="button"
                     onClick={() => setStep(setupMode === 'direct' ? 2 : 3)}
-                    className="w-1/3 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs border border-zinc-700 transition"
+                    className="w-1/3 py-3 rounded bg-subtle hover:bg-subtle text-ink font-bold text-xs border border-line transition"
                   >
                     Kembali
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
                     {loading ? 'Menghubungkan...' : 'Simpan & Aktifkan Kartu'}
@@ -620,25 +620,25 @@ export default function CardSetupPage() {
           {/* STEP 5: Payment / Subscription */}
           {step === 5 && (
             <div className="space-y-6 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#1a73e8]/20 border border-[#1a73e8]/50 flex items-center justify-center text-[#1a73e8] mx-auto shadow-lg shadow-[#1a73e8]/20">
+              <div className="w-16 h-16 rounded bg-[#1a73e8]/20 border border-[#1a73e8]/50 flex items-center justify-center text-[#1a73e8] mx-auto shadow-lg shadow-[#1a73e8]/20">
                 <CreditCard className="w-8 h-8 text-[#4285f4]" />
               </div>
 
               <div>
-                <h2 className="text-xl font-bold text-white tracking-tight">
+                <h2 className="text-xl font-bold text-ink tracking-tight">
                   Langganan Kartu AyoReview
                 </h2>
-                <p className="text-xs text-zinc-300 mt-1">
+                <p className="text-xs text-ink mt-1">
                   Aktifkan pengalihan ulasan instan dan analitik realtime
                 </p>
               </div>
 
-              <div className="bg-zinc-900 border border-zinc-700 p-5 rounded-xl text-left space-y-3">
+              <div className="bg-surface border border-line p-5 rounded text-left space-y-3">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-sm font-bold text-white">Paket Langganan Kartu</span>
-                  <span className="text-lg font-black text-[#34a853]">Rp 49.000<span className="text-xs font-normal text-zinc-400">/bln</span></span>
+                  <span className="text-sm font-bold text-ink">Paket Langganan Kartu</span>
+                  <span className="text-lg font-black text-[#34a853]">Rp 49.000<span className="text-xs font-normal text-muted-ink">/bln</span></span>
                 </div>
-                <ul className="text-xs text-zinc-200 space-y-2 pt-2.5 border-t border-zinc-800">
+                <ul className="text-xs text-ink space-y-2 pt-2.5 border-t border-line">
                   <li className="flex items-center gap-2 font-medium">
                     <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
                     Pengalihan NFC & QR tanpa batas
@@ -658,7 +658,7 @@ export default function CardSetupPage() {
                 <button
                   onClick={handleStartSubscription}
                   disabled={checkoutLoading}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98] disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98] disabled:opacity-50"
                 >
                   {checkoutLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
                   {checkoutLoading ? 'Membuka Pembayaran...' : 'Aktifkan Langganan (Stripe)'}
@@ -666,7 +666,7 @@ export default function CardSetupPage() {
 
                 <button
                   onClick={() => setStep(6)}
-                  className="w-full py-2.5 text-xs text-zinc-300 hover:text-white font-semibold transition"
+                  className="w-full py-2.5 text-xs text-ink hover:text-ink font-semibold transition"
                 >
                   Lewati untuk saat ini (Uji Coba 7 Hari Gratis) →
                 </button>
@@ -677,22 +677,22 @@ export default function CardSetupPage() {
           {/* STEP 6: Done */}
           {step === 6 && (
             <div className="space-y-6 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[#34a853] flex items-center justify-center text-white mx-auto shadow-lg shadow-[#34a853]/30">
+              <div className="w-16 h-16 rounded bg-[#34a853] flex items-center justify-center text-ink mx-auto shadow-lg shadow-[#34a853]/30">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
 
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
                   Kartu AyoReview Anda Siap Digunakan!
                 </h2>
-                <p className="text-xs sm:text-sm text-zinc-200 mt-2 leading-relaxed font-normal">
+                <p className="text-xs sm:text-sm text-ink mt-2 leading-relaxed font-normal">
                   Kartu fisik dengan ID <span className="font-mono text-[#fbbc04] font-bold">{publicId}</span> sekarang tertaut secara permanen. Setiap pelanggan yang mengetap atau memindai akan langsung diarahkan ke form ulasan Google bisnis Anda.
                 </p>
               </div>
 
               <Link
                 href="/my"
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98]"
               >
                 Buka Dasbor Saya
                 <ArrowRight className="w-4 h-4" />
@@ -703,7 +703,7 @@ export default function CardSetupPage() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full max-w-lg mx-auto text-center text-xs text-zinc-400 flex items-center justify-center gap-2 pt-4">
+      <footer className="w-full max-w-lg mx-auto text-center text-xs text-muted-ink flex items-center justify-center gap-2 pt-4">
         <ShieldCheck className="w-4 h-4 text-[#34a853]" />
         <span className="font-medium">Aktivasi Perangkat AyoReview Aman & Terverifikasi</span>
       </footer>

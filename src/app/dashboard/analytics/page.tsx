@@ -77,7 +77,7 @@ export default function AnalyticsPage() {
         actions={
           <button
             onClick={handleExportCsv}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold border border-zinc-700 transition"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-subtle hover:bg-subtle text-ink text-xs font-semibold border border-line transition"
           >
             <Download className="w-3.5 h-3.5" />
             Ekspor CSV
@@ -87,20 +87,20 @@ export default function AnalyticsPage() {
 
       <main className="p-8 space-y-8 max-w-7xl w-full mx-auto">
         {/* Timeframe Controls */}
-        <div className="flex items-center justify-between bg-[#121215] border border-zinc-800 rounded-2xl p-4 shadow-sm">
-          <div className="flex items-center gap-2 text-xs text-zinc-200 font-medium">
+        <div className="flex items-center justify-between bg-surface border border-line rounded p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-xs text-ink font-medium">
             <Calendar className="w-4 h-4 text-[#1a73e8]" />
             <span>Pilih Rentang Waktu Analitik:</span>
           </div>
-          <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800 text-xs">
+          <div className="flex items-center gap-1 bg-surface p-1 rounded border border-line text-xs">
             {[7, 30, 90].map((d) => (
               <button
                 key={d}
                 onClick={() => setDays(d)}
-                className={`px-3 py-1.5 rounded-lg font-semibold transition ${
+                className={`px-3 py-1.5 rounded font-semibold transition ${
                   days === d
                     ? 'bg-[#1a73e8] text-white shadow'
-                    : 'text-zinc-300 hover:text-white'
+                    : 'text-ink hover:text-ink'
                 }`}
               >
                 {d} Hari
@@ -129,12 +129,12 @@ export default function AnalyticsPage() {
             {/* Placement Breakdown & Locations Table */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Placements */}
-              <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-6 shadow-sm">
-                <h3 className="text-sm font-bold text-white tracking-tight mb-1 flex items-center gap-2">
+              <div className="bg-surface border border-line rounded p-6 shadow-sm">
+                <h3 className="text-sm font-bold text-ink tracking-tight mb-1 flex items-center gap-2">
                   <Layers className="w-4 h-4 text-[#1a73e8]" />
                   Interaksi berdasarkan Area Penempatan
                 </h3>
-                <p className="text-xs text-zinc-300 mb-5">
+                <p className="text-xs text-ink mb-5">
                   Ketahui titik fisik yang menghasilkan ulasan Google terbanyak
                 </p>
 
@@ -146,16 +146,16 @@ export default function AnalyticsPage() {
                     return (
                       <div
                         key={p.placement}
-                        className="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800"
+                        className="p-3.5 rounded bg-surface border border-line"
                       >
-                        <div className="flex items-center justify-between text-xs font-semibold text-white mb-1.5">
+                        <div className="flex items-center justify-between text-xs font-semibold text-ink mb-1.5">
                           <span>{placementMap[p.placement] || p.placement}</span>
                           <span>
                             {p.interactions.toLocaleString('id-ID')} kunjungan{' '}
-                            <span className="text-zinc-400 font-normal">({p.card_count} kartu)</span>
+                            <span className="text-muted-ink font-normal">({p.card_count} kartu)</span>
                           </span>
                         </div>
-                        <div className="w-full bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+                        <div className="w-full bg-subtle h-2.5 rounded-full overflow-hidden">
                           <div
                             style={{ width: `${Math.min(pct, 100)}%` }}
                             className="bg-[#1a73e8] h-full rounded-full"
@@ -168,12 +168,12 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Locations Performance */}
-              <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-6 shadow-sm">
-                <h3 className="text-sm font-bold text-white tracking-tight mb-1 flex items-center gap-2">
+              <div className="bg-surface border border-line rounded p-6 shadow-sm">
+                <h3 className="text-sm font-bold text-ink tracking-tight mb-1 flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-[#34a853]" />
                   Peringkat Performa Lokasi
                 </h3>
-                <p className="text-xs text-zinc-300 mb-5">
+                <p className="text-xs text-ink mb-5">
                   Peringkat interaksi ulasan di berbagai cabang usaha Anda
                 </p>
 
@@ -181,13 +181,13 @@ export default function AnalyticsPage() {
                   {data.locations.map((loc) => (
                     <div
                       key={loc.id}
-                      className="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between"
+                      className="p-3.5 rounded bg-surface border border-line flex items-center justify-between"
                     >
                       <div>
-                        <div className="text-xs font-bold text-white tracking-tight">
+                        <div className="text-xs font-bold text-ink tracking-tight">
                           {loc.name}
                         </div>
-                        <div className="text-[11px] text-zinc-300">
+                        <div className="text-[11px] text-ink">
                           {loc.city} · {loc.active_card_count} kartu aktif
                         </div>
                       </div>
@@ -195,7 +195,7 @@ export default function AnalyticsPage() {
                         <div className="text-sm font-bold text-[#34a853]">
                           {loc.total_interactions.toLocaleString('id-ID')}
                         </div>
-                        <div className="text-[10px] text-zinc-400">Total Kunjungan</div>
+                        <div className="text-[10px] text-muted-ink">Total Kunjungan</div>
                       </div>
                     </div>
                   ))}

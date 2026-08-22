@@ -13,6 +13,7 @@ import {
   Sparkles,
   Printer
 } from 'lucide-react';
+import { StatusBadge } from '@/components/ui/status-badge';
 
 interface AdminLocation {
   id: string;
@@ -123,21 +124,21 @@ export default function AdminCardsInventoryPage() {
     <main className="p-8 space-y-6 max-w-7xl w-full mx-auto text-xs">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
+          <h1 className="text-xl font-bold text-ink tracking-tight">
             Pengelolaan Inventaris Kartu Fisik
           </h1>
-          <p className="text-zinc-400 mt-0.5">
+          <p className="text-muted-ink mt-0.5">
             Buat kartu kosong Pre-Programmed atau tetapkan ke lokasi bisnis
           </p>
         </div>
 
         {/* Batch Generator */}
-        <div className="flex items-center gap-2 bg-[#121215] border border-zinc-800 p-2 rounded-xl">
-          <span className="text-zinc-400 font-medium">Buat Massal:</span>
+        <div className="flex items-center gap-2 bg-surface border border-line p-2 rounded">
+          <span className="text-muted-ink font-medium">Buat Massal:</span>
           <select
             value={batchCount}
             onChange={(e) => setBatchCount(parseInt(e.target.value, 10))}
-            className="bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-1 text-white"
+            className="bg-surface border border-line rounded px-2 py-1 text-ink"
           >
             <option value="5">5 kartu</option>
             <option value="10">10 kartu</option>
@@ -147,7 +148,7 @@ export default function AdminCardsInventoryPage() {
           <button
             onClick={handleBatchGenerate}
             disabled={generating}
-            className="flex items-center gap-1 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold rounded-lg transition disabled:opacity-50"
+            className="flex items-center gap-1 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-ink font-bold rounded transition disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
             {generating ? 'Membuat...' : 'Buat Kartu Kosong'}
@@ -157,27 +158,27 @@ export default function AdminCardsInventoryPage() {
 
       {/* Tabs & Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 p-1 rounded-xl">
+        <div className="flex items-center gap-1 bg-surface border border-line p-1 rounded">
           <button
             onClick={() => setFilterTab('all')}
-            className={`px-3 py-1 rounded-lg font-medium transition ${
-              filterTab === 'all' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white'
+            className={`px-3 py-1 rounded font-medium transition ${
+              filterTab === 'all' ? 'bg-subtle text-ink' : 'text-muted-ink hover:text-ink'
             }`}
           >
             Semua ({cards.length})
           </button>
           <button
             onClick={() => setFilterTab('pre_pro')}
-            className={`px-3 py-1 rounded-lg font-medium transition ${
-              filterTab === 'pre_pro' ? 'bg-amber-500/20 text-amber-300' : 'text-zinc-400 hover:text-white'
+            className={`px-3 py-1 rounded font-medium transition ${
+              filterTab === 'pre_pro' ? 'bg-warning-soft text-warning' : 'text-muted-ink hover:text-ink'
             }`}
           >
             Pre-Pro Siap Kirim ({cards.filter((c) => !c.place_id && !c.location_id).length})
           </button>
           <button
             onClick={() => setFilterTab('linked')}
-            className={`px-3 py-1 rounded-lg font-medium transition ${
-              filterTab === 'linked' ? 'bg-emerald-500/20 text-emerald-300' : 'text-zinc-400 hover:text-white'
+            className={`px-3 py-1 rounded font-medium transition ${
+              filterTab === 'linked' ? 'bg-action/20 text-success' : 'text-muted-ink hover:text-ink'
             }`}
           >
             Tertaut ({cards.filter((c) => Boolean(c.place_id || c.location_id)).length})
@@ -185,23 +186,23 @@ export default function AdminCardsInventoryPage() {
         </div>
 
         <div className="relative w-full sm:max-w-xs">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-muted-ink absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Saring kode RT, ID, bisnis..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#121215] border border-zinc-800 rounded-xl pl-9 pr-4 py-1.5 text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+            className="w-full bg-surface border border-line rounded pl-9 pr-4 py-1.5 text-ink placeholder-zinc-500 focus:outline-none focus:border-amber-500"
           />
         </div>
       </div>
 
       {/* Inventory Table */}
-      <div className="bg-[#121215] border border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-surface border border-line rounded shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px] bg-zinc-900/60">
+              <tr className="border-b border-line text-muted-ink uppercase tracking-wider font-semibold text-[10px] bg-surface/60">
                 <th className="py-3 px-5">Kode Inventaris</th>
                 <th className="py-3 px-4">ID Publik</th>
                 <th className="py-3 px-4">Nama Kartu</th>
@@ -214,45 +215,35 @@ export default function AdminCardsInventoryPage() {
             </thead>
             <tbody className="divide-y divide-zinc-800/60">
               {filteredCards.map((c) => (
-                <tr key={c.id} className="hover:bg-zinc-800/20 transition">
-                  <td className="py-3.5 px-5 font-mono font-bold text-amber-400">
+                <tr key={c.id} className="hover:bg-subtle/20 transition">
+                  <td className="py-3.5 px-5 font-mono font-bold text-warning">
                     {c.inventory_code}
                   </td>
-                  <td className="py-3.5 px-4 font-mono text-zinc-300">
+                  <td className="py-3.5 px-4 font-mono text-ink">
                     {c.public_id}
                   </td>
-                  <td className="py-3.5 px-4 font-semibold text-white">
+                  <td className="py-3.5 px-4 font-semibold text-ink">
                     {c.business_name || c.name}
                   </td>
-                  <td className="py-3.5 px-4 text-zinc-300">
+                  <td className="py-3.5 px-4 text-ink">
                     {c.place_id ? (
                       <div>
-                        <span className="text-emerald-400 font-medium">Tertaut ke Google Places</span>
-                        <div className="text-[10px] text-zinc-400 font-mono truncate max-w-[160px]">{c.place_id}</div>
+                        <span className="text-success font-medium">Tertaut ke Google Places</span>
+                        <div className="text-[10px] text-muted-ink font-mono truncate max-w-[160px]">{c.place_id}</div>
                       </div>
                     ) : c.location_name ? (
                       <span>{c.location_name}</span>
                     ) : (
-                      <span className="text-amber-400/80 font-medium">Pre-Pro (Belum ditautkan)</span>
+                      <span className="font-medium text-warning">Pre-Pro (Belum ditautkan)</span>
                     )}
                   </td>
-                  <td className="py-3.5 px-4 capitalize text-zinc-400">
+                  <td className="py-3.5 px-4 capitalize text-muted-ink">
                     {c.placement}
                   </td>
                   <td className="py-3.5 px-4">
-                    <span
-                      className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border ${
-                        c.status === 'active'
-                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                          : c.status === 'replaced'
-                          ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                          : 'bg-zinc-800 text-zinc-400 border-zinc-700'
-                      }`}
-                    >
-                      {c.status}
-                    </span>
+                    <StatusBadge tone={c.status === 'active' ? 'success' : c.status === 'replaced' ? 'warning' : 'neutral'}>{c.status}</StatusBadge>
                   </td>
-                  <td className="py-3.5 px-4 text-right font-bold text-white">
+                  <td className="py-3.5 px-4 text-right font-bold text-ink">
                     {c.stats?.allTime || 0}
                   </td>
                   <td className="py-3.5 px-5 text-right space-x-2">
@@ -261,14 +252,14 @@ export default function AdminCardsInventoryPage() {
                         setAssigningCard(c);
                         setAssignedPlacement(c.placement);
                       }}
-                      className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium border border-zinc-700 transition"
+                      className="px-2.5 py-1 rounded bg-subtle hover:bg-subtle text-ink text-[11px] font-medium border border-line transition"
                     >
                       Tetapkan Lokasi
                     </button>
                     <Link
                       href={`/dashboard/cards/${c.id}/print`}
                       target="_blank"
-                      className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-[11px] font-medium border border-zinc-700 transition inline-flex items-center gap-1"
+                      className="px-2.5 py-1 rounded bg-subtle hover:bg-subtle text-ink text-[11px] font-medium border border-line transition inline-flex items-center gap-1"
                     >
                       <Printer className="w-3 h-3" /> Print
                     </Link>
@@ -283,14 +274,14 @@ export default function AdminCardsInventoryPage() {
       {/* Assign Venue Modal */}
       {assigningCard && (
         <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#121215] border border-zinc-800 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-              <h3 className="text-sm font-bold text-white">
+          <div className="bg-surface border border-line rounded w-full max-w-md p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-line pb-3">
+              <h3 className="text-sm font-bold text-ink">
                 Tetapkan Perangkat {assigningCard.inventory_code}
               </h3>
               <button
                 onClick={() => setAssigningCard(null)}
-                className="text-zinc-400 hover:text-white"
+                className="text-muted-ink hover:text-ink"
               >
                 ✕
               </button>
@@ -298,13 +289,13 @@ export default function AdminCardsInventoryPage() {
 
             <form onSubmit={handleAssign} className="space-y-4">
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">
+                <label className="block text-ink font-semibold mb-1">
                   Cabang Tujuan
                 </label>
                 <select
                   value={selectedLocationId}
                   onChange={(e) => setSelectedLocationId(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-amber-500"
                 >
                   {locations.map((l) => (
                     <option key={l.id} value={l.id}>
@@ -315,13 +306,13 @@ export default function AdminCardsInventoryPage() {
               </div>
 
               <div>
-                <label className="block text-zinc-300 font-semibold mb-1">
+                <label className="block text-ink font-semibold mb-1">
                   Penempatan Fisik
                 </label>
                 <select
                   value={assignedPlacement}
                   onChange={(e) => setAssignedPlacement(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-amber-500"
                 >
                   <option value="cashier">Kasir / POS</option>
                   <option value="table">Meja / Bilik makan</option>
@@ -332,17 +323,17 @@ export default function AdminCardsInventoryPage() {
                 </select>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-zinc-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-line">
                 <button
                   type="button"
                   onClick={() => setAssigningCard(null)}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 font-medium"
+                  className="px-4 py-2 rounded bg-subtle text-ink font-medium"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold transition shadow"
+                  className="px-4 py-2 rounded bg-amber-500 hover:bg-amber-400 text-ink font-bold transition shadow"
                 >
                   Konfirmasi Penetapan
                 </button>

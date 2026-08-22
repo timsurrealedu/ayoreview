@@ -22,22 +22,22 @@ export function SourceSplitCard({
   const displayNfcPct = hasData ? `${nfcPercentage}%` : '—%';
 
   return (
-    <div className="bg-[#121215] border border-zinc-750 rounded-xl p-5 sm:p-6 shadow-sm flex flex-col justify-between h-full">
+    <div className="bg-surface border border-line rounded p-5 sm:p-6 shadow-sm flex flex-col justify-between h-full">
       <div>
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-bold text-white tracking-tight">
+          <h3 className="text-sm font-bold text-ink tracking-tight">
             Sumber Interaksi
           </h3>
-          <span className="text-[11px] font-semibold text-zinc-300 bg-zinc-850 px-2 py-0.5 rounded-md border border-zinc-700">
+          <span className="text-[11px] font-semibold text-ink bg-subtle px-2 py-0.5 rounded border border-line">
             QR vs NFC
           </span>
         </div>
-        <p className="text-xs text-zinc-300 mb-5">
+        <p className="text-xs text-ink mb-5">
           Perbandingan cara pelanggan memberi ulasan di tempat usaha
         </p>
 
         {/* Visual Progress Bar */}
-        <div className="h-3 w-full bg-zinc-800 rounded-full overflow-hidden flex mb-5 border border-zinc-750">
+        <div className="h-3 w-full bg-subtle rounded-full overflow-hidden flex mb-5 border border-line">
           {hasData ? (
             <>
               <div
@@ -52,35 +52,35 @@ export function SourceSplitCard({
               />
             </>
           ) : (
-            <div className="w-full bg-zinc-800 h-full" />
+            <div className="w-full bg-subtle h-full" />
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-zinc-800">
+      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-line">
         {/* QR Box */}
-        <div className="p-3.5 rounded-lg bg-zinc-900/90 border border-zinc-750 space-y-1">
+        <div className="p-3.5 rounded bg-surface/90 border border-line space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-zinc-200 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-ink flex items-center gap-1.5">
               <QrCode className="w-3.5 h-3.5 text-[#34a853]" /> Scan QR
             </span>
             <span className="text-xs font-black text-[#34a853]">{displayQrPct}</span>
           </div>
-          <div className="text-base font-black text-white">
-            {qrTotal.toLocaleString()} <span className="text-xs font-normal text-zinc-400">pindaian</span>
+          <div className="text-base font-black text-ink">
+            {qrTotal.toLocaleString()} <span className="text-xs font-normal text-muted-ink">pindaian</span>
           </div>
         </div>
 
         {/* NFC Box */}
-        <div className="p-3.5 rounded-lg bg-zinc-900/90 border border-zinc-750 space-y-1">
+        <div className="p-3.5 rounded bg-surface/90 border border-line space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-zinc-200 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-ink flex items-center gap-1.5">
               <Smartphone className="w-3.5 h-3.5 text-[#1a73e8]" /> Tap NFC
             </span>
             <span className="text-xs font-black text-[#1a73e8]">{displayNfcPct}</span>
           </div>
-          <div className="text-base font-black text-white">
-            {nfcTotal.toLocaleString()} <span className="text-xs font-normal text-zinc-400">ketukan</span>
+          <div className="text-base font-black text-ink">
+            {nfcTotal.toLocaleString()} <span className="text-xs font-normal text-muted-ink">ketukan</span>
           </div>
         </div>
       </div>

@@ -11,10 +11,10 @@ export default async function DashboardLayout({
   const { org, user } = await requireOrgMembership();
 
   return (
-    <div className="flex min-h-screen bg-[#09090b] text-zinc-100">
+    <div className="min-h-screen bg-canvas text-ink md:flex">
       <DashboardSidebar organizationName={org?.name || 'Organisasi Saya'} isPlatformAdmin={user.is_platform_admin} />
-      <div className="flex-1 flex flex-col min-w-0">
-        {children}
+      <div className="flex min-w-0 flex-1 flex-col">
+        <main id="main-content" tabIndex={-1} className="flex-1">{children}</main>
       </div>
     </div>
   );

@@ -10,18 +10,18 @@ export default async function AdminUsersPage() {
   return (
     <main className="p-8 space-y-6 max-w-6xl w-full mx-auto text-xs">
       <div>
-        <h1 className="text-xl font-bold text-white tracking-tight">
+        <h1 className="text-xl font-bold text-ink tracking-tight">
           Direktori Pengguna Platform
         </h1>
-        <p className="text-zinc-400 mt-0.5">
+        <p className="text-muted-ink mt-0.5">
           Account registrations and authentication credentials
         </p>
       </div>
 
-      <div className="bg-[#121215] border border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-surface border border-line rounded shadow-sm overflow-hidden">
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px] bg-zinc-900/60">
+            <tr className="border-b border-line text-muted-ink uppercase tracking-wider font-semibold text-[10px] bg-surface/60">
               <th className="py-3 px-5">Nama Pengguna</th>
               <th className="py-3 px-4">Email</th>
               <th className="py-3 px-4">Peran</th>
@@ -30,28 +30,28 @@ export default async function AdminUsersPage() {
           </thead>
           <tbody className="divide-y divide-zinc-800/60">
             {users.map((u) => (
-              <tr key={u.id} className="hover:bg-zinc-800/20 transition">
-                <td className="py-4 px-5 font-bold text-white text-sm">
+              <tr key={u.id} className="hover:bg-subtle/20 transition">
+                <td className="py-4 px-5 font-bold text-ink text-sm">
                   {u.name}
                 </td>
-                <td className="py-4 px-4 text-zinc-300 font-mono">
+                <td className="py-4 px-4 text-ink font-mono">
                   {u.email}
                 </td>
-                <td className="py-4 px-4 font-mono text-zinc-400">
+                <td className="py-4 px-4 font-mono text-muted-ink">
                   {u.is_platform_admin ? (
-                    <span className="text-amber-400 font-bold">Admin Platform</span>
+                    <span className="font-bold text-warning">Admin Platform</span>
                   ) : (
                     <span>Pengguna Bisnis</span>
                   )}
                 </td>
-                <td className="py-4 px-4 text-zinc-400">
+                <td className="py-4 px-4 text-muted-ink">
                   {new Date(u.created_at).toLocaleDateString()}
                 </td>
               </tr>
             ))}
             {users.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-8 text-center text-zinc-500 text-xs">
+                <td colSpan={4} className="py-8 text-center text-muted-ink text-xs">
                   Pengguna tidak ditemukan.
                 </td>
               </tr>

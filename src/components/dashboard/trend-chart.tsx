@@ -24,27 +24,27 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
   const isEmpty = totalInteractions === 0;
 
   return (
-    <div className="bg-[#121215] border border-zinc-750 rounded-xl p-5 sm:p-6 shadow-sm">
+    <div className="bg-surface border border-line rounded p-5 sm:p-6 shadow-sm">
       {/* Chart Header & Integrated Toolbar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
         <div>
-          <h3 className="text-sm font-bold text-white tracking-tight">
+          <h3 className="text-sm font-bold text-ink tracking-tight">
             Aktivitas Interaksi
           </h3>
-          <p className="text-xs text-zinc-300 mt-0.5">
+          <p className="text-xs text-ink mt-0.5">
             Tren harian pengalihan ke ulasan Google (30 Hari Terakhir)
           </p>
         </div>
 
         {/* Filter Toolbar */}
-        <div className="flex items-center bg-zinc-900 p-1 rounded-lg border border-zinc-700 text-xs font-semibold">
+        <div className="flex items-center bg-surface p-1 rounded border border-line text-xs font-semibold">
           <button
             type="button"
             onClick={() => setFilter('total')}
-            className={`px-3 py-1 rounded-md transition ${
+            className={`px-3 py-1 rounded transition ${
               filter === 'total'
                 ? 'bg-[#1a73e8] text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
+                : 'text-muted-ink hover:text-ink'
             }`}
           >
             Semua
@@ -52,10 +52,10 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
           <button
             type="button"
             onClick={() => setFilter('qr')}
-            className={`px-3 py-1 rounded-md transition ${
+            className={`px-3 py-1 rounded transition ${
               filter === 'qr'
-                ? 'bg-[#34a853] text-white shadow-sm'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-[#34a853] text-ink shadow-sm'
+                : 'text-muted-ink hover:text-ink'
             }`}
           >
             Scan QR
@@ -63,10 +63,10 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
           <button
             type="button"
             onClick={() => setFilter('nfc')}
-            className={`px-3 py-1 rounded-md transition ${
+            className={`px-3 py-1 rounded transition ${
               filter === 'nfc'
-                ? 'bg-[#fbbc04] text-zinc-950 font-bold shadow-sm'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-[#fbbc04] text-ink font-bold shadow-sm'
+                : 'text-muted-ink hover:text-ink'
             }`}
           >
             Tap NFC
@@ -77,14 +77,14 @@ export function TrendChart({ data }: { data: DailyTrendPoint[] }) {
       {/* Chart Canvas or Clean Empty State */}
       <div className="h-64 w-full relative flex items-center justify-center">
         {isEmpty ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-zinc-900/40 rounded-lg border border-dashed border-zinc-800">
-            <div className="w-12 h-12 rounded-xl bg-zinc-800/80 border border-zinc-700 flex items-center justify-center mb-3">
-              <BarChart3 className="w-6 h-6 text-zinc-400" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-surface/40 rounded border border-dashed border-line">
+            <div className="w-12 h-12 rounded bg-subtle/80 border border-line flex items-center justify-center mb-3">
+              <BarChart3 className="w-6 h-6 text-muted-ink" />
             </div>
-            <h4 className="text-sm font-bold text-white mb-1">
+            <h4 className="text-sm font-bold text-ink mb-1">
               Belum Ada Data Interaksi
             </h4>
-            <p className="text-xs text-zinc-400 max-w-sm">
+            <p className="text-xs text-muted-ink max-w-sm">
               Data grafik akan otomatis muncul setelah pelanggan mulai memindai QR atau mengetuk kartu NFC di tempat usaha Anda.
             </p>
           </div>

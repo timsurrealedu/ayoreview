@@ -1,5 +1,6 @@
 import { dbRepo } from '@/lib/db';
 import { requirePlatformAdmin } from '@/lib/auth';
+import { StatusBadge } from '@/components/ui/status-badge';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,18 +11,18 @@ export default async function AdminOrganizationsPage() {
   return (
     <main className="p-8 space-y-6 max-w-6xl w-full mx-auto text-xs">
       <div>
-        <h1 className="text-xl font-bold text-white tracking-tight">
+        <h1 className="text-xl font-bold text-ink tracking-tight">
           Organisasi & Langganan Percontohan
         </h1>
-        <p className="text-zinc-400 mt-0.5">
+        <p className="text-muted-ink mt-0.5">
           Kelola akun bisnis dan paket komersial percontohan
         </p>
       </div>
 
-      <div className="bg-[#121215] border border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-surface border border-line rounded shadow-sm overflow-hidden">
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px] bg-zinc-900/60">
+            <tr className="border-b border-line text-muted-ink uppercase tracking-wider font-semibold text-[10px] bg-surface/60">
               <th className="py-3 px-5">Nama Organisasi</th>
               <th className="py-3 px-4">Paket</th>
               <th className="py-3 px-4">Status</th>
@@ -30,26 +31,24 @@ export default async function AdminOrganizationsPage() {
           </thead>
           <tbody className="divide-y divide-zinc-800/60">
             {orgs.map((org) => (
-              <tr key={org.id} className="hover:bg-zinc-800/20 transition">
-                <td className="py-4 px-5 font-bold text-white text-sm">
+              <tr key={org.id} className="hover:bg-subtle/20 transition">
+                <td className="py-4 px-5 font-bold text-ink text-sm">
                   {org.name}
                 </td>
-                <td className="py-4 px-4 font-mono uppercase font-semibold text-emerald-400">
+                <td className="py-4 px-4 font-mono uppercase font-semibold text-success">
                   {org.plan}
                 </td>
                 <td className="py-4 px-4">
-                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                    {org.status}
-                  </span>
+                  <StatusBadge tone={org.status === 'active' ? 'success' : 'neutral'}>{org.status}</StatusBadge>
                 </td>
-                <td className="py-4 px-4 text-zinc-400">
+                <td className="py-4 px-4 text-muted-ink">
                   {new Date(org.created_at).toLocaleDateString()}
                 </td>
               </tr>
             ))}
             {orgs.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-8 text-center text-zinc-500 text-xs">
+                <td colSpan={4} className="py-8 text-center text-muted-ink text-xs">
                   Belum ada organisasi terdaftar.
                 </td>
               </tr>

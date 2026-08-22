@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 import { strictLimiter, mediumLimiter, defaultLimiter } from '@/lib/rate-limiter';
+import { wantsRateLimitPage } from '@/lib/rate-limit-presentation';
 
 export async function middleware(request: NextRequest) {
   // Apply rate limiting
@@ -20,17 +21,28 @@ export async function middleware(request: NextRequest) {
 
   const result = limiter.check(`rt:${ip}:${path}:${method}`);
   if (!result.allowed) {
-    const retryAfter = Math.ceil((result.resetTime - Date.now()) / 1000);
+    const retryAfter = Math.max(1, Math.ceil((result.resetTime - Date.now()) / 1000));
+    const headers = {
+      'Retry-After': String(retryAfter),
+      'X-RateLimit-Limit': String(limiter['max']),
+      'X-RateLimit-Remaining': '0',
+      'X-RateLimit-Reset': String(Math.ceil(result.resetTime / 1000)),
+    };
+    if (wantsRateLimitPage(request)) {
+      const recoveryUrl = request.nextUrl.clone();
+      recoveryUrl.pathname = '/rate-limited';
+      recoveryUrl.search = '';
+      recoveryUrl.searchParams.set('path', path);
+      recoveryUrl.searchParams.set('retryAfter', String(retryAfter));
+      return NextResponse.rewrite(recoveryUrl, { status: 429, headers });
+    }
     return new NextResponse(
       JSON.stringify({ success: false, error: 'Too many requests. Please slow down.' }),
       {
         status: 429,
         headers: {
+          ...headers,
           'Content-Type': 'application/json',
-          'Retry-After': String(retryAfter),
-          'X-RateLimit-Limit': String(limiter['max']),
-          'X-RateLimit-Remaining': '0',
-          'X-RateLimit-Reset': String(Math.ceil(result.resetTime / 1000)),
         },
       }
     );

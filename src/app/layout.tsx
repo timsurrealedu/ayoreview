@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${archivo.variable} ${plexMono.variable}`}>
-      <body className="min-h-[100dvh] bg-[#09090b] text-[#fafafa] antialiased">
+      <body className="min-h-[100dvh] bg-canvas text-ink antialiased">
         {children}
       </body>
     </html>

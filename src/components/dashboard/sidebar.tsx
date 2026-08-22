@@ -1,175 +1,66 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  MapPin, 
-  CreditCard, 
-  BarChart3, 
-  Settings, 
-  Receipt, 
-  ShieldCheck, 
-  Store,
-  Sparkles,
-  ExternalLink,
-  LogOut
-} from 'lucide-react';
+import { ArrowLeft, BarChart3, CreditCard, LayoutDashboard, LogOut, MapPin, Menu, Receipt, Settings, ShieldCheck, Sparkles, Store, Users, X } from 'lucide-react';
 import clsx from 'clsx';
 
-const navItems = [
-  { label: 'Ringkasan', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Lokasi Usaha', href: '/dashboard/locations', icon: MapPin },
-  { label: 'Kartu Ulasan', href: '/dashboard/cards', icon: CreditCard },
-  { label: 'Analitik', href: '/dashboard/analytics', icon: BarChart3 },
-];
+type Shell = 'dashboard' | 'merchant' | 'admin';
+const navigation = {
+  dashboard: [
+    { label: 'Ringkasan', href: '/dashboard', icon: LayoutDashboard }, { label: 'Lokasi Usaha', href: '/dashboard/locations', icon: MapPin },
+    { label: 'Kartu Ulasan', href: '/dashboard/cards', icon: CreditCard }, { label: 'Analitik', href: '/dashboard/analytics', icon: BarChart3 },
+    { label: 'Akun & Pengaturan', href: '/dashboard/settings', icon: Settings }, { label: 'Paket & Tagihan', href: '/dashboard/billing', icon: Receipt },
+  ],
+  merchant: [{ label: 'Kartu Saya', href: '/my', icon: CreditCard }, { label: 'Langganan & Tagihan', href: '/my/billing', icon: Receipt }],
+  admin: [{ label: 'Ringkasan', href: '/admin', icon: LayoutDashboard }, { label: 'Inventaris & Kartu Fisik', href: '/admin/cards', icon: CreditCard }, { label: 'Organisasi', href: '/admin/organizations', icon: Store }, { label: 'Pengguna', href: '/admin/users', icon: Users }],
+} satisfies Record<Shell, Array<{ label: string; href: string; icon: typeof LayoutDashboard }>>;
 
-const bottomNavItems = [
-  { label: 'Akun & Pengaturan', href: '/dashboard/settings', icon: Settings },
-  { label: 'Paket & Tagihan', href: '/dashboard/billing', icon: Receipt },
-];
+function isCurrent(pathname: string, href: string) {
+  return pathname === href || (!['/dashboard', '/my', '/admin'].includes(href) && pathname.startsWith(`${href}/`));
+}
 
-const adminNavItem = { label: 'Admin Platform', href: '/admin', icon: ShieldCheck };
-
-export function DashboardSidebar({ 
-  organizationName, 
-  isPlatformAdmin 
-}: { 
-  organizationName?: string; 
-  isPlatformAdmin?: boolean;
-}) {
+export function DashboardSidebar({ organizationName, isPlatformAdmin, shell = 'dashboard', userName, userEmail }: { organizationName?: string; isPlatformAdmin?: boolean; shell?: Shell; userName?: string | null; userEmail?: string }) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+    const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && setOpen(false);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => { document.body.style.overflow = overflow; document.removeEventListener('keydown', closeOnEscape); triggerRef.current?.focus(); };
+  }, [open]);
 
-  return (
-    <aside className="w-60 border-r border-zinc-800 bg-[#0c0c0e] flex flex-col justify-between shrink-0 min-h-screen">
-      <div>
-        {/* Brand Header */}
-        <div className="h-16 flex items-center px-5 border-b border-zinc-800">
-          <Link href="/dashboard" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30">
-              A
-            </div>
-            <div>
-              <span className="font-bold text-white tracking-tight text-sm block leading-none">
-                AyoReview
-              </span>
-              <span className="text-[10px] font-semibold text-zinc-400 tracking-wide uppercase">
-                Konsol Bisnis
-              </span>
-            </div>
-          </Link>
-        </div>
-
-        {/* Business Selector / Info Badge */}
-        <div className="px-3 py-3">
-          <div className="px-3 py-2 rounded-lg bg-zinc-900/90 border border-zinc-800 flex items-center gap-2.5">
-            <Store className="w-4 h-4 text-[#1a73e8] shrink-0" />
-            <div className="truncate flex-1 min-w-0">
-              <div className="text-xs font-semibold text-white truncate">
-                {organizationName || 'Bisnis Anda'}
-              </div>
-              <div className="text-[10px] text-zinc-400">Akun Terdaftar</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Navigation */}
-        <div className="px-3 py-1">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-2.5 mb-1.5">
-            Menu Utama
-          </div>
-          <nav className="space-y-0.5">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={clsx(
-                    'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all',
-                    isActive
-                      ? 'bg-zinc-800/90 text-white font-semibold border-l-2 border-[#1a73e8] shadow-sm'
-                      : 'text-zinc-300 hover:text-white hover:bg-zinc-850'
-                  )}
-                >
-                  <Icon className={clsx('w-4 h-4 shrink-0', isActive ? 'text-[#1a73e8]' : 'text-zinc-400')} />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
+  const admin = shell === 'admin';
+  const merchant = shell === 'merchant';
+  const title = admin ? 'Operator AyoReview' : 'AyoReview';
+  const subtitle = admin ? 'Portal Admin Platform' : merchant ? 'Portal Pemilik Usaha' : 'Konsol Bisnis';
+  const home = admin ? '/admin' : merchant ? '/my' : '/dashboard';
+  const panel = (
+    <div className="flex h-full flex-col bg-surface">
+      <div className="flex min-h-16 items-center justify-between border-b border-line px-5">
+        <Link href={home} className="flex min-h-11 items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded bg-action text-sm font-black text-white">AR</span><span><span className="block text-sm font-bold leading-none text-ink">{title}</span><span className="mt-1 block font-mono text-[10px] font-medium text-muted-ink">{subtitle}</span></span></Link>
+        <button ref={closeRef} type="button" onClick={() => setOpen(false)} className="flex h-11 w-11 items-center justify-center rounded text-ink md:hidden" aria-label="Tutup navigasi"><X className="h-5 w-5" /></button>
       </div>
-
-      {/* Footer Nav & Admin Shortcut */}
-      <div className="p-3 border-t border-zinc-800 space-y-1">
-        <div className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-2.5 mb-1">
-          Sistem & Tagihan
-        </div>
-        {bottomNavItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={clsx(
-                'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all',
-                isActive
-                  ? 'bg-zinc-850 text-white font-semibold border-l-2 border-[#1a73e8]'
-                  : 'text-zinc-300 hover:text-white hover:bg-zinc-850/60'
-              )}
-            >
-              <Icon className="w-4 h-4 text-zinc-400 shrink-0" />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-
-        {/* Platform Admin — only visible to platform operators */}
-        {isPlatformAdmin && (() => {
-          const Icon = adminNavItem.icon;
-          const isActive = pathname === adminNavItem.href;
-          return (
-            <Link
-              key={adminNavItem.href}
-              href={adminNavItem.href}
-              className={clsx(
-                'flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all',
-                isActive
-                  ? 'bg-zinc-850 text-white font-semibold border-l-2 border-[#fbbc04]'
-                  : 'text-zinc-300 hover:text-white hover:bg-zinc-850/60'
-              )}
-            >
-              <Icon className="w-4 h-4 text-[#fbbc04] shrink-0" />
-              <span>{adminNavItem.label}</span>
-            </Link>
-          );
-        })()}
-
-        <div className="pt-2 px-1 space-y-1">
-          <Link
-            href="/onboarding"
-            className="flex items-center justify-between p-2 rounded-lg bg-zinc-900 border border-zinc-750 text-zinc-200 text-xs font-medium hover:border-[#1a73e8] hover:text-white transition group"
-          >
-            <span className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#fbbc04]" /> Panduan Setup
-            </span>
-            <ExternalLink className="w-3 h-3 text-zinc-400 group-hover:text-white transition" />
-          </Link>
-          <button
-            onClick={async () => {
-              await fetch('/api/auth/signout', { method: 'POST' });
-              window.location.href = '/login';
-            }}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-zinc-400 hover:text-rose-400 hover:bg-zinc-900/60 transition cursor-pointer"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Keluar</span>
-          </button>
-        </div>
+      <div className="flex-1 overflow-y-auto px-3 py-4">
+        {!admin && !merchant && organizationName && <div className="mb-4 flex items-center gap-2.5 rounded border border-line bg-subtle px-3 py-2.5"><Store className="h-4 w-4 shrink-0 text-action" /><div className="min-w-0"><div className="truncate text-xs font-semibold text-ink">{organizationName}</div><div className="text-[10px] text-muted-ink">Akun terdaftar</div></div></div>}
+        <nav aria-label={subtitle} className="space-y-1">
+          {navigation[shell].map(({ label, href, icon: Icon }) => { const active = isCurrent(pathname, href); return <Link key={href} href={href} aria-current={active ? 'page' : undefined} className={clsx('flex min-h-11 items-center gap-3 rounded px-3 text-xs font-semibold transition-colors', active ? 'bg-action-soft text-action' : 'text-ink hover:bg-subtle')}><Icon className="h-4 w-4 shrink-0" /><span>{label}</span></Link>; })}
+          {!admin && isPlatformAdmin && <Link href="/admin" className="flex min-h-11 items-center gap-3 rounded px-3 text-xs font-semibold text-warning hover:bg-warning-soft"><ShieldCheck className="h-4 w-4" />Admin Platform</Link>}
+        </nav>
       </div>
-    </aside>
+      <div className="space-y-2 border-t border-line p-3">
+        {merchant && (userName || userEmail) && <div className="px-3 py-1"><div className="truncate text-xs font-semibold text-ink">{userName}</div><div className="truncate text-[11px] text-muted-ink">{userEmail}</div></div>}
+        {!admin && <Link href="/onboarding" className="flex min-h-11 items-center gap-2 rounded border border-line px-3 text-xs font-semibold text-ink hover:bg-subtle"><Sparkles className="h-4 w-4 text-warning" />Panduan Setup</Link>}
+        {admin ? <Link href="/dashboard" className="flex min-h-11 items-center gap-2 rounded px-3 text-xs font-semibold text-ink hover:bg-subtle"><ArrowLeft className="h-4 w-4" />Kembali ke Dasbor Bisnis</Link> : <form action="/api/auth/signout" method="POST"><button type="submit" className="flex min-h-11 w-full items-center gap-2 rounded px-3 text-xs font-semibold text-error hover:bg-error-soft"><LogOut className="h-4 w-4" />Keluar</button></form>}
+      </div>
+    </div>
   );
+  return <><a href="#main-content" className="fixed left-3 top-3 z-[70] -translate-y-20 rounded bg-action px-4 py-3 text-sm font-bold text-white focus:translate-y-0">Lewati ke konten utama</a><header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-line bg-surface px-4 md:hidden"><Link href={home} className="flex min-h-11 items-center gap-2"><span className="flex h-8 w-8 items-center justify-center rounded bg-action text-xs font-black text-white">AR</span><span className="text-sm font-bold text-ink">{title}</span></Link><button ref={triggerRef} type="button" onClick={() => setOpen(true)} aria-label="Buka navigasi" aria-expanded={open} aria-controls={`${shell}-navigation`} className="flex h-11 w-11 items-center justify-center rounded border border-line text-ink"><Menu className="h-5 w-5" /></button></header><aside className="hidden min-h-screen w-64 shrink-0 border-r border-line md:block">{panel}</aside>{open && <div className="fixed inset-0 z-50 md:hidden"><button type="button" className="absolute inset-0 bg-ink/35" onClick={() => setOpen(false)} aria-label="Tutup navigasi" /><aside id={`${shell}-navigation`} role="dialog" aria-modal="true" aria-label={subtitle} className="relative h-full w-[min(20rem,88vw)] shadow-2xl">{panel}</aside></div>}</>;
 }

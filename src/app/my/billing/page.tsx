@@ -12,6 +12,7 @@ import {
   ArrowRight,
   ExternalLink 
 } from 'lucide-react';
+import { StatusBadge } from '@/components/ui/status-badge';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,19 +30,19 @@ export default async function MyBillingPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
           Langganan & Tagihan
         </h1>
-        <p className="text-xs sm:text-sm text-zinc-300 mt-1">
+        <p className="text-xs sm:text-sm text-ink mt-1">
           Kelola pembayaran bulanan kartu AyoReview dan status operasional ulasan bisnis Anda
         </p>
       </div>
 
       {/* Grace Period Alert Banner if any card is past due */}
       {pastDueCards.length > 0 && (
-        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 space-y-2">
-          <div className="flex items-center gap-2 font-bold text-sm text-amber-300">
-            <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
+        <div role="status" className="space-y-2 rounded border border-warning/25 bg-warning-soft p-4 text-warning">
+          <div className="flex items-center gap-2 text-sm font-bold">
+            <AlertTriangle className="h-5 w-5 shrink-0" />
             Pemberitahuan Masa Tenggang Pembayaran ({GRACE_PERIOD_DAYS} Hari)
           </div>
           <p className="text-xs leading-relaxed">
@@ -51,30 +52,30 @@ export default async function MyBillingPage() {
       )}
 
       {/* Plan Summary Card */}
-      <div className="bg-[#121215] border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-sm space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
+      <div className="bg-surface border border-line p-6 sm:p-8 rounded shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-line pb-6">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#1a73e8] bg-[#1a73e8]/10 px-2.5 py-1 rounded-full border border-[#1a73e8]/30">
+            <span className="rounded border border-action/25 bg-action-soft px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-action">
               Paket Standar AyoReview
             </span>
-            <h2 className="text-xl font-bold text-white mt-2">
+            <h2 className="text-xl font-bold text-ink mt-2">
               Langganan Pengalihan Ulasan Otomatis
             </h2>
-            <p className="text-xs text-zinc-300 mt-1">
+            <p className="text-xs text-ink mt-1">
               Rp 49.000 / kartu per bulan • Ditagih otomatis setiap bulan
             </p>
           </div>
 
           <div className="text-right sm:text-right">
-            <div className="text-2xl sm:text-3xl font-black text-white">
+            <div className="text-2xl sm:text-3xl font-black text-ink">
               Rp {(cards.length * 49000).toLocaleString('id-ID')}
             </div>
-            <div className="text-[11px] text-zinc-400">Total untuk {cards.length} kartu</div>
+            <div className="text-[11px] text-muted-ink">Total untuk {cards.length} kartu</div>
           </div>
         </div>
 
         {/* Benefits list */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-zinc-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-ink">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
             Pengalihan NFC & QR tanpa batasan kuota
@@ -96,15 +97,15 @@ export default async function MyBillingPage() {
 
       {/* Cards Billing Table */}
       <div className="space-y-4">
-        <h2 className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
+        <h2 className="text-xs font-bold text-ink uppercase tracking-wider">
           Status Langganan Per Kartu
         </h2>
 
-        <div className="bg-[#121215] border border-zinc-800 rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-surface border border-line rounded overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-zinc-800 text-zinc-300 uppercase font-semibold text-[10px] bg-zinc-900">
+                <tr className="border-b border-line text-ink uppercase font-semibold text-[10px] bg-surface">
                   <th className="py-3 px-5">Kode / Kartu</th>
                   <th className="py-3 px-4">Nama Bisnis</th>
                   <th className="py-3 px-4">Status Langganan</th>
@@ -116,37 +117,29 @@ export default async function MyBillingPage() {
                 {cards.map((c) => {
                   const check = checkCardSubscriptionStatus(c as any);
                   return (
-                    <tr key={c.id} className="hover:bg-zinc-800/40 transition">
+                    <tr key={c.id} className="hover:bg-subtle/40 transition">
                       <td className="py-3.5 px-5 font-mono font-bold text-[#fbbc04]">
                         {c.inventory_code}
                       </td>
-                      <td className="py-3.5 px-4 font-semibold text-white">
+                      <td className="py-3.5 px-4 font-semibold text-ink">
                         {c.business_name || c.name}
                       </td>
                       <td className="py-3.5 px-4">
                         {check.inGracePeriod ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
-                            <AlertTriangle className="w-3 h-3 text-amber-400" />
-                            Tenggang ({check.daysRemainingInGrace} hr)
-                          </span>
+                          <StatusBadge tone="warning">Tenggang ({check.daysRemainingInGrace} hr)</StatusBadge>
                         ) : c.subscription_status === 'active' ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#34a853]/10 text-[#34a853] border border-[#34a853]/30">
-                            <CheckCircle2 className="w-3 h-3" />
-                            Aktif
-                          </span>
+                          <StatusBadge tone="success">Aktif</StatusBadge>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-                            {c.subscription_status || 'Pending'}
-                          </span>
+                          <StatusBadge>{c.subscription_status || 'Pending'}</StatusBadge>
                         )}
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-zinc-300 text-[11px]">
+                      <td className="py-3.5 px-4 font-mono text-ink text-[11px]">
                         {c.subscription_id || 'Belum terhubung'}
                       </td>
                       <td className="py-3.5 px-5 text-right">
                         <Link
                           href={`/s/${c.public_id}`}
-                          className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white text-[11px] font-medium border border-zinc-700 transition"
+                          className="px-2.5 py-1 rounded bg-subtle hover:bg-subtle text-ink text-[11px] font-medium border border-line transition"
                         >
                           Kelola / Bayar
                         </Link>

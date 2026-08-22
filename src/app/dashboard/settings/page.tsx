@@ -15,84 +15,84 @@ export default async function SettingsPage() {
       />
 
       <main className="p-8 space-y-6 max-w-4xl w-full mx-auto">
-        <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-6 shadow-sm space-y-6">
-          <div className="border-b border-zinc-800 pb-4">
-            <h3 className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+        <div className="bg-surface border border-line rounded p-6 shadow-sm space-y-6">
+          <div className="border-b border-line pb-4">
+            <h3 className="text-sm font-bold text-ink tracking-tight flex items-center gap-2">
               <Store className="w-4 h-4 text-[#1a73e8]" /> Profil Organisasi
             </h3>
-            <p className="text-xs text-zinc-300 mt-0.5">
+            <p className="text-xs text-ink mt-0.5">
               Identitas utama bisnis untuk semua cabang lokasi dan kartu ulasan
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-zinc-300 font-semibold mb-1.5">Nama Organisasi</label>
+              <label className="block text-ink font-semibold mb-1.5">Nama Organisasi</label>
               <input
                 type="text"
                 disabled
                 value={org.name}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white"
+                className="w-full bg-surface border border-line rounded px-3.5 py-2.5 text-ink"
               />
             </div>
             <div>
-              <label className="block text-zinc-300 font-semibold mb-1.5">Paket Langganan</label>
+              <label className="block text-ink font-semibold mb-1.5">Paket Langganan</label>
               <input
                 type="text"
                 disabled
                 value={`${org.plan.toUpperCase()} (${org.status})`}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-[#1a73e8] font-bold uppercase font-mono"
+                className="w-full bg-surface border border-line rounded px-3.5 py-2.5 text-[#1a73e8] font-bold uppercase font-mono"
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-6 shadow-sm space-y-6">
-          <div className="border-b border-zinc-800 pb-4">
-            <h3 className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+        <div className="bg-surface border border-line rounded p-6 shadow-sm space-y-6">
+          <div className="border-b border-line pb-4">
+            <h3 className="text-sm font-bold text-ink tracking-tight flex items-center gap-2">
               <User className="w-4 h-4 text-[#1a73e8]" /> Akun & Hak Akses
             </h3>
-            <p className="text-xs text-zinc-300 mt-0.5">
+            <p className="text-xs text-ink mt-0.5">
               Sesi terautentikasi dan izin saat ini
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-zinc-300 font-semibold mb-1.5">Nama Pengguna</label>
+              <label className="block text-ink font-semibold mb-1.5">Nama Pengguna</label>
               <input
                 type="text"
                 disabled
                 value={user.name}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white"
+                className="w-full bg-surface border border-line rounded px-3.5 py-2.5 text-ink"
               />
             </div>
             <div>
-              <label className="block text-zinc-300 font-semibold mb-1.5">Alamat Email</label>
+              <label className="block text-ink font-semibold mb-1.5">Alamat Email</label>
               <input
                 type="email"
                 disabled
                 value={user.email}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-white"
+                className="w-full bg-surface border border-line rounded px-3.5 py-2.5 text-ink"
               />
             </div>
             <div>
-              <label className="block text-zinc-300 font-semibold mb-1.5">Peran Organisasi</label>
+              <label className="block text-ink font-semibold mb-1.5">Peran Organisasi</label>
               <input
                 type="text"
                 disabled
                 value={role.toUpperCase()}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-zinc-200 font-mono font-semibold"
+                className="w-full bg-surface border border-line rounded px-3.5 py-2.5 text-ink font-mono font-semibold"
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-[#121215] border border-zinc-800 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 text-xs text-zinc-200">
+        <div className="bg-surface border border-line rounded p-6 shadow-sm">
+          <div className="flex items-center gap-3 text-xs text-ink">
             <Shield className="w-4 h-4 text-[#34a853] shrink-0" />
             <div>
-              <span className="font-semibold text-white">Keamanan AyoReview:</span> Penyimpanan Supabase PostgreSQL dengan Keamanan Tingkat Baris (RLS), isolasi organisasi terenkripsi, dan validasi URL Google yang ketat.
+              <span className="font-semibold text-ink">Keamanan AyoReview:</span> Penyimpanan Supabase PostgreSQL dengan Keamanan Tingkat Baris (RLS), isolasi organisasi terenkripsi, dan validasi URL Google yang ketat.
             </div>
           </div>
         </div>

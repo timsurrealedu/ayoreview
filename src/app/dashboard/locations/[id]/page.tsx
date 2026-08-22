@@ -96,11 +96,11 @@ export default function LocationDetailPage() {
   };
 
   if (loading) {
-    return <div className="p-8 text-zinc-400 text-xs">Memuat pengaturan lokasi...</div>;
+    return <div className="p-8 text-muted-ink text-xs">Memuat pengaturan lokasi...</div>;
   }
 
   if (!location) {
-    return <div className="p-8 text-zinc-400 text-xs">Lokasi tidak ditemukan.</div>;
+    return <div className="p-8 text-muted-ink text-xs">Lokasi tidak ditemukan.</div>;
   }
 
   return (
@@ -111,7 +111,7 @@ export default function LocationDetailPage() {
         actions={
           <Link
             href="/dashboard/locations"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-medium border border-zinc-700 transition"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-subtle hover:bg-subtle text-ink text-xs font-medium border border-line transition"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Locations
           </Link>
@@ -120,19 +120,19 @@ export default function LocationDetailPage() {
 
       <main className="p-8 space-y-8 max-w-5xl w-full mx-auto">
         {/* Core Review Destination Form */}
-        <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-4">
+        <div className="bg-surface border border-line/80 rounded p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4 border-b border-line/80 pb-4">
             <div>
-              <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
-                <Star className="w-4 h-4 text-amber-400" />
+              <h3 className="text-base font-bold text-ink tracking-tight flex items-center gap-2">
+                <Star className="w-4 h-4 text-warning" />
                 URL Tujuan Ulasan Google
               </h3>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <p className="text-xs text-muted-ink mt-0.5">
                 Mengubah URL ini langsung mengalihkan semua {cards.length} kartu NFC & QR yang terhubung tanpa mencetak ulang.
               </p>
             </div>
             {saved && (
-              <span className="flex items-center gap-1 text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+              <span className="flex items-center gap-1 text-xs font-medium text-success bg-action/10 px-2.5 py-1 rounded border border-success/20">
                 <Check className="w-3.5 h-3.5" /> Tersimpan & Langsung Aktif
               </span>
             )}
@@ -140,7 +140,7 @@ export default function LocationDetailPage() {
 
           <form onSubmit={handleUpdate} className="space-y-4 text-xs">
             <div>
-              <label className="block text-zinc-300 font-semibold mb-1">
+              <label className="block text-ink font-semibold mb-1">
                 URL Ulasan Google Aktif (Tujuan)
               </label>
               <div className="flex gap-2">
@@ -149,54 +149,54 @@ export default function LocationDetailPage() {
                   required
                   value={reviewUrl}
                   onChange={(e) => setReviewUrl(e.target.value)}
-                  className="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-white font-mono text-xs focus:outline-none focus:border-emerald-500"
+                  className="flex-1 bg-surface border border-line rounded px-4 py-2.5 text-ink font-mono text-xs focus:outline-none focus:border-success"
                 />
                 <button
                   type="submit"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold transition shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded bg-action hover:bg-action text-white font-bold transition shadow-lg shadow-action/20 active:scale-[0.98]"
                 >
                   <Save className="w-4 h-4" /> Simpan Tujuan
                 </button>
               </div>
-              <div className="flex items-center justify-between text-[11px] text-zinc-400 mt-2">
+              <div className="flex items-center justify-between text-[11px] text-muted-ink mt-2">
                 <span>Harus diawali https:// (contoh: https://g.page/r/.../review)</span>
                 <a
                   href={reviewUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-emerald-400 hover:underline flex items-center gap-1"
+                  className="text-success hover:underline flex items-center gap-1"
                 >
                   Test current link <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-zinc-800/80">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-line/80">
               <div>
-                <label className="block text-zinc-400 font-medium mb-1">Nama Cabang</label>
+                <label className="block text-muted-ink font-medium mb-1">Nama Cabang</label>
                 <input
                   type="text"
                   value={locName}
                   onChange={(e) => setLocName(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-zinc-700"
+                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-line"
                 />
               </div>
               <div>
-                <label className="block text-zinc-400 font-medium mb-1">Kota</label>
+                <label className="block text-muted-ink font-medium mb-1">Kota</label>
                 <input
                   type="text"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-zinc-700"
+                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-line"
                 />
               </div>
               <div>
-                <label className="block text-zinc-400 font-medium mb-1">Alamat</label>
+                <label className="block text-muted-ink font-medium mb-1">Alamat</label>
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-zinc-700"
+                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-line"
                 />
               </div>
             </div>
@@ -204,19 +204,19 @@ export default function LocationDetailPage() {
         </div>
 
         {/* Associated Physical Cards */}
-        <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-6 shadow-sm">
+        <div className="bg-surface border border-line/80 rounded p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-base font-bold text-white tracking-tight">
+              <h3 className="text-base font-bold text-ink tracking-tight">
                 Kartu Ulasan yang Terhubung ke {location.name}
               </h3>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <p className="text-xs text-muted-ink mt-0.5">
                 Dudukan dan kartu fisik yang terpasang di cabang ini (total {cards.length})
               </p>
             </div>
             <Link
               href="/dashboard/cards"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold border border-zinc-700 transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-subtle hover:bg-subtle text-ink text-xs font-semibold border border-line transition"
             >
               <Plus className="w-3.5 h-3.5" /> Add Another Card
             </Link>
@@ -225,7 +225,7 @@ export default function LocationDetailPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-zinc-800 text-zinc-400 uppercase tracking-wider font-semibold text-[10px]">
+                <tr className="border-b border-line text-muted-ink uppercase tracking-wider font-semibold text-[10px]">
                   <th className="pb-3 pt-2">Nama Kartu</th>
                   <th className="pb-3 pt-2">Penempatan</th>
                   <th className="pb-3 pt-2">Kode Inventaris</th>
@@ -235,31 +235,31 @@ export default function LocationDetailPage() {
               </thead>
               <tbody className="divide-y divide-zinc-800/60">
                 {cards.map((c) => (
-                  <tr key={c.id} className="hover:bg-zinc-800/30 transition">
-                    <td className="py-3.5 font-medium text-white">
+                  <tr key={c.id} className="hover:bg-subtle/30 transition">
+                    <td className="py-3.5 font-medium text-ink">
                       {c.name}
                     </td>
-                    <td className="py-3.5 text-zinc-400 capitalize">
-                      <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700 text-[11px]">
+                    <td className="py-3.5 text-muted-ink capitalize">
+                      <span className="px-2 py-0.5 rounded bg-subtle text-ink border border-line text-[11px]">
                         {c.placement}
                       </span>
                     </td>
-                    <td className="py-3.5 font-mono text-zinc-400 text-[11px]">
+                    <td className="py-3.5 font-mono text-muted-ink text-[11px]">
                       {c.inventory_code}
                     </td>
-                    <td className="py-3.5 text-right font-bold text-white">
+                    <td className="py-3.5 text-right font-bold text-ink">
                       {c.stats.last30Days.toLocaleString()}
                     </td>
                     <td className="py-3.5 text-right space-x-2">
                       <button
                         onClick={() => setSelectedCardForQr(c)}
-                        className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium border border-zinc-700 transition"
+                        className="px-2.5 py-1 rounded bg-subtle hover:bg-subtle text-ink text-[11px] font-medium border border-line transition"
                       >
                         QR Code
                       </button>
                       <Link
                         href={`/dashboard/cards/${c.id}`}
-                        className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-[11px] font-medium border border-emerald-500/20 transition"
+                        className="px-2.5 py-1 rounded bg-action/10 hover:bg-action/20 text-success text-[11px] font-medium border border-success/20 transition"
                       >
                         Detail Kartu
                       </Link>
@@ -278,7 +278,7 @@ export default function LocationDetailPage() {
               <div className="flex justify-end mb-2">
                 <button
                   onClick={() => setSelectedCardForQr(null)}
-                  className="text-zinc-400 hover:text-white text-xs bg-zinc-800 px-3 py-1 rounded-lg border border-zinc-700"
+                  className="text-muted-ink hover:text-ink text-xs bg-subtle px-3 py-1 rounded border border-line"
                 >
                   Tutup
                 </button>
