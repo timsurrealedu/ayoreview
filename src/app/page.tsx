@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Archivo } from 'next/font/google';
-import { ArrowRight, BarChart3, Building2, Check, LayoutDashboard, MapPin, QrCode, ScanLine, Smartphone, Star } from 'lucide-react';
+import { ArrowRight, BarChart3, Building2, Check, LayoutDashboard, MapPin, QrCode, Smartphone, Star } from 'lucide-react';
 import { ActivateCardModal } from '@/components/ui/activate-card-modal';
 import './landing.css';
 
@@ -32,7 +32,7 @@ export default function LandingPage() {
     <nav className="landing-nav" aria-label="Navigasi utama"><div className="nav-inner">
       <Link href="/" className="wordmark" aria-label="Beranda AyoReview"><span aria-hidden="true">A</span>AyoReview</Link>
       <div className="nav-links"><a href="#cara-kerja">Cara kerja</a><a href="#produk">Produknya</a><a href="#penempatan">Penempatan</a></div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+      <div className="nav-actions">
         <ActivateCardModal />
         <Link href="/login" className="button button-small button-inverse">Masuk</Link>
       </div>
