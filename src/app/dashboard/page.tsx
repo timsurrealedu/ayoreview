@@ -4,6 +4,7 @@ import { DashboardHeader } from '@/components/dashboard/header';
 import { TrendChart } from '@/components/dashboard/trend-chart';
 import { SourceSplitCard } from '@/components/dashboard/source-split';
 import { TopCardsTable } from '@/components/dashboard/top-cards-table';
+import { ActivateCardModal } from '@/components/ui/activate-card-modal';
 import Link from 'next/link';
 import { 
   Plus, 
@@ -15,7 +16,9 @@ import {
   ExternalLink,
   Store,
   Sparkles,
-  AlertCircle
+  AlertCircle,
+  Activity,
+  CheckCircle2
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -36,111 +39,96 @@ export default async function DashboardOverviewPage({
     dbRepo.getBusinesses(org.id),
   ]);
 
+  const hasInteractions = overview.allTime > 0;
+
   return (
     <div className="flex-1 flex flex-col">
       <DashboardHeader
-        title="Ringkasan Dasbor"
-        subtitle={`Metrik interaksi waktu nyata untuk ${org.name}`}
+        title="Ringkasan"
+        subtitle={`Pantau performa kartu ulasan dan interaksi pelanggan ${org.name}`}
         actions={
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ActivateCardModal />
             <Link
               href="/dashboard/cards"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium border border-zinc-700 transition"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#1a73e8] hover:bg-[#1557b0] text-white text-xs font-bold shadow-md shadow-[#1a73e8]/20 transition active:scale-[0.98]"
             >
-              <CreditCard className="w-3.5 h-3.5" />
-              Kelola Kartu
-            </Link>
-            <Link
-              href="/dashboard/locations"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 text-xs font-semibold shadow-lg shadow-emerald-500/20 transition active:scale-[0.98]"
-            >
-              <Plus className="w-4 h-4" />
-              Tambah Lokasi
+              <Plus className="w-3.5 h-3.5" />
+              <span>Buat Kartu</span>
             </Link>
           </div>
         }
       />
 
-      <main className="p-8 space-y-8 max-w-7xl w-full mx-auto">
+      <main className="p-6 sm:p-8 space-y-6 max-w-7xl w-full mx-auto">
         {/* Error Banner */}
         {adminError && (
-          <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{adminError}</span>
+          <div className="p-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <span className="font-semibold">{adminError}</span>
           </div>
         )}
 
-        {/* Create QR Code CTA Card */}
-        <div className="bg-gradient-to-r from-emerald-950/30 to-[#111115] border border-emerald-500/20 rounded-2xl p-6 shadow-sm flex items-center justify-between gap-6">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
-              <Sparkles className="w-4 h-4" /> Kartu Ulasan Baru
-            </div>
-            <h3 className="text-lg font-bold text-white tracking-tight">Buat Kode QR baru</h3>
-            <p className="text-xs text-zinc-400">Buat pengalihan NFC + QR baru untuk meja, kasir, atau pintu masuk.</p>
-          </div>
-          <Link
-            href="/dashboard/cards"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all active:scale-[0.97] shrink-0"
-          >
-            <QrCode className="w-4 h-4" /> Create QR Code
-          </Link>
-        </div>
-
-        {/* KPI Summary Cards */}
+        {/* 4 Distinct, Purposeful KPI Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Today */}
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-            <div className="flex items-center justify-between text-zinc-400 text-xs font-medium mb-2">
-              <span>Kunjungan Ulasan Hari Ini</span>
-              <span className="flex items-center gap-1 text-[11px] text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                <TrendingUp className="w-3 h-3" /> +{overview.todayGrowthPct}%
+          {/* 1. Total Interaksi */}
+          <div className="bg-[#121215] border border-zinc-750 rounded-xl p-5 shadow-sm space-y-1.5">
+            <div className="flex items-center justify-between text-zinc-300 text-xs font-bold uppercase tracking-wider">
+              <span>Total Interaksi</span>
+              <Activity className="w-4 h-4 text-[#1a73e8]" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              {overview.allTime.toLocaleString('id-ID')}
+            </div>
+            <div className="flex items-center justify-between text-xs text-zinc-400 pt-1">
+              <span>Total Scan QR & Tap NFC</span>
+              {overview.todayGrowthPct > 0 && (
+                <span className="text-[#34a853] font-bold">+{overview.todayGrowthPct}%</span>
+              )}
+            </div>
+          </div>
+
+          {/* 2. Kunjungan Ulasan (30 Hari) */}
+          <div className="bg-[#121215] border border-zinc-750 rounded-xl p-5 shadow-sm space-y-1.5">
+            <div className="flex items-center justify-between text-zinc-300 text-xs font-bold uppercase tracking-wider">
+              <span>Kunjungan Ulasan</span>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#1a73e8]/20 text-[#4285f4] border border-[#1a73e8]/30">
+                30 Hari
               </span>
             </div>
-            <div className="text-3xl font-black text-white tracking-tight">
-              {overview.today.toLocaleString()}
+            <div className="text-2xl sm:text-3xl font-black text-[#34a853] tracking-tight">
+              {overview.last30Days.toLocaleString('id-ID')}
             </div>
-            <div className="text-[11px] text-zinc-400 mt-1">
-              Tujuan ulasan Google yang dikunjungi hari ini
-            </div>
-          </div>
-
-          {/* Last 7 Days */}
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-            <div className="text-zinc-400 text-xs font-medium mb-2">
-              7 Hari Terakhir
-            </div>
-            <div className="text-3xl font-black text-white tracking-tight">
-              {overview.last7Days.toLocaleString()}
-            </div>
-            <div className="text-[11px] text-zinc-400 mt-1">
-              Interaksi pelanggan mingguan
+            <div className="text-xs text-zinc-400 pt-1">
+              Pengalihan sukses ke ulasan Google
             </div>
           </div>
 
-          {/* Last 30 Days */}
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-            <div className="text-zinc-400 text-xs font-medium mb-2">
-              30 Hari Terakhir
+          {/* 3. Scan QR */}
+          <div className="bg-[#121215] border border-zinc-750 rounded-xl p-5 shadow-sm space-y-1.5">
+            <div className="flex items-center justify-between text-zinc-300 text-xs font-bold uppercase tracking-wider">
+              <span>Scan QR</span>
+              <QrCode className="w-4 h-4 text-[#34a853]" />
             </div>
-            <div className="text-3xl font-black text-white tracking-tight text-emerald-400">
-              {overview.last30Days.toLocaleString()}
+            <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              {overview.qrTotal.toLocaleString('id-ID')}
             </div>
-            <div className="text-[11px] text-zinc-400 mt-1">
-              Kunjungan Halaman Ulasan Bulanan (Metrik Utama)
+            <div className="text-xs text-zinc-400 pt-1">
+              {hasInteractions ? `${overview.qrPercentage}% dari total interaksi` : '—% dari total interaksi'}
             </div>
           </div>
 
-          {/* All Time */}
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-5 shadow-sm">
-            <div className="text-zinc-400 text-xs font-medium mb-2">
-              Total Sepanjang Waktu
+          {/* 4. Tap NFC */}
+          <div className="bg-[#121215] border border-zinc-750 rounded-xl p-5 shadow-sm space-y-1.5">
+            <div className="flex items-center justify-between text-zinc-300 text-xs font-bold uppercase tracking-wider">
+              <span>Tap NFC</span>
+              <Smartphone className="w-4 h-4 text-[#1a73e8]" />
             </div>
-            <div className="text-3xl font-black text-white tracking-tight">
-              {overview.allTime.toLocaleString()}
+            <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              {overview.nfcTotal.toLocaleString('id-ID')}
             </div>
-            <div className="text-[11px] text-zinc-400 mt-1">
-              Cumulative hardware engagements
+            <div className="text-xs text-zinc-400 pt-1">
+              {hasInteractions ? `${overview.nfcPercentage}% dari total interaksi` : '—% dari total interaksi'}
             </div>
           </div>
         </div>
@@ -167,36 +155,36 @@ export default async function DashboardOverviewPage({
           </div>
 
           {/* Multi-Location Overview */}
-          <div className="bg-[#121215] border border-zinc-800/80 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+          <div className="bg-[#121215] border border-zinc-750 rounded-xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-semibold text-white tracking-tight">
-                  Locations Performance
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-bold text-white tracking-tight">
+                  Performa Lokasi Usaha
                 </h3>
                 <Link
                   href="/dashboard/locations"
-                  className="text-xs text-emerald-400 hover:underline"
+                  className="text-xs text-[#1a73e8] hover:text-[#4285f4] font-semibold hover:underline"
                 >
                   Kelola
                 </Link>
               </div>
-              <p className="text-xs text-zinc-400 mb-4">
-                Tujuan ulasan aktif di seluruh tempat usaha Anda
+              <p className="text-xs text-zinc-300 mb-4">
+                Cabang terdaftar dan kartu yang aktif
               </p>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 {locations.map((loc) => (
                   <Link
                     key={loc.id}
                     href={`/dashboard/locations/${loc.id}`}
-                    className="block p-3.5 rounded-xl bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700 transition"
+                    className="block p-3 rounded-lg bg-zinc-900/90 border border-zinc-750 hover:border-[#1a73e8] transition"
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-bold text-white tracking-tight">
                         {loc.name}
                       </span>
-                      <span className="text-xs font-bold text-emerald-400">
-                        {loc.total_interactions} kunjungan
+                      <span className="text-xs font-black text-[#34a853]">
+                        {loc.total_interactions.toLocaleString('id-ID')} interaksi
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-[11px] text-zinc-400">
@@ -206,20 +194,20 @@ export default async function DashboardOverviewPage({
                   </Link>
                 ))}
                 {locations.length === 0 && (
-                  <div className="text-center py-6 text-zinc-500 text-xs">
-                    Belum ada lokasi. Tambahkan lokasi usaha pertama Anda di atas.
+                  <div className="text-center py-6 text-zinc-400 text-xs font-medium bg-zinc-900/50 rounded-lg border border-dashed border-zinc-800">
+                    Belum ada lokasi usaha. Tambahkan lokasi cabang Anda di menu Lokasi Usaha.
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="pt-4 border-t border-zinc-800/80 mt-4">
+            <div className="pt-4 border-t border-zinc-800 mt-4">
               <Link
                 href="/onboarding"
-                className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-medium hover:bg-zinc-800 transition"
+                className="w-full flex items-center justify-center gap-2 p-2.5 rounded-lg bg-zinc-900 border border-zinc-750 text-zinc-200 text-xs font-bold hover:bg-zinc-800 hover:border-[#1a73e8] transition"
               >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                Launch 3-Minute Onboarding Wizard
+                <Sparkles className="w-3.5 h-3.5 text-[#fbbc04]" />
+                Buka Panduan Setup Bisnis
               </Link>
             </div>
           </div>
