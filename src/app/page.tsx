@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Archivo } from 'next/font/google';
 import { ArrowRight, BarChart3, Building2, Check, LayoutDashboard, MapPin, QrCode, ScanLine, Smartphone, Star } from 'lucide-react';
+import { ActivateCardModal } from '@/components/ui/activate-card-modal';
 import './landing.css';
 
 const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', display: 'swap' });
@@ -31,11 +32,14 @@ export default function LandingPage() {
     <nav className="landing-nav" aria-label="Navigasi utama"><div className="nav-inner">
       <Link href="/" className="wordmark" aria-label="Beranda AyoReview"><span aria-hidden="true">A</span>AyoReview</Link>
       <div className="nav-links"><a href="#cara-kerja">Cara kerja</a><a href="#produk">Produknya</a><a href="#penempatan">Penempatan</a></div>
-      <Link href="/signup" className="button button-small">Beli Sekarang</Link>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <ActivateCardModal />
+        <Link href="/login" className="button button-small button-inverse">Masuk</Link>
+      </div>
     </div></nav>
 
     <section className="hero" aria-labelledby="hero-title">
-      <div className="hero-copy"><p className="eyebrow">Kartu NFC + QR untuk Ulasan Google</p><h1 id="hero-title">Tingkatkan peringkat Google. Bangun kepercayaan.</h1><p className="hero-deck">Pelanggan cukup mengetuk atau memindai QR untuk memberi ulasan dan meyakinkan lebih banyak calon pelanggan.</p><div className="hero-actions"><Link href="/signup" className="button">Beli Sekarang <ArrowRight aria-hidden="true" /></Link><a href="#cara-kerja" className="text-action">Lihat cara kerja <ScanLine aria-hidden="true" /></a></div></div>
+      <div className="hero-copy"><p className="eyebrow">Kartu NFC + QR untuk Ulasan Google</p><h1 id="hero-title">Tingkatkan peringkat Google. Bangun kepercayaan.</h1><p className="hero-deck">Pelanggan cukup mengetuk atau memindai QR untuk memberi ulasan dan meyakinkan lebih banyak calon pelanggan.</p><div className="hero-actions"><Link href="/signup" className="button">Beli Sekarang <ArrowRight aria-hidden="true" /></Link><ActivateCardModal /></div></div>
       <div className="hero-product" aria-label="Kartu AyoReview"><div className="google-shape google-shape-blue" aria-hidden="true" /><div className="google-shape google-shape-yellow" aria-hidden="true" /><div className="product-shadow" aria-hidden="true" /><ReviewCard priority /><div className="rating-badge"><ReviewStars /><strong>Ulasan Google</strong><span>Lebih mudah diminta</span></div></div>
     </section>
 

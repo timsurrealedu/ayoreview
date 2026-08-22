@@ -15,6 +15,8 @@ import {
   Sparkles
 } from 'lucide-react';
 
+import { ActivateCardModal } from '@/components/ui/activate-card-modal';
+
 export const dynamic = 'force-dynamic';
 
 export default async function MyCardsDashboardPage() {
@@ -43,6 +45,9 @@ export default async function MyCardsDashboardPage() {
           <p className="text-xs sm:text-sm text-zinc-300 mt-1">
             Pantau performa ketukan NFC dan pemindaian QR kartu ulasan bisnis Anda
           </p>
+        </div>
+        <div>
+          <ActivateCardModal />
         </div>
       </div>
 
