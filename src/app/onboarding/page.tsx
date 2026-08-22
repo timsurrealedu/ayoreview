@@ -94,7 +94,7 @@ export default function OnboardingPage() {
               <div>
                 <label className="block text-zinc-200 font-semibold mb-1.5">Nama bisnis *</label>
                 <input type="text" required placeholder="contoh: Kopi Kenangan, Salon Cantik" value={businessName} onChange={(e) => setBusinessName(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8]" />
+                  className="w-full bg-zinc-900 border border-zinc-600 rounded-xl px-3.5 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]" />
               </div>
               <div>
                 <label className="block text-zinc-200 font-semibold mb-1.5">Kategori</label>
@@ -112,7 +112,7 @@ export default function OnboardingPage() {
                 <div>
                   <label className="block text-zinc-200 font-semibold mb-1.5">Kota *</label>
                   <input type="text" required placeholder="contoh: Jakarta Selatan" value={city} onChange={(e) => setCity(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8]" />
+                    className="w-full bg-zinc-900 border border-zinc-600 rounded-xl px-3.5 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]" />
                 </div>
                 <div>
                   <label className="block text-zinc-200 font-semibold mb-1.5">Negara</label>
@@ -142,12 +142,12 @@ export default function OnboardingPage() {
               <div>
                 <label className="block text-zinc-200 font-semibold mb-1.5">Nama cabang *</label>
                 <input type="text" required placeholder="contoh: Cabang Utama Senopati" value={locationName} onChange={(e) => setLocationName(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8]" />
+                  className="w-full bg-zinc-900 border border-zinc-600 rounded-xl px-3.5 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]" />
               </div>
               <div>
                 <label className="block text-zinc-200 font-semibold mb-1.5">Alamat</label>
                 <input type="text" placeholder="contoh: Jl. Senopati No. 45" value={address} onChange={(e) => setAddress(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8]" />
+                  className="w-full bg-zinc-900 border border-zinc-600 rounded-xl px-3.5 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]" />
               </div>
             </div>
             <div className="flex justify-between pt-4 border-t border-zinc-800">
@@ -172,7 +172,7 @@ export default function OnboardingPage() {
               <div>
                 <label className="block text-zinc-200 font-semibold mb-1.5">URL Ulasan Google *</label>
                 <input type="url" required placeholder="https://g.page/r/.../review atau https://search.google.com/local/writereview?placeid=..." value={googleReviewUrl} onChange={(e) => setGoogleReviewUrl(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8]" />
+                  className="w-full bg-zinc-900 border border-zinc-600 rounded-xl px-3.5 py-3 text-white font-mono text-xs placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]" />
                 <div className="p-3.5 bg-zinc-900 border border-zinc-800 rounded-xl mt-3 text-[11px] text-zinc-300 space-y-1.5">
                   <div className="font-semibold text-white">Cara mendapatkan tautan:</div>
                   <div>1. Buka profil Google Bisnis Anda / Google Maps</div>
@@ -203,7 +203,7 @@ export default function OnboardingPage() {
               <div>
                 <label className="block text-zinc-200 font-semibold mb-1.5">Nama kartu *</label>
                 <input type="text" required placeholder="contoh: Kasir 01, Meja 04" value={cardName} onChange={(e) => setCardName(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8]" />
+                  className="w-full bg-zinc-900 border border-zinc-600 rounded-xl px-3.5 py-3 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]" />
               </div>
               <div>
                 <label className="block text-zinc-200 font-semibold mb-1.5">Penempatan</label>

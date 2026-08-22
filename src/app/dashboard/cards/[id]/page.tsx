@@ -192,7 +192,7 @@ export default function CardDetailPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white placeholder:text-zinc-500 focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                  className="w-full bg-zinc-900 border border-zinc-600 rounded-xl px-3.5 py-2.5 text-white placeholder:text-zinc-400 font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
                 />
               </div>
 
