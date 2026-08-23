@@ -12,6 +12,9 @@ export async function searchPlaces(query: string, city?: string): Promise<PlaceS
   const textQuery = city ? `${cleanQuery} ${city.trim()}` : cleanQuery;
 
   if (!GOOGLE_PLACES_API_KEY) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('[Places API] GOOGLE_PLACES_API_KEY is not configured');
+    }
     console.warn('[Places API] GOOGLE_PLACES_API_KEY is not set. Returning mock results for local development.');
     return [
       {

@@ -6,9 +6,16 @@ import { NextRequest } from 'next/server';
  * Used to gate ?test=true on redirect routes.
  */
 export async function isAuthenticatedRequest(request: NextRequest): Promise<boolean> {
+  return !!(await getSessionUserEmail(request));
+}
+
+/**
+ * Returns the authenticated user's email for this request, or null.
+ */
+export async function getSessionUserEmail(request: NextRequest): Promise<string | null> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return false;
+  if (!url || !key) return null;
 
   const supabase = createServerClient(url, key, {
     cookies: {
@@ -22,5 +29,5 @@ export async function isAuthenticatedRequest(request: NextRequest): Promise<bool
   });
 
   const { data: { user } } = await supabase.auth.getUser();
-  return !!user;
+  return user?.email ?? null;
 }

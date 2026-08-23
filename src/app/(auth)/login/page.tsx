@@ -21,10 +21,10 @@ function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo') || '/dashboard';
+  const redirectTo = searchParams.get('redirectTo') || '/my';
   const sanitizedRedirect = redirectTo.startsWith('/') && !redirectTo.startsWith('//') 
     ? redirectTo 
-    : '/dashboard';
+    : '/my';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

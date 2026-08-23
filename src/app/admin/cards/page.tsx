@@ -257,7 +257,7 @@ export default function AdminCardsInventoryPage() {
                       Tetapkan Lokasi
                     </button>
                     <Link
-                      href={`/dashboard/cards/${c.id}/print`}
+                      href={`/admin/cards/${c.id}/print`}
                       target="_blank"
                       className="px-2.5 py-1 rounded bg-subtle hover:bg-subtle text-ink text-[11px] font-medium border border-line transition inline-flex items-center gap-1"
                     >

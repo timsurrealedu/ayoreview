@@ -3,25 +3,20 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowLeft, BarChart3, CreditCard, LayoutDashboard, LogOut, MapPin, Menu, Receipt, Settings, ShieldCheck, Sparkles, Store, Users, X } from 'lucide-react';
+import { CreditCard, LayoutDashboard, LogOut, Menu, Package, Receipt, ShieldCheck, Store, Users, X } from 'lucide-react';
 import clsx from 'clsx';
 
-type Shell = 'dashboard' | 'merchant' | 'admin';
+type Shell = 'merchant' | 'admin';
 const navigation = {
-  dashboard: [
-    { label: 'Ringkasan', href: '/dashboard', icon: LayoutDashboard }, { label: 'Lokasi Usaha', href: '/dashboard/locations', icon: MapPin },
-    { label: 'Kartu Ulasan', href: '/dashboard/cards', icon: CreditCard }, { label: 'Analitik', href: '/dashboard/analytics', icon: BarChart3 },
-    { label: 'Akun & Pengaturan', href: '/dashboard/settings', icon: Settings }, { label: 'Paket & Tagihan', href: '/dashboard/billing', icon: Receipt },
-  ],
   merchant: [{ label: 'Kartu Saya', href: '/my', icon: CreditCard }, { label: 'Langganan & Tagihan', href: '/my/billing', icon: Receipt }],
-  admin: [{ label: 'Ringkasan', href: '/admin', icon: LayoutDashboard }, { label: 'Inventaris & Kartu Fisik', href: '/admin/cards', icon: CreditCard }, { label: 'Organisasi', href: '/admin/organizations', icon: Store }, { label: 'Pengguna', href: '/admin/users', icon: Users }],
+  admin: [{ label: 'Ringkasan', href: '/admin', icon: LayoutDashboard }, { label: 'Pesanan Masuk', href: '/admin/orders', icon: Package }, { label: 'Inventaris & Kartu Fisik', href: '/admin/cards', icon: CreditCard }, { label: 'Organisasi', href: '/admin/organizations', icon: Store }, { label: 'Pengguna', href: '/admin/users', icon: Users }],
 } satisfies Record<Shell, Array<{ label: string; href: string; icon: typeof LayoutDashboard }>>;
 
 function isCurrent(pathname: string, href: string) {
-  return pathname === href || (!['/dashboard', '/my', '/admin'].includes(href) && pathname.startsWith(`${href}/`));
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function DashboardSidebar({ organizationName, isPlatformAdmin, shell = 'dashboard', userName, userEmail }: { organizationName?: string; isPlatformAdmin?: boolean; shell?: Shell; userName?: string | null; userEmail?: string }) {
+export function DashboardSidebar({ isPlatformAdmin, shell = 'merchant', userName, userEmail }: { isPlatformAdmin?: boolean; shell?: Shell; userName?: string | null; userEmail?: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -38,10 +33,9 @@ export function DashboardSidebar({ organizationName, isPlatformAdmin, shell = 'd
   }, [open]);
 
   const admin = shell === 'admin';
-  const merchant = shell === 'merchant';
   const title = admin ? 'Operator AyoReview' : 'AyoReview';
-  const subtitle = admin ? 'Portal Admin Platform' : merchant ? 'Portal Pemilik Usaha' : 'Konsol Bisnis';
-  const home = admin ? '/admin' : merchant ? '/my' : '/dashboard';
+  const subtitle = admin ? 'Portal Admin Platform' : 'Portal Pemilik Usaha';
+  const home = admin ? '/admin' : '/my';
   const panel = (
     <div className="flex h-full flex-col bg-surface">
       <div className="flex min-h-16 items-center justify-between border-b border-line px-5">
@@ -49,16 +43,14 @@ export function DashboardSidebar({ organizationName, isPlatformAdmin, shell = 'd
         <button ref={closeRef} type="button" onClick={() => setOpen(false)} className="flex h-11 w-11 items-center justify-center rounded text-ink md:hidden" aria-label="Tutup navigasi"><X className="h-5 w-5" /></button>
       </div>
       <div className="flex-1 overflow-y-auto px-3 py-4">
-        {!admin && !merchant && organizationName && <div className="mb-4 flex items-center gap-2.5 rounded border border-line bg-subtle px-3 py-2.5"><Store className="h-4 w-4 shrink-0 text-action" /><div className="min-w-0"><div className="truncate text-xs font-semibold text-ink">{organizationName}</div><div className="text-[10px] text-muted-ink">Akun terdaftar</div></div></div>}
         <nav aria-label={subtitle} className="space-y-1">
           {navigation[shell].map(({ label, href, icon: Icon }) => { const active = isCurrent(pathname, href); return <Link key={href} href={href} aria-current={active ? 'page' : undefined} className={clsx('flex min-h-11 items-center gap-3 rounded px-3 text-xs font-semibold transition-colors', active ? 'bg-action-soft text-action' : 'text-ink hover:bg-subtle')}><Icon className="h-4 w-4 shrink-0" /><span>{label}</span></Link>; })}
           {!admin && isPlatformAdmin && <Link href="/admin" className="flex min-h-11 items-center gap-3 rounded px-3 text-xs font-semibold text-warning hover:bg-warning-soft"><ShieldCheck className="h-4 w-4" />Admin Platform</Link>}
         </nav>
       </div>
       <div className="space-y-2 border-t border-line p-3">
-        {merchant && (userName || userEmail) && <div className="px-3 py-1"><div className="truncate text-xs font-semibold text-ink">{userName}</div><div className="truncate text-[11px] text-muted-ink">{userEmail}</div></div>}
-        {!admin && <Link href="/onboarding" className="flex min-h-11 items-center gap-2 rounded border border-line px-3 text-xs font-semibold text-ink hover:bg-subtle"><Sparkles className="h-4 w-4 text-warning" />Panduan Setup</Link>}
-        {admin ? <Link href="/dashboard" className="flex min-h-11 items-center gap-2 rounded px-3 text-xs font-semibold text-ink hover:bg-subtle"><ArrowLeft className="h-4 w-4" />Kembali ke Dasbor Bisnis</Link> : <form action="/api/auth/signout" method="POST"><button type="submit" className="flex min-h-11 w-full items-center gap-2 rounded px-3 text-xs font-semibold text-error hover:bg-error-soft"><LogOut className="h-4 w-4" />Keluar</button></form>}
+        {(userName || userEmail) && <div className="px-3 py-1"><div className="truncate text-xs font-semibold text-ink">{userName}</div><div className="truncate text-[11px] text-muted-ink">{userEmail}</div></div>}
+        <form action="/api/auth/signout" method="POST"><button type="submit" className="flex min-h-11 w-full items-center gap-2 rounded px-3 text-xs font-semibold text-error hover:bg-error-soft"><LogOut className="h-4 w-4" />Keluar</button></form>
       </div>
     </div>
   );

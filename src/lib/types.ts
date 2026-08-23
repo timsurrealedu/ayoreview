@@ -161,3 +161,29 @@ export type LocationWithStats = Location & {
   active_card_count: number;
   total_interactions: number;
 };
+
+export type OrderStatus =
+  | 'pending_payment'
+  | 'paid'
+  | 'paid_unfulfilled'
+  | 'shipped'
+  | 'completed'
+  | 'cancelled';
+
+export type Order = {
+  id: string;
+  order_code: string;
+  status: OrderStatus;
+  place_id: string | null;
+  business_name: string;
+  merchant_name: string;
+  merchant_email: string;
+  merchant_phone: string | null;
+  shipping_address: string;
+  amount: number;
+  currency: string;
+  stripe_checkout_session_id: string | null;
+  allocated_card_id: string | null;
+  created_at: string;
+  updated_at: string;
+};

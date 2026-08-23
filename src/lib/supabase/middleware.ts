@@ -40,8 +40,8 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  // Protect /dashboard and /my
-  if ((path.startsWith('/dashboard') || path.startsWith('/my')) && !user) {
+  // Protect /my
+  if (path.startsWith('/my') && !user) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     url.searchParams.set('redirectTo', path);
@@ -56,17 +56,9 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Protect /onboarding — QR creation requires an account
-  if (path === '/onboarding' && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    url.searchParams.set('redirectTo', '/onboarding');
-    return NextResponse.redirect(url);
-  }
-
   // Redirect authenticated user away from /login /signup
   if ((path === '/login' || path === '/signup') && user) {
-    const redirectTo = request.nextUrl.searchParams.get('redirectTo') || '/dashboard';
+    const redirectTo = request.nextUrl.searchParams.get('redirectTo') || '/my';
     const url = request.nextUrl.clone();
     url.pathname = redirectTo;
     url.searchParams.delete('redirectTo');

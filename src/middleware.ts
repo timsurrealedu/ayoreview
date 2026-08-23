@@ -53,10 +53,10 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/dashboard/:path*',
     '/my/:path*',
     '/admin/:path*',
     '/s/:path*',
+    '/pesan/:path*',
     '/login',
     '/signup',
     // Public redirect endpoints — the most abuse-exposed surface (analytics inflation)
@@ -69,6 +69,7 @@ export const config = {
     '/api/analytics/:path*',
     '/api/admin/:path*',
     '/api/setup/:path*',
+    '/api/orders/:path*',
     '/api/stripe/:path*',
   ],
 };

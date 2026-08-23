@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { 
   Building2, 
@@ -24,8 +24,17 @@ import { createClient } from '@/lib/supabase/client';
 import { PlaceSearchResult } from '@/lib/types';
 
 export default function CardSetupPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
+      <CardSetupContent />
+    </Suspense>
+  );
+}
+
+function CardSetupContent() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const publicId = typeof params.publicId === 'string' ? params.publicId : '';
 
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1);
@@ -54,6 +63,11 @@ export default function CardSetupPage() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
+    if (searchParams.get('paid') === '1') {
+      setIsLinked(true);
+      setStep(6);
+      return;
+    }
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       if (data?.user) {
@@ -62,7 +76,7 @@ export default function CardSetupPage() {
         setName(data.user.user_metadata?.name || data.user.email?.split('@')[0] || '');
       }
     });
-  }, []);
+  }, [searchParams]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,6 +197,7 @@ export default function CardSetupPage() {
 
   const handleStartSubscription = async () => {
     setCheckoutLoading(true);
+    setError(null);
     try {
       const res = await fetch('/api/stripe/create-checkout', {
         method: 'POST',
@@ -190,15 +205,12 @@ export default function CardSetupPage() {
         body: JSON.stringify({ publicId, email }),
       });
       const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setStep(6);
+      if (!res.ok || !data.success || !data.url) {
+        throw new Error(data.error || 'Gagal membuka halaman pembayaran');
       }
-    } catch (err) {
-      console.error(err);
-      setStep(6);
-    } finally {
+      window.location.href = data.url;
+    } catch (err: any) {
+      setError(err.message || 'Gagal membuka pembayaran. Coba lagi.');
       setCheckoutLoading(false);
     }
   };
@@ -381,8 +393,8 @@ export default function CardSetupPage() {
                         <HelpCircle className="w-4 h-4 text-[#fbbc04]" />
                         Cara mendapatkan tautan gratis (10 Detik):
                       </div>
-                      <div className="text-ink">1. Buka aplikasi Google Maps di HP $\rightarrow$ cari nama toko Anda.</div>
-                      <div className="text-ink">2. Klik tombol <span className="font-semibold text-ink">&quot;Bagikan&quot;</span> atau <span className="font-semibold text-ink">&quot;Minta Ulasan&quot;</span> $\rightarrow$ Salin Link.</div>
+                <div className="text-ink">1. Buka aplikasi Google Maps di HP, lalu cari nama toko Anda.</div>
+                <div className="text-ink">2. Klik tombol <span className="font-semibold text-ink">&quot;Bagikan&quot;</span> atau <span className="font-semibold text-ink">&quot;Minta Ulasan&quot;</span>, lalu salin tautannya.</div>
                       <div className="text-ink">3. Tempel link tersebut di atas. Selesai!</div>
                     </div>
                   </div>
@@ -663,13 +675,9 @@ export default function CardSetupPage() {
                   {checkoutLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
                   {checkoutLoading ? 'Membuka Pembayaran...' : 'Aktifkan Langganan (Stripe)'}
                 </button>
-
-                <button
-                  onClick={() => setStep(6)}
-                  className="w-full py-2.5 text-xs text-ink hover:text-ink font-semibold transition"
-                >
-                  Lewati untuk saat ini (Uji Coba 7 Hari Gratis) →
-                </button>
+                <p className="text-[11px] text-muted-ink text-center">
+                  Kartu baru aktif setelah langganan dibayarkan.
+                </p>
               </div>
             </div>
           )}

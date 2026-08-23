@@ -1,5 +1,5 @@
 import { dbRepo } from '@/lib/db';
-import { requireOrgMembership } from '@/lib/auth';
+import { requirePlatformAdmin } from '@/lib/auth';
 import { generateQrPngDataUrl } from '@/lib/qr';
 import Link from 'next/link';
 import { Smartphone, ArrowLeft } from 'lucide-react';
@@ -12,12 +12,12 @@ export default async function PrintCardTemplatePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { org } = await requireOrgMembership();
+  await requirePlatformAdmin();
   const { id } = await params;
-  const card = await dbRepo.getCardById(id, org.id);
+  const card = await dbRepo.getAnyCardById(id);
 
   if (!card) {
-    return <div className="p-8 text-black">Kartu tidak ditemukan di organisasi Anda.</div>;
+    return <div className="p-8 text-black">Kartu tidak ditemukan.</div>;
   }
 
   // Derive base URL from request origin with env override — never hardcode a domain
@@ -34,10 +34,10 @@ export default async function PrintCardTemplatePage({
       {/* Non-printable action bar */}
       <div className="no-print w-full max-w-md flex items-center justify-between mb-8">
         <Link
-          href={`/dashboard/cards/${card.id}`}
+          href={`/admin/cards`}
           className="flex items-center gap-1.5 text-xs text-muted-ink hover:text-zinc-900 font-medium"
         >
-          <ArrowLeft className="w-4 h-4" /> Kembali ke Pengaturan Kartu
+          <ArrowLeft className="w-4 h-4" /> Kembali ke Inventaris Kartu
         </Link>
         <button
           onClick={() => window.print()}
@@ -52,7 +52,7 @@ export default async function PrintCardTemplatePage({
         {/* Top subtle decorative strip */}
         <div className="w-full flex justify-between items-center text-[10px] text-muted-ink font-mono">
           <span>{card.inventory_code}</span>
-          <span>{card.location_name || 'AyoReview'}</span>
+          <span>{card.business_name || 'AyoReview'}</span>
         </div>
 
         {/* 5-Star Hospitality Visual */}

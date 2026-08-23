@@ -9,10 +9,17 @@ export async function POST(request: NextRequest) {
     }
 
     if (!process.env.STRIPE_SECRET_KEY) {
+      if (process.env.NODE_ENV === 'production') {
+        return NextResponse.json(
+          { success: false, error: 'Payment system not configured' },
+          { status: 500 }
+        );
+      }
       // Mock / direct success in development if Stripe key is unconfigured
       return NextResponse.json({
         success: true,
         mock: true,
+        url: `${request.nextUrl.origin}/s/${publicId}?paid=1`,
         message: 'Stripe not configured; proceeding with mock subscription.',
       });
     }

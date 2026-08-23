@@ -37,7 +37,7 @@ export default function SignupPage() {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?next=/onboarding`,
+          redirectTo: `${window.location.origin}/auth/callback?next=/pesan`,
         },
       });
 
@@ -76,7 +76,7 @@ export default function SignupPage() {
       }
 
       if (data.session) {
-        router.push('/onboarding');
+        router.push("/pesan");
         router.refresh();
       } else {
         router.push('/login?message=check_email');

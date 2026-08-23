@@ -104,7 +104,7 @@ export async function requireOrgMembership(requestedOrgId?: string): Promise<Aut
 export async function requirePlatformAdmin() {
   const user = await requireUser();
   if (!user.is_platform_admin) {
-    redirect('/dashboard?error=unauthorized_admin_access');
+    redirect('/my?error=unauthorized_admin_access');
   }
   return user;
 }

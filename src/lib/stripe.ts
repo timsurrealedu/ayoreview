@@ -47,7 +47,7 @@ export async function createCheckoutSession(params: {
                 name: `AyoReview Subscription (${card.business_name || card.name})`,
                 description: `Langganan pengalihan ulasan & analitik aktif kartu ${card.inventory_code}`,
               },
-              unit_amount: 4900000, // Rp 49.000 in smallest unit (IDR cents / whole)
+              unit_amount: 49000, // Rp 49.000 — IDR is zero-decimal in Stripe
               recurring: { interval: 'month' },
             },
             quantity: 1,
@@ -64,11 +64,52 @@ export async function createCheckoutSession(params: {
         publicId: card.public_id,
       },
     },
-    success_url: params.successUrl || `${APP_URL}/my?session_id={CHECKOUT_SESSION_ID}&setup=success`,
-    cancel_url: params.cancelUrl || `${APP_URL}/s/${card.public_id}`,
+    success_url: params.successUrl || `${APP_URL}/s/${card.public_id}?paid=1`,
+    cancel_url: params.cancelUrl || `${APP_URL}/s/${card.public_id}?step=5`,
   });
 
   return session;
+}
+
+/**
+ * Creates a Stripe Checkout Session for a one-time physical card order.
+ */
+export async function createOrderCheckoutSession(params: {
+  orderId: string;
+  orderCode: string;
+  email: string;
+}) {
+  if (!stripe) {
+    throw new Error('STRIPE_SECRET_KEY is not configured');
+  }
+
+  const unitAmount = Number(process.env.CARD_PRICE_IDR || 99000);
+
+  return stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    mode: 'payment',
+    customer_email: params.email,
+    line_items: [
+      {
+        price_data: {
+          currency: 'idr',
+          product_data: {
+            name: 'Kartu Ulasan AyoReview (NFC + QR)',
+            description: `Kartu pintar ulasan Google untuk ${params.orderCode}`,
+          },
+          unit_amount: unitAmount, // IDR is zero-decimal in Stripe: amount IS the rupiah value
+        },
+        quantity: 1,
+      },
+    ],
+    metadata: {
+      orderId: params.orderId,
+      orderCode: params.orderCode,
+      kind: 'card_order',
+    },
+    success_url: `${APP_URL}/pesan/sukses?order=${params.orderId}&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${APP_URL}/pesan?cancelled=1`,
+  });
 }
 
 /**
@@ -101,6 +142,13 @@ export async function processStripeWebhookEvent(event: Stripe.Event) {
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
+
+      // One-time card orders fulfill by allocating + pre-linking inventory
+      if (session.metadata?.kind === 'card_order' && session.metadata.orderId) {
+        await dbRepo.fulfillOrder(session.metadata.orderId, session.id);
+        break;
+      }
+
       const cardId = session.metadata?.cardId;
       const subscriptionId =
         typeof session.subscription === 'string'

@@ -2,7 +2,7 @@ import { getAdminClient } from './supabase/admin';
 import { 
   User, Organization, Business, Location, Card, Interaction, 
   AnalyticsOverview, DailyTrendPoint, CardWithStats, LocationWithStats,
-  CardPlacement, CardStatus, InteractionSource
+  CardPlacement, CardStatus, InteractionSource, Order, OrderStatus
 } from './types';
 import { nanoid } from 'nanoid';
 import { validateGoogleReviewUrl, validateGoogleMapsUrl } from './url-validator';
@@ -436,6 +436,16 @@ export const dbRepo = {
   async getCardById(id: string, orgId?: string): Promise<CardWithStats | null> {
     const cards = await this.getCards(orgId ? { orgId } : undefined);
     return cards.find((c) => c.id === id) || null;
+  },
+
+  /**
+   * Flat fetch by card id with no org scoping — for operator surfaces
+   * (printing blank / pre-linked cards that have no location).
+   */
+  async getAnyCardById(id: string): Promise<Card | null> {
+    const supabase = getAdminClient();
+    const { data } = await supabase.from('cards').select('*').eq('id', id).single();
+    return (data as Card) || null;
   },
 
   async getCardByPublicId(publicId: string): Promise<(Card & { google_review_url?: string; location_status?: string }) | null> {
@@ -1044,5 +1054,156 @@ export const dbRepo = {
       nfcPercentage,
       todayGrowthPct,
     };
+  },
+
+  // -------------------------------------------------------------
+  // Card Orders (order-first sales flow)
+  // -------------------------------------------------------------
+  async createOrder(data: {
+    placeId: string | null;
+    businessName: string;
+    merchantName: string;
+    merchantEmail: string;
+    merchantPhone?: string;
+    shippingAddress: string;
+    amount: number;
+  }): Promise<Order> {
+    const supabase = getAdminClient();
+    const now = new Date().toISOString();
+    const { data: order, error } = await supabase
+      .from('orders')
+      .insert({
+        order_code: 'ORD-' + nanoid(8).replace(/[^a-zA-Z0-9]/g, 'x').toUpperCase(),
+        status: 'pending_payment',
+        place_id: data.placeId,
+        business_name: data.businessName.trim(),
+        merchant_name: data.merchantName.trim(),
+        merchant_email: data.merchantEmail.toLowerCase().trim(),
+        merchant_phone: data.merchantPhone?.trim() || null,
+        shipping_address: data.shippingAddress.trim(),
+        amount: data.amount,
+        currency: 'idr',
+        created_at: now,
+        updated_at: now,
+      })
+      .select()
+      .single();
+    if (error) throw error;
+    return order as Order;
+  },
+
+  async getOrderById(id: string): Promise<Order | null> {
+    const supabase = getAdminClient();
+    const { data } = await supabase.from('orders').select('*').eq('id', id).single();
+    return (data as Order) || null;
+  },
+
+  async getOrderBySessionId(sessionId: string): Promise<Order | null> {
+    const supabase = getAdminClient();
+    const { data } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('stripe_checkout_session_id', sessionId)
+      .single();
+    return (data as Order) || null;
+  },
+
+  async listOrders(): Promise<Order[]> {
+    const supabase = getAdminClient();
+    const { data } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    return (data || []) as Order[];
+  },
+
+  /**
+   * Fulfills a paid order: marks it paid and allocates the oldest blank card
+   * from inventory, pre-linking it to the ordered Google listing.
+   * Idempotent — safe to call twice for the same order.
+   */
+  async fulfillOrder(orderId: string, sessionId: string): Promise<Order | null> {
+    const supabase = getAdminClient();
+
+    const { data: order } = await supabase.from('orders').select('*').eq('id', orderId).single();
+    if (!order) return null;
+    if ((order as Order).status !== 'pending_payment') return order as Order;
+
+    // Mark session id first so webhook retries collapse into one fulfillment.
+    const { data: claimed, error } = await supabase
+      .from('orders')
+      .update({ stripe_checkout_session_id: sessionId, updated_at: new Date().toISOString() })
+      .eq('id', orderId)
+      .eq('status', 'pending_payment')
+      .is('stripe_checkout_session_id', null)
+      .select()
+      .single();
+    if (error || !claimed) {
+      return this.getOrderBySessionId(sessionId) || (order as Order);
+    }
+
+    // Pick oldest blank card not already allocated to any order.
+    const { data: blanks } = await supabase
+      .from('cards')
+      .select('id')
+      .is('location_id', null)
+      .is('place_id', null)
+      .eq('status', 'active')
+      .order('created_at', { ascending: true })
+      .limit(20);
+
+    let allocatedCard: Card | null = null;
+    for (const candidate of (blanks || []) as Array<{ id: string }>) {
+      const now = new Date().toISOString();
+      const { data: linked, error: linkErr } = await supabase
+        .from('cards')
+        .update({
+          place_id: order.place_id,
+          business_name: order.business_name,
+          merchant_email: order.merchant_email,
+          linked_at: now,
+          subscription_status: 'pending',
+          subscription_status_updated_at: now,
+          updated_at: now,
+        })
+        .eq('id', candidate.id)
+        .is('place_id', null) // conditional update guards against concurrent allocation
+        .select()
+        .single();
+      if (!linkErr && linked) {
+        allocatedCard = linked as Card;
+        break;
+      }
+    }
+
+    const { data: fulfilled } = await supabase
+      .from('orders')
+      .update({
+        status: allocatedCard ? 'paid' : 'paid_unfulfilled',
+        allocated_card_id: allocatedCard?.id ?? null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', orderId)
+      .select()
+      .single();
+
+    return (fulfilled as Order) || (order as Order);
+  },
+
+  async setOrderSessionId(orderId: string, sessionId: string): Promise<void> {
+    const supabase = getAdminClient();
+    await supabase
+      .from('orders')
+      .update({ stripe_checkout_session_id: sessionId, updated_at: new Date().toISOString() })
+      .eq('id', orderId);
+  },
+
+  async updateOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
+    const supabase = getAdminClient();
+    await supabase
+      .from('orders')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', orderId);
   },
 };

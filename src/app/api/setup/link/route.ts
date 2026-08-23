@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
+import { getSessionUserEmail } from '@/lib/session-check';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,6 +19,19 @@ export async function POST(request: NextRequest) {
         { success: false, error: 'Card not found' },
         { status: 404 }
       );
+    }
+
+    // Re-linking an already-linked card requires the current owner's session.
+    // Unlinked cards stay open so the scan-to-setup flow keeps working.
+    if (card.place_id) {
+      const sessionEmail = await getSessionUserEmail(request);
+      const isOwner = !!sessionEmail && sessionEmail.toLowerCase() === String(card.merchant_email).toLowerCase();
+      if (!isOwner) {
+        return NextResponse.json(
+          { success: false, error: 'Kartu ini sudah tertaut. Masuk dengan akun pemilik kartu untuk mengubah tautan.' },
+          { status: 403 }
+        );
+      }
     }
 
     const updatedCard = await dbRepo.setupLinkCard(

@@ -29,25 +29,30 @@
 ## Key Features
 
 - ⚡ **Ultra-Fast Sub-Second Redirect Engine (<100ms)**: Lightweight 302 redirect engine with automated crawler/bot detection (`is_bot`) and anonymous interaction logging.
-- 💳 **Pre-Programmed Card Instant Setup (`/s/:publicId`)**: Sell pre-printed NFC/QR cards. Merchants scan/tap an unlinked card to search their Google listing via Google Places API and link it in seconds.
-- 🛡️ **Monthly Subscription & 7-Day Grace Period**: Automated monthly card subscription with Stripe. If payment fails or cancels, a **7-day grace period** keeps customer review redirects alive before cutoff.
-- 📱 **Hardware-Enabled NFC & QR Integration**: Built-in high-DPI vector SVG and PNG QR generator + print-ready acrylic stand card generator (`/dashboard/cards/[id]/print` and `/my/cards/[id]`).
-- 🏬 **Dual Operational Architecture**:
-  - **Flat Model (`/my`)**: Streamlined lightweight merchant portal for pre-programmed card buyers.
-  - **Hierarchical Model (`/dashboard`)**: Full organizational hierarchy (`Organization -> Businesses -> Locations -> Cards -> Interactions`) for enterprise operators.
+- 🛒 **Order-First Sales Flow (`/pesan`)**: Merchant configures their Google listing, enters shipping details, and pays for the physical card in one pass. The ordered card is allocated from inventory and **pre-linked before it ships** — scan-to-activate (`/s/:publicId`) remains the door-to-door salesman channel.
+- 🛡️ **Monthly Subscription & 7-Day Grace Period**: Automated monthly card subscription with Stripe. If payment fails or cancels, a **7-day grace period** keeps customer review redirects alive before cutoff. No trial bypass — cards only go live after the subscription is paid.
+- 📱 **Hardware-Enabled NFC & QR Integration**: Built-in high-DPI vector SVG and PNG QR generator + print-ready acrylic stand card generator (`/admin/cards/[id]/print`).
 - 📊 **Real-Time Analytics**: 30-day visit trends, QR vs NFC hardware split, placement zone conversion analysis, and daily metrics.
-- 🛠️ **Platform Operator Admin Portal (`/admin/cards`)**: Batch pre-pro card generation (`RT-100000` series), on-site venue assignment, and inventory monitoring.
-- 🧙‍♂️ **3-Minute Classic Onboarding Wizard (`/onboarding`)**: Guided flow for merchants wanting to create their account and generate QR codes digitally first.
+- 🛠️ **Platform Operator Admin Portal (`/admin`)**: Incoming card orders (`/admin/orders`), batch pre-pro card generation (`RT-100000` series), on-site venue assignment, and inventory monitoring.
 
 ---
 
 ## Architecture & Workflows
 
-### 1. Pre-Programmed Card Flow (The Pivot)
+### 1. Order-First Flow (Web Channel)
+```text
+1. Merchant configures their listing on /pesan (paste review link or Google Places search).
+2. Merchant enters contact + shipping address, pays via Stripe Checkout (one-time).
+3. Webhook fulfills the order: a blank card is allocated from inventory and pre-linked.
+4. Operator prints (/admin/cards/[id]/print) and ships the card.
+5. Card arrives live: customer taps/scans -> Google Review form instantly.
+```
+
+### 2. Pre-Programmed Card Flow (Salesman Channel)
 ```text
 1. Operator batch generates blank cards in /admin/cards.
 2. Physical card manufactured with NFC/QR pointing to: https://reviewtap.id/q/:publicId.
-3. Merchant buys card, scans it -> redirected to https://reviewtap.id/s/:publicId.
+3. Merchant buys card on-site, scans it -> redirected to https://reviewtap.id/s/:publicId.
 4. Merchant searches business via Google Places API, connects account & starts subscription.
 5. All future customer taps/scans immediately redirect to Google Review form.
 ```
@@ -103,10 +108,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the application:
 - **Landing Page**: `http://localhost:3000`
+- **Order Wizard (Web Sales Channel)**: `http://localhost:3000/pesan`
 - **Pre-Programmed Card Setup Wizard**: `http://localhost:3000/s/DEMO_CARD_ID`
-- **Merchant Flat Dashboard**: `http://localhost:3000/my`
-- **Classic Hierarchical Dashboard**: `http://localhost:3000/dashboard`
-- **Operator Admin Portal**: `http://localhost:3000/admin/cards`
+- **Merchant Dashboard**: `http://localhost:3000/my`
+- **Operator Admin Portal**: `http://localhost:3000/admin/orders`
 - **Test Live Redirect**: `http://localhost:3000/q/a7Xk29?test=true`
 
 ### Production Build
@@ -130,10 +135,11 @@ npm run start
 ### Pre-Programmed Setup & Billing APIs
 | Method | Endpoint | Description |
 |---|---|---|
+| `POST` | `/api/orders/create` | Creates a card order + Stripe Checkout session (one-time payment) |
 | `POST` | `/api/setup/search` | Google Places API (New) text search with rate limiting |
-| `POST` | `/api/setup/link` | Links Google Place ID and merchant email to card |
+| `POST` | `/api/setup/link` | Links Google Place ID and merchant email to card (owner-guarded re-link) |
 | `POST` | `/api/stripe/create-checkout` | Creates Stripe Checkout subscription session |
-| `POST` | `/api/stripe/webhook` | Handles Stripe billing events & 7-day grace period triggers |
+| `POST` | `/api/stripe/webhook` | Handles Stripe billing events, order fulfillment & 7-day grace period triggers |
 
 ### Classic & Admin REST APIs
 | Method | Endpoint | Description |
