@@ -135,11 +135,12 @@ npm run start
 ### Pre-Programmed Setup & Billing APIs
 | Method | Endpoint | Description |
 |---|---|---|
-| `POST` | `/api/orders/create` | Creates a card order + Stripe Checkout session (one-time payment) |
+| `POST` | `/api/orders/create` | Creates a card order + Midtrans Snap payment (QRIS, GoPay, VA, cards) |
 | `POST` | `/api/setup/search` | Google Places API (New) text search with rate limiting |
 | `POST` | `/api/setup/link` | Links Google Place ID and merchant email to card (owner-guarded re-link) |
+| `POST` | `/api/midtrans/webhook` | Handles verified Midtrans notifications: order fulfillment & status updates |
 | `POST` | `/api/stripe/create-checkout` | Creates Stripe Checkout subscription session |
-| `POST` | `/api/stripe/webhook` | Handles Stripe billing events, order fulfillment & 7-day grace period triggers |
+| `POST` | `/api/stripe/webhook` | Handles Stripe subscription billing events & 7-day grace period triggers |
 
 ### Classic & Admin REST APIs
 | Method | Endpoint | Description |

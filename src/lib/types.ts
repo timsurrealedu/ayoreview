@@ -164,10 +164,12 @@ export type LocationWithStats = Location & {
 
 export type OrderStatus =
   | 'pending_payment'
+  | 'review'
   | 'paid'
   | 'paid_unfulfilled'
   | 'shipped'
   | 'completed'
+  | 'failed'
   | 'cancelled';
 
 export type Order = {
@@ -182,7 +184,7 @@ export type Order = {
   shipping_address: string;
   amount: number;
   currency: string;
-  stripe_checkout_session_id: string | null;
+  payment_ref: string | null;
   allocated_card_id: string | null;
   created_at: string;
   updated_at: string;

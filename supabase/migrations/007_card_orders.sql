@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS orders (
   amount INTEGER NOT NULL,
   currency TEXT NOT NULL DEFAULT 'idr',
   stripe_checkout_session_id TEXT UNIQUE,
-  allocated_card_id UUID REFERENCES cards(id),
+  allocated_card_id TEXT REFERENCES cards(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

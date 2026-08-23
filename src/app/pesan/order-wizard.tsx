@@ -417,7 +417,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98] disabled:opacity-50"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
-                {loading ? 'Menyiapkan Pembayaran...' : `Bayar ${formatIdr(cardPrice)} via Stripe`}
+                {loading ? 'Menyiapkan Pembayaran...' : `Bayar ${formatIdr(cardPrice)}`}
               </button>
             </form>
           )}
@@ -425,7 +425,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
 
         <footer className="text-center text-xs text-muted-ink flex items-center justify-center gap-2 pt-1">
           <ShieldCheck className="w-4 h-4 text-[#137333]" />
-          <span className="font-medium">Pembayaran aman via Stripe · Kartu dikirim dengan kurir</span>
+          <span className="font-medium">Bayar via QRIS, GoPay, transfer bank, atau kartu · Kartu dikirim dengan kurir</span>
         </footer>
       </main>
     </div>

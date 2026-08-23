@@ -1,30 +1,25 @@
 import Link from 'next/link';
 import { CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
 import { dbRepo } from '@/lib/db';
-import { stripe } from '@/lib/stripe';
+import { getMidtransStatus, mapMidtransToOrderStatus } from '@/lib/midtrans';
 
 export const dynamic = 'force-dynamic';
 
 type Props = {
-  searchParams: Promise<{ order?: string; session_id?: string; mock?: string }>;
+  searchParams: Promise<{ order?: string; mock?: string }>;
 };
 
-async function resolveOrder(orderId: string | undefined, sessionId: string | undefined) {
+async function resolveOrder(orderId: string | undefined) {
   if (!orderId) return null;
-  const order = await dbRepo.getOrderById(orderId);
+  let order = await dbRepo.getOrderById(orderId);
   if (!order) return null;
 
-  // Belt-and-suspenders: if the webhook hasn't landed yet, verify the session
-  // directly with Stripe before fulfilling. fulfillOrder is idempotent.
-  if (order.status === 'pending_payment' && sessionId && stripe) {
-    try {
-      const session = await stripe.checkout.sessions.retrieve(sessionId);
-      if (session.payment_status === 'paid') {
-        return await dbRepo.fulfillOrder(order.id, sessionId);
-      }
-    } catch (err) {
-      console.error('[pesan/sukses] Session verification failed:', err);
-      return order;
+  // Belt-and-suspenders: if the webhook hasn't landed yet, verify the
+  // transaction directly with Midtrans before fulfilling. fulfillOrder is idempotent.
+  if (order.status === 'pending_payment' && order.order_code) {
+    const status = await getMidtransStatus(order.order_code);
+    if (status && mapMidtransToOrderStatus(status) === 'paid') {
+      order = (await dbRepo.fulfillOrder(order.id, status.transaction_id)) || order;
     }
   }
 
@@ -33,7 +28,7 @@ async function resolveOrder(orderId: string | undefined, sessionId: string | und
 
 export default async function OrderSuccessPage({ searchParams }: Props) {
   const params = await searchParams;
-  const order = await resolveOrder(params.order, params.session_id);
+  const order = await resolveOrder(params.order);
 
   return (
     <div className="min-h-screen bg-canvas text-ink flex flex-col p-4 sm:p-8 font-sans">

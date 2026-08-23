@@ -7,19 +7,23 @@ export const dynamic = 'force-dynamic';
 
 const statusTone: Record<OrderStatus, 'info' | 'success' | 'warning' | 'error'> = {
   pending_payment: 'warning',
+  review: 'warning',
   paid: 'info',
   paid_unfulfilled: 'error',
   shipped: 'info',
   completed: 'success',
+  failed: 'error',
   cancelled: 'error',
 };
 
 const statusLabel: Record<OrderStatus, string> = {
   pending_payment: 'Menunggu Bayar',
+  review: 'Review Fraud',
   paid: 'Dibayar',
   paid_unfulfilled: 'Perlu Kartu',
   shipped: 'Dikirim',
   completed: 'Selesai',
+  failed: 'Gagal',
   cancelled: 'Dibatalkan',
 };
 

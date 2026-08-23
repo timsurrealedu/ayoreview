@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbRepo } from '@/lib/db';
-import { createOrderCheckoutSession, stripe } from '@/lib/stripe';
+import { createSnapTransaction, midtransConfigured } from '@/lib/midtrans';
 import { strictLimiter } from '@/lib/rate-limiter';
 
 export async function POST(request: NextRequest) {
@@ -47,6 +47,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const amount = Number(process.env.CARD_PRICE_IDR || 99000);
+
     const order = await dbRepo.createOrder({
       placeId: trimmedPlaceId,
       businessName,
@@ -54,31 +56,31 @@ export async function POST(request: NextRequest) {
       merchantEmail,
       merchantPhone,
       shippingAddress,
-      amount: Number(process.env.CARD_PRICE_IDR || 99000),
+      amount,
     });
 
-    if (!stripe) {
+    if (!midtransConfigured) {
       if (process.env.NODE_ENV === 'production') {
         return NextResponse.json(
           { success: false, error: 'Payment system not configured' },
           { status: 500 }
         );
       }
-      // Dev without Stripe: simulate a paid order end-to-end
-      await dbRepo.fulfillOrder(order.id, `dev-session-${order.id}`);
+      // Dev without Midtrans keys: simulate a paid order end-to-end
+      await dbRepo.fulfillOrder(order.id, `dev-txn-${order.id}`);
       return NextResponse.json({ success: true, mock: true, orderId: order.id });
     }
 
-    const session = await createOrderCheckoutSession({
+    const snap = await createSnapTransaction({
       orderId: order.id,
       orderCode: order.order_code,
+      grossAmount: amount,
       email: order.merchant_email,
+      name: order.merchant_name,
+      phone: order.merchant_phone || undefined,
     });
 
-    // Persist the session id so /pesan/sukses can look the order up
-    await dbRepo.setOrderSessionId(order.id, session.id);
-
-    return NextResponse.json({ success: true, url: session.url });
+    return NextResponse.json({ success: true, url: snap.redirect_url });
   } catch (err: any) {
     console.error('Error in POST /api/orders/create:', err);
     return NextResponse.json(

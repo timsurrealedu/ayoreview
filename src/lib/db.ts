@@ -1098,13 +1098,19 @@ export const dbRepo = {
     return (data as Order) || null;
   },
 
-  async getOrderBySessionId(sessionId: string): Promise<Order | null> {
+  async getOrderByPaymentRef(sessionId: string): Promise<Order | null> {
     const supabase = getAdminClient();
     const { data } = await supabase
       .from('orders')
       .select('*')
-      .eq('stripe_checkout_session_id', sessionId)
+      .eq('payment_ref', sessionId)
       .single();
+    return (data as Order) || null;
+  },
+
+  async getOrderByCode(orderCode: string): Promise<Order | null> {
+    const supabase = getAdminClient();
+    const { data } = await supabase.from('orders').select('*').eq('order_code', orderCode).single();
     return (data as Order) || null;
   },
 
@@ -1133,14 +1139,14 @@ export const dbRepo = {
     // Mark session id first so webhook retries collapse into one fulfillment.
     const { data: claimed, error } = await supabase
       .from('orders')
-      .update({ stripe_checkout_session_id: sessionId, updated_at: new Date().toISOString() })
+      .update({ payment_ref: sessionId, updated_at: new Date().toISOString() })
       .eq('id', orderId)
       .eq('status', 'pending_payment')
-      .is('stripe_checkout_session_id', null)
+      .is('payment_ref', null)
       .select()
       .single();
     if (error || !claimed) {
-      return this.getOrderBySessionId(sessionId) || (order as Order);
+      return this.getOrderByPaymentRef(sessionId) || (order as Order);
     }
 
     // Pick oldest blank card not already allocated to any order.
@@ -1191,11 +1197,11 @@ export const dbRepo = {
     return (fulfilled as Order) || (order as Order);
   },
 
-  async setOrderSessionId(orderId: string, sessionId: string): Promise<void> {
+  async setOrderPaymentRef(orderId: string, sessionId: string): Promise<void> {
     const supabase = getAdminClient();
     await supabase
       .from('orders')
-      .update({ stripe_checkout_session_id: sessionId, updated_at: new Date().toISOString() })
+      .update({ payment_ref: sessionId, updated_at: new Date().toISOString() })
       .eq('id', orderId);
   },
 
