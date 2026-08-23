@@ -77,19 +77,19 @@ export default async function MyBillingPage() {
         {/* Benefits list */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-ink">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
             Pengalihan NFC & QR tanpa batasan kuota
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
             Masa tenggang proteksi 7 hari saat pembayaran gagal
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
             Penyaringan bot cerdas dan analitik perangkat
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
             Bebas batal kapan saja tanpa denda
           </div>
         </div>
@@ -118,7 +118,7 @@ export default async function MyBillingPage() {
                   const check = checkCardSubscriptionStatus(c as any);
                   return (
                     <tr key={c.id} className="hover:bg-subtle/40 transition">
-                      <td className="py-3.5 px-5 font-mono font-bold text-[#fbbc04]">
+                      <td className="py-3.5 px-5 font-mono font-bold text-warning">
                         {c.inventory_code}
                       </td>
                       <td className="py-3.5 px-4 font-semibold text-ink">

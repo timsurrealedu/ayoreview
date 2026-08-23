@@ -127,7 +127,7 @@ function LoginForm() {
               placeholder="nama@bisnis.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-surface border border-line focus:border-[#1a73e8] rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium text-xs focus:outline-none focus:ring-1 focus:ring-[#1a73e8]"
+              className="w-full bg-surface border border-line focus:border-action rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium text-xs focus:outline-none focus:ring-1 focus:ring-action"
             />
           </div>
         </div>
@@ -144,7 +144,7 @@ function LoginForm() {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-surface border border-line focus:border-[#1a73e8] rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium text-xs focus:outline-none focus:ring-1 focus:ring-[#1a73e8]"
+              className="w-full bg-surface border border-line focus:border-action rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium text-xs focus:outline-none focus:ring-1 focus:ring-action"
             />
           </div>
         </div>
@@ -152,7 +152,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading || googleLoading}
-          className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition shadow-lg shadow-action/30 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
           <span>{loading ? 'Sedang masuk...' : 'Masuk ke Dasbor'}</span>
@@ -167,14 +167,14 @@ export default function LoginPage() {
     <div className="min-h-screen bg-canvas text-ink flex flex-col justify-between p-4 sm:p-8 font-sans">
       <header className="w-full max-w-md mx-auto flex items-center justify-between pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30 group-hover:scale-105 transition">
+          <div className="w-8 h-8 rounded bg-action flex items-center justify-center text-white font-black text-sm shadow-md shadow-action/30 group-hover:scale-105 transition">
             A
           </div>
           <span className="font-bold text-ink tracking-tight text-base">AyoReview</span>
         </Link>
         <Link
           href="/signup"
-          className="text-xs font-bold text-[#1a73e8] hover:text-[#4285f4] hover:underline transition"
+          className="text-xs font-bold text-action hover:text-action-hover hover:underline transition"
         >
           Daftar Akun Baru
         </Link>

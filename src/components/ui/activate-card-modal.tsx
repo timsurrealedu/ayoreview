@@ -24,7 +24,7 @@ export function ActivateCardModal({ triggerClassName }: { triggerClassName?: str
         onClick={() => setIsOpen(true)}
         className={triggerClassName || "flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-subtle hover:bg-subtle text-ink font-semibold text-xs border border-line transition shadow-sm"}
       >
-        <QrCode className="w-3.5 h-3.5 text-[#1a73e8]" />
+        <QrCode className="w-3.5 h-3.5 text-action" />
         <span>Aktivasi Kartu Fisik</span>
       </button>
 
@@ -40,8 +40,8 @@ export function ActivateCardModal({ triggerClassName }: { triggerClassName?: str
             </button>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-[#1a73e8]/20 border border-[#1a73e8]/50 flex items-center justify-center text-[#1a73e8]">
-                <Sparkles className="w-5 h-5 text-[#4285f4]" />
+              <div className="w-10 h-10 rounded bg-action/20 border border-action/50 flex items-center justify-center text-action">
+                <Sparkles className="w-5 h-5 text-action" />
               </div>
               <div>
                 <h3 className="font-bold text-ink text-base">Aktivasi Kartu AyoReview</h3>
@@ -63,11 +63,11 @@ export function ActivateCardModal({ triggerClassName }: { triggerClassName?: str
                     placeholder="Contoh: demo101 atau AR-000101"
                     value={cardCode}
                     onChange={(e) => setCardCode(e.target.value)}
-                    className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-mono text-sm focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                    className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-mono text-sm focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
                   />
                 </div>
                 <p className="text-[11px] text-muted-ink mt-1.5">
-                  💡 Tips: ID tertera di bagian belakang kartu atau di tautan QR (misal: /q/<span className="text-[#fbbc04]">demo101</span>).
+                  💡 Tips: ID tertera di bagian belakang kartu atau di tautan QR (misal: /q/<span className="text-warning">demo101</span>).
                 </p>
               </div>
 
@@ -82,7 +82,7 @@ export function ActivateCardModal({ triggerClassName }: { triggerClassName?: str
                 <button
                   type="submit"
                   disabled={!cardCode.trim()}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                 >
                   Buka Setup Wizard
                   <ArrowRight className="w-4 h-4" />

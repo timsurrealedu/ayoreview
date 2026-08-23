@@ -121,7 +121,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
 
   const stepLabels = ['Bisnis', 'Pengiriman', 'Bayar'];
   const inputClass =
-    'w-full bg-surface border border-line rounded px-3.5 py-3 text-ink placeholder:text-muted-ink text-xs font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]';
+    'w-full bg-surface border border-line rounded px-3.5 py-3 text-ink placeholder:text-muted-ink text-xs font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action';
   const labelClass = 'block text-ink font-bold mb-1.5 text-xs';
 
   const canContinueShipping =
@@ -133,7 +133,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
     <div className="min-h-screen bg-canvas text-ink flex flex-col p-4 sm:p-8 font-sans">
       <header className="w-full max-w-lg mx-auto flex items-center justify-between pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30 group-hover:scale-105 transition">
+          <div className="w-8 h-8 rounded bg-action flex items-center justify-center text-white font-black text-sm shadow-md shadow-action/30 group-hover:scale-105 transition">
             A
           </div>
           <span className="font-bold text-ink tracking-tight text-sm sm:text-base">AyoReview</span>
@@ -147,11 +147,11 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
         <div className="bg-surface/90 border border-line rounded p-3">
           <div className="flex justify-between items-center text-xs font-semibold text-ink mb-2">
             <span>Langkah {step} dari 3</span>
-            <span className="text-[#1a73e8]">{stepLabels[step - 1]}</span>
+            <span className="text-action">{stepLabels[step - 1]}</span>
           </div>
           <div className="w-full bg-subtle h-1.5 rounded-full overflow-hidden">
             <div
-              className="bg-[#1a73e8] h-full transition-all duration-300 rounded-full"
+              className="bg-action h-full transition-all duration-300 rounded-full"
               style={{ width: `${(step / 3) * 100}%` }}
             />
           </div>
@@ -182,7 +182,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                   onClick={() => setSetupMode('direct')}
                   className={`py-2.5 rounded transition text-center ${
                     setupMode === 'direct'
-                      ? 'bg-[#1a73e8] text-white shadow-md'
+                      ? 'bg-action text-white shadow-md'
                       : 'text-ink hover:bg-subtle'
                   }`}
                 >
@@ -193,7 +193,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                   onClick={() => setSetupMode('search')}
                   className={`py-2.5 rounded transition text-center ${
                     setupMode === 'search'
-                      ? 'bg-[#1a73e8] text-white shadow-md'
+                      ? 'bg-action text-white shadow-md'
                       : 'text-ink hover:bg-subtle'
                   }`}
                 >
@@ -237,7 +237,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                   <button
                     type="submit"
                     disabled={!businessQuery.trim() || !directUrl.trim()}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                   >
                     Lanjut ke Pengiriman
                     <ArrowRight className="w-4 h-4" />
@@ -275,7 +275,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                   <button
                     type="submit"
                     disabled={loading || !businessQuery.trim()}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                     {loading ? 'Mencari di Google Maps...' : 'Cari Listing Google'}
@@ -356,7 +356,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                 <button
                   type="submit"
                   disabled={!canContinueShipping}
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                 >
                   Tinjau Pesanan
                   <ArrowRight className="w-4 h-4" />
@@ -390,22 +390,22 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                 </div>
                 <div className="border-t border-line pt-3 flex justify-between items-baseline">
                   <span className="font-bold text-sm">Kartu NFC + QR</span>
-                  <span className="text-lg font-black text-[#137333]">
+                  <span className="text-lg font-black text-success">
                     {formatIdr(cardPrice)}
                     <span className="text-xs font-normal text-muted-ink"> sekali bayar</span>
                   </span>
                 </div>
                 <ul className="space-y-2 pt-1">
                   <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-[#137333] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                     Kartu sudah tertaut ke bisnis Anda sebelum dikirim
                   </li>
                   <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-[#137333] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                     Langganan Rp 49.000/bulan dimulai setelah kartu aktif dipakai
                   </li>
                   <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-[#137333] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                     Dasbor analitik ketukan &amp; pemindaian termasuk
                   </li>
                 </ul>
@@ -414,7 +414,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98] disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition shadow-lg shadow-action/30 active:scale-[0.98] disabled:opacity-50"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
                 {loading ? 'Menyiapkan Pembayaran...' : `Bayar ${formatIdr(cardPrice)}`}
@@ -424,7 +424,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
         </div>
 
         <footer className="text-center text-xs text-muted-ink flex items-center justify-center gap-2 pt-1">
-          <ShieldCheck className="w-4 h-4 text-[#137333]" />
+          <ShieldCheck className="w-4 h-4 text-success" />
           <span className="font-medium">Bayar via QRIS, GoPay, transfer bank, atau kartu · Kartu dikirim dengan kurir</span>
         </footer>
       </main>

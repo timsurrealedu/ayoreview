@@ -41,7 +41,7 @@ export default async function PrintCardTemplatePage({
         </Link>
         <button
           onClick={() => window.print()}
-          className="px-4 py-2 bg-[#1a73e8] hover:bg-[#1557b0] text-white text-xs font-bold rounded shadow cursor-pointer transition"
+          className="px-4 py-2 bg-action hover:bg-action-hover text-white text-xs font-bold rounded shadow cursor-pointer transition"
         >
           Cetak Kartu Dudukan
         </button>
@@ -57,7 +57,7 @@ export default async function PrintCardTemplatePage({
 
         {/* 5-Star Hospitality Visual */}
         <div className="flex flex-col items-center my-auto space-y-3">
-          <div className="flex items-center gap-1 text-[#fbbc04] text-2xl tracking-wider">
+          <div className="flex items-center gap-1 text-warning text-2xl tracking-wider">
             ★★★★★
           </div>
 
@@ -79,7 +79,7 @@ export default async function PrintCardTemplatePage({
           </div>
 
           <div className="flex items-center gap-2 text-zinc-800 text-xs font-bold pt-1">
-            <Smartphone className="w-4 h-4 text-[#1a73e8] animate-pulse" />
+            <Smartphone className="w-4 h-4 text-action animate-pulse" />
             <span>Ketukan NFC Aktif</span>
           </div>
         </div>
@@ -87,7 +87,7 @@ export default async function PrintCardTemplatePage({
         {/* Bottom Logo & Inventory Bar */}
         <div className="w-full pt-3 border-t border-zinc-200 flex items-center justify-between text-[11px] text-muted-ink font-medium">
           <span className="font-bold text-zinc-900 tracking-tight flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#1a73e8]"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-action"></span>
             AyoReview
           </span>
           <span className="font-mono text-[10px] text-muted-ink">{card.public_id}</span>

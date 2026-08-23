@@ -3,39 +3,40 @@
 @theme {
   --font-sans: var(--font-archivo), sans-serif;
   --font-mono: var(--font-plex-mono), monospace;
-  --color-canvas: #f8f9fa;
+  --color-canvas: #fbfaff;
   --color-surface: #ffffff;
-  --color-subtle: #eef1f4;
-  --color-ink: #202124;
-  --color-muted-ink: #5f6368;
-  --color-line: #dadce0;
-  --color-action: #1a73e8;
-  --color-action-hover: #1557b0;
-  --color-action-soft: #e8f0fe;
-  --color-success: #137333;
-  --color-success-soft: #e6f4ea;
-  --color-warning: #7a4f01;
-  --color-warning-soft: #fef7e0;
-  --color-error: #b3261e;
-  --color-error-soft: #fce8e6;
-  --color-focus: #7a4f01;
+  --color-subtle: #f4f1fc;
+  --color-ink: #241b3e;
+  --color-muted-ink: #6f6893;
+  --color-line: #e7e3f4;
+  --color-action: #7c3aed;
+  --color-action-hover: #6d28d9;
+  --color-action-soft: #f1eafe;
+  --color-success: #0c9d61;
+  --color-success-soft: #e0f8ee;
+  --color-warning: #b45309;
+  --color-warning-soft: #fdf1df;
+  --color-error: #e11d48;
+  --color-error-soft: #ffe8ee;
+  --color-focus: #7c3aed;
 }
 
 @layer base {
   :root {
-    --background: #f8f9fa;
-    --foreground: #202124;
+    --background: #fbfaff;
+    --foreground: #241b3e;
     --card: #ffffff;
-    --card-foreground: #202124;
-    --primary: #1a73e8;
+    --card-foreground: #241b3e;
+    --primary: #7c3aed;
     --primary-foreground: #ffffff;
-    --muted: #e8eaed;
-    --muted-foreground: #667080;
-    --border: #dadce0;
-    --radius: 0.25rem;
-    --signal-red: #ea4335;
+    --muted: #f4f1fc;
+    --muted-foreground: #6f6893;
+    --border: #e7e3f4;
+    --radius: 0.5rem;
+    --signal-red: #f04438;
     --signal-yellow: #fbbc04;
-    --signal-green: #34a853;
+    --signal-green: #12c78f;
+    --gradient-fun: linear-gradient(120deg, #7c3aed, #d946ef 55%, #f97316);
   }
 
   body {
@@ -45,12 +46,12 @@
   }
 
   :focus-visible {
-    outline: 3px solid #7a4f01;
+    outline: 3px solid #7c3aed;
     outline-offset: 3px;
   }
 
   ::selection {
-    background: #d2e3fc;
+    background: #ede4ff;
     color: var(--foreground);
   }
 
@@ -58,7 +59,14 @@
 }
 
 @layer utilities {
-  .shadow-lg, .shadow-xl, .shadow-2xl { --tw-shadow-color: rgb(19 33 60 / 0.12); }
+  .shadow-lg, .shadow-xl, .shadow-2xl { --tw-shadow-color: rgb(36 27 62 / 0.12); }
+  .text-gradient {
+    background: var(--gradient-fun);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-gradient-fun { background-image: var(--gradient-fun); }
 }
 
 /* Custom scrollbar */

@@ -68,7 +68,7 @@ export default async function MyCardDetailPage({
             {subCheck.inGracePeriod ? <StatusBadge tone="warning">Masa Tenggang 7 Hari ({subCheck.daysRemainingInGrace} hari tersisa)</StatusBadge> : card.subscription_status === 'active' ? <StatusBadge tone="success">Aktif</StatusBadge> : <StatusBadge>{card.subscription_status || 'Pending'}</StatusBadge>}
           </div>
           <div className="flex items-center gap-3 text-xs text-ink mt-1 font-mono">
-            <span>Kode: <strong className="text-[#fbbc04] font-semibold">{card.inventory_code}</strong></span>
+            <span>Kode: <strong className="text-warning font-semibold">{card.inventory_code}</strong></span>
             <span>•</span>
             <span>ID: <strong className="text-ink">{card.public_id}</strong></span>
           </div>
@@ -91,7 +91,7 @@ export default async function MyCardDetailPage({
         {/* QR Preview Column */}
         <div className="bg-surface border border-line p-6 rounded space-y-4 text-center">
           <h2 className="text-sm font-bold text-ink text-left flex items-center gap-2">
-            <QrCode className="w-4 h-4 text-[#1a73e8]" /> Kode QR Kartu
+            <QrCode className="w-4 h-4 text-action" /> Kode QR Kartu
           </h2>
 
           <div className="bg-white p-4 rounded inline-block shadow-lg mx-auto">
@@ -116,7 +116,7 @@ export default async function MyCardDetailPage({
           {/* Interaction Overview */}
           <div className="bg-surface border border-line p-6 rounded space-y-4">
             <h2 className="text-sm font-bold text-ink flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#1a73e8]" /> Metrik Interaksi Pelanggan
+              <Activity className="w-4 h-4 text-action" /> Metrik Interaksi Pelanggan
             </h2>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
@@ -134,7 +134,7 @@ export default async function MyCardDetailPage({
               </div>
               <div className="bg-surface border border-line p-3.5 rounded">
                 <div className="text-[10px] text-muted-ink uppercase font-semibold">Sepanjang Waktu</div>
-                <div className="text-xl font-bold text-[#34a853] mt-1">{analytics.allTime}</div>
+                <div className="text-xl font-bold text-success mt-1">{analytics.allTime}</div>
               </div>
             </div>
 
@@ -142,19 +142,19 @@ export default async function MyCardDetailPage({
             <div className="bg-surface border border-line p-4 rounded space-y-3">
               <div className="flex justify-between text-xs font-semibold">
                 <span className="text-ink flex items-center gap-1.5">
-                  <Radio className="w-3.5 h-3.5 text-[#1a73e8]" /> Tap NFC: {analytics.nfcTotal} ({analytics.nfcPercentage}%)
+                  <Radio className="w-3.5 h-3.5 text-action" /> Tap NFC: {analytics.nfcTotal} ({analytics.nfcPercentage}%)
                 </span>
                 <span className="text-ink flex items-center gap-1.5">
-                  <Smartphone className="w-3.5 h-3.5 text-[#fbbc04]" /> Scan QR: {analytics.qrTotal} ({analytics.qrPercentage}%)
+                  <Smartphone className="w-3.5 h-3.5 text-warning" /> Scan QR: {analytics.qrTotal} ({analytics.qrPercentage}%)
                 </span>
               </div>
               <div className="w-full bg-subtle h-2.5 rounded-full overflow-hidden flex">
                 <div
-                  className="bg-[#1a73e8] h-full transition-all"
+                  className="bg-action h-full transition-all"
                   style={{ width: `${analytics.nfcPercentage}%` }}
                 />
                 <div
-                  className="bg-[#fbbc04] h-full transition-all"
+                  className="bg-warning h-full transition-all"
                   style={{ width: `${analytics.qrPercentage}%` }}
                 />
               </div>
@@ -164,7 +164,7 @@ export default async function MyCardDetailPage({
           {/* Place & Target Details */}
           <div className="bg-surface border border-line p-6 rounded space-y-3 text-xs">
             <h2 className="text-sm font-bold text-ink flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#1a73e8]" /> Konfigurasi Google Places
+              <MapPin className="w-4 h-4 text-action" /> Konfigurasi Google Places
             </h2>
             <div className="space-y-2 text-ink bg-surface border border-line p-4 rounded">
               <div>
@@ -177,7 +177,7 @@ export default async function MyCardDetailPage({
                   href={targetGoogleUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#1a73e8] hover:text-[#4285f4] hover:underline break-all block mt-0.5"
+                  className="text-action hover:text-action-hover hover:underline break-all block mt-0.5"
                 >
                   {targetGoogleUrl}
                 </a>

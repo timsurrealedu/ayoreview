@@ -229,7 +229,7 @@ function CardSetupContent() {
       {/* Header */}
       <header className="w-full max-w-lg mx-auto flex items-center justify-between pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#1a73e8]/30 group-hover:scale-105 transition">
+          <div className="w-8 h-8 rounded bg-action flex items-center justify-center text-white font-black text-sm shadow-md shadow-action/30 group-hover:scale-105 transition">
             A
           </div>
           <div className="flex flex-col">
@@ -251,11 +251,11 @@ function CardSetupContent() {
         <div className="mb-4 bg-surface/90 border border-line rounded p-3">
           <div className="flex justify-between items-center text-xs font-semibold text-ink mb-2">
             <span>Langkah {step} dari 6</span>
-            <span className="text-[#1a73e8]">{stepLabels[step - 1]}</span>
+            <span className="text-action">{stepLabels[step - 1]}</span>
           </div>
           <div className="w-full bg-subtle h-1.5 rounded-full overflow-hidden">
             <div 
-              className="bg-[#1a73e8] h-full transition-all duration-300 rounded-full"
+              className="bg-action h-full transition-all duration-300 rounded-full"
               style={{ width: `${(step / 6) * 100}%` }}
             />
           </div>
@@ -272,36 +272,36 @@ function CardSetupContent() {
           {/* STEP 1: Welcome */}
           {step === 1 && (
             <div className="space-y-6 text-center">
-              <div className="w-16 h-16 rounded bg-[#1a73e8]/20 border border-[#1a73e8]/50 flex items-center justify-center text-[#1a73e8] mx-auto shadow-lg shadow-[#1a73e8]/20">
-                <Sparkles className="w-8 h-8 text-[#4285f4]" />
+              <div className="w-16 h-16 rounded bg-action/20 border border-action/50 flex items-center justify-center text-action mx-auto shadow-lg shadow-action/20">
+                <Sparkles className="w-8 h-8 text-action" />
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
                   Aktifkan Kartu AyoReview Anda
                 </h1>
                 <p className="text-xs sm:text-sm text-ink mt-2 leading-relaxed font-normal">
-                  Kartu fisik dengan ID <span className="font-mono text-[#fbbc04] font-bold">{publicId}</span> siap dihubungkan ke profil ulasan Google Maps tempat usaha Anda.
+                  Kartu fisik dengan ID <span className="font-mono text-warning font-bold">{publicId}</span> siap dihubungkan ke profil ulasan Google Maps tempat usaha Anda.
                 </p>
               </div>
 
               <div className="bg-surface border border-line p-4 rounded text-left space-y-3">
                 <div className="flex items-center gap-2.5 text-xs font-semibold text-ink">
-                  <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                   Langsung terhubung ke Google Review Form
                 </div>
                 <div className="flex items-center gap-2.5 text-xs font-semibold text-ink">
-                  <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                   Mendukung Tap NFC dan Scan QR instan
                 </div>
                 <div className="flex items-center gap-2.5 text-xs font-semibold text-ink">
-                  <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                   Garansi masa tenggang 7 hari pembayaran
                 </div>
               </div>
 
               <button
                 onClick={() => setStep(2)}
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition shadow-lg shadow-action/30 active:scale-[0.98]"
               >
                 Mulai Hubungkan Bisnis
                 <ArrowRight className="w-4 h-4" />
@@ -338,7 +338,7 @@ function CardSetupContent() {
                   onClick={() => setSetupMode('direct')}
                   className={`py-2.5 rounded transition text-center ${
                     setupMode === 'direct'
-                      ? 'bg-[#1a73e8] text-white shadow-md'
+                      ? 'bg-action text-white shadow-md'
                       : 'text-ink hover:text-ink hover:bg-subtle'
                   }`}
                 >
@@ -349,7 +349,7 @@ function CardSetupContent() {
                   onClick={() => setSetupMode('search')}
                   className={`py-2.5 rounded transition text-center ${
                     setupMode === 'search'
-                      ? 'bg-[#1a73e8] text-white shadow-md'
+                      ? 'bg-action text-white shadow-md'
                       : 'text-ink hover:text-ink hover:bg-subtle'
                   }`}
                 >
@@ -371,7 +371,7 @@ function CardSetupContent() {
                         placeholder="Contoh: Kopi Kenangan Senopati"
                         value={directName}
                         onChange={(e) => setDirectName(e.target.value)}
-                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
                       />
                     </div>
                   </div>
@@ -386,11 +386,11 @@ function CardSetupContent() {
                       placeholder="https://g.page/r/.../review atau https://maps.app.goo.gl/..."
                       value={directUrl}
                       onChange={(e) => setDirectUrl(e.target.value)}
-                      className="w-full bg-surface border border-line rounded px-3.5 py-3 text-ink font-mono text-xs placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      className="w-full bg-surface border border-line rounded px-3.5 py-3 text-ink font-mono text-xs placeholder:text-muted-ink font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
                     />
                     <div className="p-3.5 bg-surface/90 border border-line rounded mt-2.5 text-xs text-ink space-y-1.5">
                       <div className="font-bold text-ink flex items-center gap-1.5">
-                        <HelpCircle className="w-4 h-4 text-[#fbbc04]" />
+                        <HelpCircle className="w-4 h-4 text-warning" />
                         Cara mendapatkan tautan gratis (10 Detik):
                       </div>
                 <div className="text-ink">1. Buka aplikasi Google Maps di HP, lalu cari nama toko Anda.</div>
@@ -410,7 +410,7 @@ function CardSetupContent() {
                     <button
                       type="submit"
                       disabled={!directName.trim() || !directUrl.trim()}
-                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                     >
                       Lanjutkan ke Akun
                       <ArrowRight className="w-4 h-4" />
@@ -431,7 +431,7 @@ function CardSetupContent() {
                         placeholder="Contoh: Kopi Kenangan, Salon Indah"
                         value={businessQuery}
                         onChange={(e) => setBusinessQuery(e.target.value)}
-                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
                       />
                     </div>
                   </div>
@@ -447,7 +447,7 @@ function CardSetupContent() {
                         placeholder="Contoh: Jakarta Selatan, Surabaya"
                         value={cityQuery}
                         onChange={(e) => setCityQuery(e.target.value)}
-                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                        className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
                       />
                     </div>
                   </div>
@@ -463,7 +463,7 @@ function CardSetupContent() {
                     <button
                       type="submit"
                       disabled={loading || !businessQuery.trim()}
-                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                      className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                     >
                       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                       {loading ? 'Mencari di Google Maps...' : 'Cari Listing Google'}
@@ -502,11 +502,11 @@ function CardSetupContent() {
                     key={place.place_id}
                     onClick={() => handleSelectPlace(place)}
                     disabled={loading}
-                    className="w-full text-left p-4 rounded bg-surface hover:bg-subtle border border-line hover:border-[#1a73e8] transition group flex items-start gap-3.5 shadow-sm"
+                    className="w-full text-left p-4 rounded bg-surface hover:bg-subtle border border-line hover:border-action transition group flex items-start gap-3.5 shadow-sm"
                   >
-                    <MapPin className="w-5 h-5 text-[#1a73e8] shrink-0 mt-0.5" />
+                    <MapPin className="w-5 h-5 text-action shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
-                      <div className="font-bold text-ink text-sm group-hover:text-[#4285f4] truncate">
+                      <div className="font-bold text-ink text-sm group-hover:text-action-hover truncate">
                         {place.name}
                       </div>
                       <div className="text-xs text-ink mt-0.5 line-clamp-2">
@@ -551,7 +551,7 @@ function CardSetupContent() {
 
               {selectedPlace && (
                 <div className="p-3.5 bg-surface border border-line rounded text-xs flex items-center gap-2.5">
-                  <Building2 className="w-4 h-4 text-[#1a73e8] shrink-0" />
+                  <Building2 className="w-4 h-4 text-action shrink-0" />
                   <span className="text-ink truncate font-bold">{selectedPlace.name}</span>
                 </div>
               )}
@@ -569,7 +569,7 @@ function CardSetupContent() {
                       placeholder="Nama pemilik / manajer"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
                     />
                   </div>
                 </div>
@@ -586,7 +586,7 @@ function CardSetupContent() {
                       placeholder="email@bisnis.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
                     />
                   </div>
                 </div>
@@ -603,7 +603,7 @@ function CardSetupContent() {
                       placeholder="Minimal 6 karakter"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]"
+                      className="w-full bg-surface border border-line rounded pl-10 pr-4 py-3 text-ink placeholder:text-muted-ink font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
                     />
                   </div>
                 </div>
@@ -619,7 +619,7 @@ function CardSetupContent() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs transition shadow-lg shadow-[#1a73e8]/20 active:scale-[0.98] disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                   >
                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
                     {loading ? 'Menghubungkan...' : 'Simpan & Aktifkan Kartu'}
@@ -632,8 +632,8 @@ function CardSetupContent() {
           {/* STEP 5: Payment / Subscription */}
           {step === 5 && (
             <div className="space-y-6 text-center">
-              <div className="w-16 h-16 rounded bg-[#1a73e8]/20 border border-[#1a73e8]/50 flex items-center justify-center text-[#1a73e8] mx-auto shadow-lg shadow-[#1a73e8]/20">
-                <CreditCard className="w-8 h-8 text-[#4285f4]" />
+              <div className="w-16 h-16 rounded bg-action/20 border border-action/50 flex items-center justify-center text-action mx-auto shadow-lg shadow-action/20">
+                <CreditCard className="w-8 h-8 text-action" />
               </div>
 
               <div>
@@ -648,19 +648,19 @@ function CardSetupContent() {
               <div className="bg-surface border border-line p-5 rounded text-left space-y-3">
                 <div className="flex justify-between items-baseline">
                   <span className="text-sm font-bold text-ink">Paket Langganan Kartu</span>
-                  <span className="text-lg font-black text-[#34a853]">Rp 49.000<span className="text-xs font-normal text-muted-ink">/bln</span></span>
+                  <span className="text-lg font-black text-success">Rp 49.000<span className="text-xs font-normal text-muted-ink">/bln</span></span>
                 </div>
                 <ul className="text-xs text-ink space-y-2 pt-2.5 border-t border-line">
                   <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                     Pengalihan NFC & QR tanpa batas
                   </li>
                   <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                     Masa tenggang 7 hari jika pembayaran tertunda
                   </li>
                   <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-[#34a853] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
                     Laporan analitik ketukan & pemindaian
                   </li>
                 </ul>
@@ -670,7 +670,7 @@ function CardSetupContent() {
                 <button
                   onClick={handleStartSubscription}
                   disabled={checkoutLoading}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98] disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition shadow-lg shadow-action/30 active:scale-[0.98] disabled:opacity-50"
                 >
                   {checkoutLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
                   {checkoutLoading ? 'Membuka Pembayaran...' : 'Aktifkan Langganan (Stripe)'}
@@ -685,7 +685,7 @@ function CardSetupContent() {
           {/* STEP 6: Done */}
           {step === 6 && (
             <div className="space-y-6 text-center">
-              <div className="w-16 h-16 rounded bg-[#34a853] flex items-center justify-center text-ink mx-auto shadow-lg shadow-[#34a853]/30">
+              <div className="w-16 h-16 rounded bg-success flex items-center justify-center text-ink mx-auto shadow-lg shadow-success/30">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
 
@@ -694,13 +694,13 @@ function CardSetupContent() {
                   Kartu AyoReview Anda Siap Digunakan!
                 </h2>
                 <p className="text-xs sm:text-sm text-ink mt-2 leading-relaxed font-normal">
-                  Kartu fisik dengan ID <span className="font-mono text-[#fbbc04] font-bold">{publicId}</span> sekarang tertaut secara permanen. Setiap pelanggan yang mengetap atau memindai akan langsung diarahkan ke form ulasan Google bisnis Anda.
+                  Kartu fisik dengan ID <span className="font-mono text-warning font-bold">{publicId}</span> sekarang tertaut secara permanen. Setiap pelanggan yang mengetap atau memindai akan langsung diarahkan ke form ulasan Google bisnis Anda.
                 </p>
               </div>
 
               <Link
                 href="/my"
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition shadow-lg shadow-action/30 active:scale-[0.98]"
               >
                 Buka Dasbor Saya
                 <ArrowRight className="w-4 h-4" />
@@ -712,7 +712,7 @@ function CardSetupContent() {
 
       {/* Footer */}
       <footer className="w-full max-w-lg mx-auto text-center text-xs text-muted-ink flex items-center justify-center gap-2 pt-4">
-        <ShieldCheck className="w-4 h-4 text-[#34a853]" />
+        <ShieldCheck className="w-4 h-4 text-success" />
         <span className="font-medium">Aktivasi Perangkat AyoReview Aman & Terverifikasi</span>
       </footer>
     </div>

@@ -61,7 +61,7 @@ export function QrPreviewModal({
     <div className="flex flex-col items-center bg-surface border border-line rounded p-6 shadow-xl">
       {/* Physical Stand Simulated Card */}
       <div className="relative mb-6 flex w-full max-w-[280px] flex-col items-center rounded border border-line bg-surface p-5 text-center shadow-lg">
-        <div className="flex items-center gap-1 text-[#fbbc04] mb-2 text-base">
+        <div className="flex items-center gap-1 text-warning mb-2 text-base">
           {'★'.repeat(5)}
         </div>
         <h4 className="text-ink font-bold text-sm tracking-tight mb-1">
@@ -89,7 +89,7 @@ export function QrPreviewModal({
         {/* Card Metadata Footer */}
         <div className="w-full flex items-center justify-between text-[10px] text-ink font-mono pt-2 border-t border-line">
           <span>{inventoryCode || 'AR-000000'}</span>
-          <span className="text-[#1a73e8] flex items-center gap-1 font-sans font-semibold">
+          <span className="text-action flex items-center gap-1 font-sans font-semibold">
             <Smartphone className="w-3 h-3" /> NFC Aktif
           </span>
         </div>
@@ -125,7 +125,7 @@ export function QrPreviewModal({
               className="text-ink hover:text-ink p-1"
               title="Salin URL QR"
             >
-              {copiedUrl === 'qr' ? <Check className="w-3.5 h-3.5 text-[#34a853]" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedUrl === 'qr' ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
           </div>
 
@@ -139,7 +139,7 @@ export function QrPreviewModal({
               className="text-ink hover:text-ink p-1"
               title="Salin URL NFC"
             >
-              {copiedUrl === 'nfc' ? <Check className="w-3.5 h-3.5 text-[#34a853]" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedUrl === 'nfc' ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
           </div>
         </div>
@@ -148,7 +148,7 @@ export function QrPreviewModal({
           href={`${qrRedirectUrl}?test=true`}
           target="_blank"
           rel="noreferrer"
-          className="w-full flex items-center justify-center gap-1.5 text-xs text-[#1a73e8] hover:text-[#4285f4] hover:underline pt-1 font-semibold"
+          className="w-full flex items-center justify-center gap-1.5 text-xs text-action hover:text-action-hover hover:underline pt-1 font-semibold"
         >
           <ExternalLink className="w-3.5 h-3.5" />
           Uji pengalihan langsung di tab baru (tanpa analitik)

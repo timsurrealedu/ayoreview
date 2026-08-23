@@ -57,7 +57,7 @@ export default async function MyCardsDashboardPage() {
         <div className="bg-surface border border-line p-5 rounded">
           <div className="flex items-center justify-between text-ink text-xs font-semibold">
             <span>Interaksi Hari Ini</span>
-            <Activity className="w-4 h-4 text-[#1a73e8]" />
+            <Activity className="w-4 h-4 text-action" />
           </div>
           <div className="text-2xl sm:text-3xl font-black text-ink mt-2">
             {totalToday.toLocaleString('id-ID')}
@@ -68,7 +68,7 @@ export default async function MyCardsDashboardPage() {
         <div className="bg-surface border border-line p-5 rounded">
           <div className="flex items-center justify-between text-ink text-xs font-semibold">
             <span>7 Hari Terakhir</span>
-            <TrendingUp className="w-4 h-4 text-[#34a853]" />
+            <TrendingUp className="w-4 h-4 text-success" />
           </div>
           <div className="text-2xl sm:text-3xl font-black text-ink mt-2">
             {total7Days.toLocaleString('id-ID')}
@@ -79,7 +79,7 @@ export default async function MyCardsDashboardPage() {
         <div className="bg-surface border border-line p-5 rounded">
           <div className="flex items-center justify-between text-ink text-xs font-semibold">
             <span>Total Sepanjang Waktu</span>
-            <CreditCard className="w-4 h-4 text-[#fbbc04]" />
+            <CreditCard className="w-4 h-4 text-warning" />
           </div>
           <div className="text-2xl sm:text-3xl font-black text-ink mt-2">
             {totalAllTime.toLocaleString('id-ID')}
@@ -97,7 +97,7 @@ export default async function MyCardsDashboardPage() {
         {cards.length === 0 ? (
           <div className="bg-surface border border-line rounded p-10 text-center space-y-4">
             <div className="w-14 h-14 rounded bg-surface border border-line flex items-center justify-center text-muted-ink mx-auto">
-              <CreditCard className="w-7 h-7 text-[#1a73e8]" />
+              <CreditCard className="w-7 h-7 text-action" />
             </div>
             <div>
               <h3 className="text-base font-bold text-ink">Belum Ada Kartu yang Ditautkan</h3>
@@ -123,7 +123,7 @@ export default async function MyCardsDashboardPage() {
                         {c.business_name || c.name}
                       </div>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="font-mono text-[11px] text-[#fbbc04] font-semibold">
+                        <span className="font-mono text-[11px] text-warning font-semibold">
                           {c.inventory_code}
                         </span>
                         <span className="text-muted-ink">•</span>
@@ -176,7 +176,7 @@ export default async function MyCardsDashboardPage() {
 
                     <Link
                       href={`/my/cards/${c.id}`}
-                      className="inline-flex items-center gap-1 font-semibold text-[#1a73e8] hover:text-[#4285f4] transition"
+                      className="inline-flex items-center gap-1 font-semibold text-action hover:text-action-hover transition"
                     >
                       Detail & QR <ArrowRight className="w-3.5 h-3.5" />
                     </Link>

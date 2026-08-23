@@ -34,7 +34,7 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
     <div className="min-h-screen bg-canvas text-ink flex flex-col p-4 sm:p-8 font-sans">
       <header className="w-full max-w-lg mx-auto flex items-center pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded bg-[#1a73e8] flex items-center justify-center text-white font-black text-sm">
+          <div className="w-8 h-8 rounded bg-action flex items-center justify-center text-white font-black text-sm">
             A
           </div>
           <span className="font-bold text-ink tracking-tight text-sm sm:text-base">AyoReview</span>
@@ -52,7 +52,7 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 py-3 px-6 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition active:scale-[0.98]"
+              className="inline-flex items-center gap-2 py-3 px-6 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition active:scale-[0.98]"
             >
               Kembali ke Beranda
             </Link>
@@ -69,13 +69,13 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
           </div>
         ) : (
           <div className="bg-surface border border-line rounded p-6 sm:p-8 shadow-2xl text-center space-y-5">
-            <div className="w-16 h-16 rounded-full bg-[#137333] flex items-center justify-center mx-auto shadow-lg shadow-[#137333]/30">
+            <div className="w-16 h-16 rounded-full bg-success flex items-center justify-center mx-auto shadow-lg shadow-success/30">
               <CheckCircle2 className="w-8 h-8 text-white" />
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Pesanan Diterima!</h1>
               <p className="text-xs sm:text-sm text-muted-ink mt-2 leading-relaxed">
-                Pesanan <span className="font-mono font-bold text-[#137333]">{order.order_code}</span>{' '}
+                Pesanan <span className="font-mono font-bold text-success">{order.order_code}</span>{' '}
                 untuk <span className="font-bold text-ink">{order.business_name}</span> sudah kami
                 terima dan dibayarkan.
               </p>
@@ -83,22 +83,22 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
 
             <ol className="text-left bg-subtle border border-line rounded p-4 space-y-2.5 text-xs">
               <li className="flex items-start gap-2.5 font-medium">
-                <CheckCircle2 className="w-4 h-4 text-[#137333] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
                 Kartu Anda sudah tertaut ke profil Google bisnis sebelum dikirim
               </li>
               <li className="flex items-start gap-2.5 font-medium">
-                <CheckCircle2 className="w-4 h-4 text-[#137333] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
                 Kami cetak, quality-check, lalu kirim ke alamat Anda (2–4 hari kerja)
               </li>
               <li className="flex items-start gap-2.5 font-medium">
-                <CheckCircle2 className="w-4 h-4 text-[#137333] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
                 Kartu tiba: taruh di kasir atau meja, pelanggan langsung bisa memberi ulasan
               </li>
             </ol>
 
             <Link
               href="/signup"
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-sm transition shadow-lg shadow-[#1a73e8]/30 active:scale-[0.98]"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition shadow-lg shadow-action/30 active:scale-[0.98]"
             >
               Buat Akun Dasbor
             </Link>
