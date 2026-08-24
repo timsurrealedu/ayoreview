@@ -62,13 +62,13 @@ export default async function MyBillingPage() {
               Langganan Pengalihan Ulasan Otomatis
             </h2>
             <p className="text-xs text-ink mt-1">
-              Rp 49.000 / kartu per bulan • Ditagih otomatis setiap bulan
+              Rp 5.000 / kartu per bulan • Ditagih otomatis setiap bulan
             </p>
           </div>
 
           <div className="text-right sm:text-right">
             <div className="text-2xl sm:text-3xl font-black text-ink">
-              Rp {(cards.length * 49000).toLocaleString('id-ID')}
+              Rp {(cards.length * 5000).toLocaleString('id-ID')}
             </div>
             <div className="text-[11px] text-muted-ink">Total untuk {cards.length} kartu</div>
           </div>

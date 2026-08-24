@@ -47,7 +47,7 @@ export async function createCheckoutSession(params: {
                 name: `AyoReview Subscription (${card.business_name || card.name})`,
                 description: `Langganan pengalihan ulasan & analitik aktif kartu ${card.inventory_code}`,
               },
-              unit_amount: 49000, // Rp 49.000 — IDR is zero-decimal in Stripe
+              unit_amount: 5000, // Rp 5.000 — IDR is zero-decimal in Stripe
               recurring: { interval: 'month' },
             },
             quantity: 1,
@@ -83,7 +83,7 @@ export async function createOrderCheckoutSession(params: {
     throw new Error('STRIPE_SECRET_KEY is not configured');
   }
 
-  const unitAmount = Number(process.env.CARD_PRICE_IDR || 99000);
+  const unitAmount = Number(process.env.CARD_PRICE_IDR || 20000);
 
   return stripe.checkout.sessions.create({
     payment_method_types: ['card'],

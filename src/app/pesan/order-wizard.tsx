@@ -402,7 +402,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                   </li>
                   <li className="flex items-center gap-2 font-medium">
                     <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
-                    Langganan Rp 49.000/bulan dimulai setelah kartu aktif dipakai
+                    Langganan Rp 5.000/bulan dimulai setelah kartu aktif dipakai
                   </li>
                   <li className="flex items-center gap-2 font-medium">
                     <CheckCircle2 className="w-4 h-4 text-success shrink-0" />

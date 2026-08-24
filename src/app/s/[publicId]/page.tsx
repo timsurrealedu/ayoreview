@@ -648,7 +648,7 @@ function CardSetupContent() {
               <div className="bg-surface border border-line p-5 rounded text-left space-y-3">
                 <div className="flex justify-between items-baseline">
                   <span className="text-sm font-bold text-ink">Paket Langganan Kartu</span>
-                  <span className="text-lg font-black text-success">Rp 49.000<span className="text-xs font-normal text-muted-ink">/bln</span></span>
+                  <span className="text-lg font-black text-success">Rp 5.000<span className="text-xs font-normal text-muted-ink">/bln</span></span>
                 </div>
                 <ul className="text-xs text-ink space-y-2 pt-2.5 border-t border-line">
                   <li className="flex items-center gap-2 font-medium">

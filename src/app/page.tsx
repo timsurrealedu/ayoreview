@@ -56,7 +56,7 @@ export default function LandingPage() {
           <Link href="/pesan" className="button">Pesan Sekarang <ArrowRight aria-hidden="true" /></Link>
           <ActivateCardModal />
         </div>
-        <p className="hero-note">Kartu siap pakai Rp 99.000 sekali bayar · dikirim ke alamat Anda</p>
+        <p className="hero-note">Kartu siap pakai Rp 20.000 sekali bayar · dikirim ke alamat Anda</p>
       </div>
 
       <div className="hero-demo" role="img" aria-label="Contoh tampilan dasbor AyoReview dengan jumlah ulasan yang bertambah, rasio NFC dan QR, serta tren 30 hari">

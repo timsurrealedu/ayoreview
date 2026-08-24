@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const amount = Number(process.env.CARD_PRICE_IDR || 99000);
+    const amount = Number(process.env.CARD_PRICE_IDR || 20000);
 
     const order = await dbRepo.createOrder({
       placeId: trimmedPlaceId,
