@@ -6,6 +6,6 @@ export const metadata = {
 };
 
 export default function PesanPage() {
-  const cardPrice = Number(process.env.CARD_PRICE_IDR || 20000);
+  const cardPrice = Number(process.env.CARD_PRICE_IDR || 30000);
   return <OrderWizard cardPrice={cardPrice} />;
 }

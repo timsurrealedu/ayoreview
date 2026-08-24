@@ -1,15 +1,14 @@
-# ReviewTap — Smart NFC & QR Review Infrastructure
+# AyoReview — Kartu Ulasan Google NFC & QR
 
 <div align="center">
 
-![ReviewTap V1](https://img.shields.io/badge/ReviewTap-V1.0.0-10b981?style=for-the-badge)
-![Next.js 15](https://img.shields.io/badge/Next.js-15.1.7-black?style=for-the-badge&logo=next.js)
-![TailwindCSS v4](https://img.shields.io/badge/TailwindCSS-v4.0-38bdf8?style=for-the-badge&logo=tailwindcss)
-![PostgreSQL / SQLite](https://img.shields.io/badge/Database-PostgreSQL%20%2F%20SQLite-336791?style=for-the-badge&logo=postgresql)
+![Next.js 15](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
+![TailwindCSS v4](https://img.shields.io/badge/TailwindCSS-v4-38bdf8?style=for-the-badge&logo=tailwindcss)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-336791?style=for-the-badge&logo=supabase)
 
-**Turn happy in-store customers into 5-star Google reviews with physical NFC tap & dynamic QR cards.**
+**Ubah pelanggan yang puas menjadi ulasan Google bintang 5 — cukup ketuk atau pindai.**
 
-[Key Features](#key-features) • [Architecture](#architecture) • [Physical Hardware](#physical-hardware) • [Quick Start](#quick-start) • [API Reference](#api-reference)
+[Pesan](#alur-pembelian) • [Redirect Engine](#redirect-engine) • [Quick Start](#quick-start) • [API](#api-reference)
 
 </div>
 
@@ -17,144 +16,52 @@
 
 ## Overview
 
-**ReviewTap** connects physical customer touchpoints (dining tables, POS cashiers, waiting areas, and entrance counters) with digital Google review destinations through managed NFC acrylic stands and dynamic QR codes.
+AyoReview menjual kartu fisik (NFC acrylic stand + QR) seharga **Rp 30.000 sekali bayar** — tanpa biaya bulanan. Kartu dialokasikan dari inventaris dan **dipra-tautkan ke profil Google bisnis sebelum dikirim**. Pelanggan mengetap/memindai → langsung diarahkan ke form ulasan Google bisnis tersebut.
 
-### The Problem ReviewTap Solves
-1. **Friction-Free Customer Review Flow**: Eliminates 8+ manual steps (unlocking phone, searching business on Maps, selecting branch, scrolling to reviews, clicking review). Customers simply tap or scan to open the review star selector in < 1 second.
-2. **Dynamic Destination Routing**: Physical cards and QR codes encode dynamic ReviewTap redirect endpoints (`reviewtap.id/q/:publicId` and `reviewtap.id/n/:publicId`). Merchants can update their Google Review destination URL anytime without reprinting physical hardware.
-3. **Physical-to-Digital Interaction Analytics**: Tracks scan/tap volume, QR vs NFC ratios, best-performing placement zones (Cashier vs Table vs Entrance), and multi-branch performance metrics in real time.
+## Alur Pembelian
 
----
+1. Merchant membuka `/pesan`, menghubungkan bisnis (tempel tautan Google **atau** cari di Google Maps), isi alamat pengiriman, bayar via **Midtrans** (QRIS/GoPay/VA).
+2. Webhook Midtrans memverifikasi pembayaran → `fulfillOrder()` mengklaim kartu kosong dari inventaris secara race-safe (conditional update + idempotency guard) dan mempra-tautkannya.
+3. Operator mencetak dudukan (`/admin/orders` → link cetak), mengirim, lalu menandai pesanan *Dikirim* / *Selesai* dari dasbor admin.
+4. Merchant masuk ke `/my`: status kartu, jumlah ketukan, **edit tujuan ulasan**, tombol uji tautan.
 
-## Key Features
+## Redirect Engine
 
-- ⚡ **Ultra-Fast Sub-Second Redirect Engine (<100ms)**: Lightweight 302 redirect engine with automated crawler/bot detection (`is_bot`) and anonymous interaction logging.
-- 🛒 **Order-First Sales Flow (`/pesan`)**: Merchant configures their Google listing, enters shipping details, and pays for the physical card in one pass. The ordered card is allocated from inventory and **pre-linked before it ships** — scan-to-activate (`/s/:publicId`) remains the door-to-door salesman channel.
-- 🛡️ **Monthly Subscription & 7-Day Grace Period**: Automated monthly card subscription with Stripe. If payment fails or cancels, a **7-day grace period** keeps customer review redirects alive before cutoff. No trial bypass — cards only go live after the subscription is paid.
-- 📱 **Hardware-Enabled NFC & QR Integration**: Built-in high-DPI vector SVG and PNG QR generator + print-ready acrylic stand card generator (`/admin/cards/[id]/print`).
-- 📊 **Real-Time Analytics**: 30-day visit trends, QR vs NFC hardware split, placement zone conversion analysis, and daily metrics.
-- 🛠️ **Platform Operator Admin Portal (`/admin`)**: Incoming card orders (`/admin/orders`), batch pre-pro card generation (`RT-100000` series), on-site venue assignment, and inventory monitoring.
-
----
-
-## Architecture & Workflows
-
-### 1. Order-First Flow (Web Channel)
-```text
-1. Merchant configures their listing on /pesan (paste review link or Google Places search).
-2. Merchant enters contact + shipping address, pays via Stripe Checkout (one-time).
-3. Webhook fulfills the order: a blank card is allocated from inventory and pre-linked.
-4. Operator prints (/admin/cards/[id]/print) and ships the card.
-5. Card arrives live: customer taps/scans -> Google Review form instantly.
-```
-
-### 2. Pre-Programmed Card Flow (Salesman Channel)
-```text
-1. Operator batch generates blank cards in /admin/cards.
-2. Physical card manufactured with NFC/QR pointing to: https://reviewtap.id/q/:publicId.
-3. Merchant buys card on-site, scans it -> redirected to https://reviewtap.id/s/:publicId.
-4. Merchant searches business via Google Places API, connects account & starts subscription.
-5. All future customer taps/scans immediately redirect to Google Review form.
-```
-
-### 2. Redirect Engine & Grace Period Resolution
-```text
-Customer Tap/Scan (GET /q/:publicId or /n/:publicId)
-   │
-   ├─ Card not found? ─────────────> 302 /fallback/not-found
-   ├─ Card unlinked (no place_id)? ─> 302 /s/:publicId (Setup Wizard)
-   ├─ Subscription inactive/past-due?
-   │     ├─ Within 7-day grace period? ──> ALLOW REDIRECT (Grace active)
-   │     └─ Past 7-day grace period? ────> 302 /fallback/inactive
-   │
-   └─ Valid card & active subscription:
-         ├─ Resolves Google Review URL (Places API / Direct link)
-         ├─ Asynchronously records interaction (NFC/QR, bot check, IP hash)
-         └─ 302 Fast Redirect to Google Review Form (< 1s)
-```
-
----
-
-## Physical Hardware Specification
-
-- **Recommended Stand**: Clear cast acrylic stand ($8 \times 12\text{ cm}$ or $10 \times 15\text{ cm}$).
-- **NFC Tag**: NTAG213 (144 bytes memory, universal iOS & Android compatibility).
-  - Target URL: `https://reviewtap.id/n/{publicId}` (or `/q/{publicId}`)
-- **QR Code**: High-contrast error correction level H with white quiet zone.
-  - Target URL: `https://reviewtap.id/q/{publicId}`
-- **Inventory Code**: Discrete laser-engraved/printed `RT-XXXXXX` serial for on-site inventory identification.
-
----
+- `GET /q/:publicId` (QR) dan `GET /n/:publicId` (NFC) → validasi kartu → 302 ke URL ulasan Google yang tervalidasi ketat (`validateGoogleReviewUrl`, hanya host Google resmi).
+- `GET /r/:publicId` alias → `/q/:publicId`.
+- Interaksi dicatat asinkron via `after()` dengan bot filtering + IP hashing (`IP_HASH_SECRET`).
+- Fallback bermartabat: `/fallback/not-found|unconfigured|inactive` — copy pemulihan untuk pelanggan, bukan CTA penjualan.
+- Rate limit per-tier di middleware; permintaan browser diarahkan ke halaman `/rate-limited` berbahasa Indonesia.
 
 ## Quick Start
 
-### Prerequisites
-- Node.js 18.18+ (tested on Node v24)
-- npm or pnpm
-
-### Installation
-
 ```bash
-# Clone repository
-git clone https://github.com/timsurrealedu/reviewtap.git
-cd reviewtap
-
-# Install dependencies
 npm install
-
-# Run development server
+cp .env.example .env.local   # isi kredensial Supabase & Midtrans
+# Terapkan migrasi di supabase/migrations/ ke project Supabase Anda
+# (wajib termasuk 009_analytics_aggregates.sql)
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application:
-- **Landing Page**: `http://localhost:3000`
-- **Order Wizard (Web Sales Channel)**: `http://localhost:3000/pesan`
-- **Pre-Programmed Card Setup Wizard**: `http://localhost:3000/s/DEMO_CARD_ID`
-- **Merchant Dashboard**: `http://localhost:3000/my`
-- **Operator Admin Portal**: `http://localhost:3000/admin/orders`
-- **Test Live Redirect**: `http://localhost:3000/q/a7Xk29?test=true`
-
-### Production Build
-
-```bash
-npm run build
-npm run start
-```
-
----
+Verifikasi cepat: `BASE_URL=http://localhost:3000 bash scripts/smoke.sh`
 
 ## API Reference
 
-### Redirect Endpoints
-| Method | Endpoint | Description |
+| Endpoint | Auth | Fungsi |
 |---|---|---|
-| `GET` | `/q/:publicId` | Dynamic QR entrypoint (routes unlinked cards to `/s/:publicId` or active cards to Google Review) |
-| `GET` | `/n/:publicId` | Dynamic NFC entrypoint (same logic, logs source as `nfc`) |
-| `GET` | `/r/:publicId` | Universal redirect handler |
+| `POST /api/setup/search` | public (rate-limited) | Cari lokasi Google Places |
+| `POST /api/setup/link` | owner session untuk kartu tertaut | Tautkan / ubah tujuan ulasan |
+| `GET /api/setup/card-status` | public (rate-limited) | Cek keberadaan & status kartu |
+| `POST /api/orders/create` | public (rate-limited) | Buat pesanan + Midtrans Snap token |
+| `POST /api/midtrans/webhook` | signature Midtrans | Konfirmasi pembayaran → fulfillment |
+| `POST /api/admin/batch-generate` | platform admin | Generate kartu kosong RT-XXXXXX |
+| `POST /api/admin/assign` | platform admin | Tetapkan kartu ke lokasi bisnis |
+| `GET /api/admin/inventory` | platform admin | Daftar inventaris |
+| `POST /api/admin/orders/update-status` | platform admin | shipped/completed/cancelled/failed |
 
-### Pre-Programmed Setup & Billing APIs
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/orders/create` | Creates a card order + Midtrans Snap payment (QRIS, GoPay, VA, cards) |
-| `POST` | `/api/setup/search` | Google Places API (New) text search with rate limiting |
-| `POST` | `/api/setup/link` | Links Google Place ID and merchant email to card (owner-guarded re-link) |
-| `POST` | `/api/midtrans/webhook` | Handles verified Midtrans notifications: order fulfillment & status updates |
-| `POST` | `/api/stripe/create-checkout` | Creates Stripe Checkout subscription session |
-| `POST` | `/api/stripe/webhook` | Handles Stripe subscription billing events & 7-day grace period triggers |
+## Dokumentasi
 
-### Classic & Admin REST APIs
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` / `POST` | `/api/businesses` | List or create merchant businesses |
-| `GET` / `POST` / `PATCH` | `/api/locations` | Manage branches and update Google Review URLs |
-| `GET` / `POST` | `/api/cards` | List cards or create new review cards |
-| `GET` / `PATCH` | `/api/cards/:id` | Card detail, placement, and status toggles |
-| `GET` | `/api/analytics` | Overview metrics, 30-day trends, and placement breakdowns |
-| `POST` | `/api/admin/batch-generate` | Operator tool to generate blank hardware serials |
-| `POST` | `/api/admin/assign` | Assign blank inventory cards to merchant locations |
-
----
-
-## License
-
-MIT License. Designed for commercial pilot deployments in local hospitality, healthcare, and retail businesses.
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — arsitektur teknis saat ini
+- [DESIGN.md](./DESIGN.md) — design tokens & aturan UI
+- [SECURITY.md](./SECURITY.md) — model ancaman + risiko yang diterima
+- `docs/archive/` — dokumen perencanaan historis (tidak menggambarkan produk)

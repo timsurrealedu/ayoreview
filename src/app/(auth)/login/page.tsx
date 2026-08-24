@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Lock, Mail, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { ErrorAlert } from '@/components/ui/alert';
+import { Logo } from '@/components/ui/logo';
 
 function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -167,9 +168,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-canvas text-ink flex flex-col justify-between p-4 sm:p-8 font-sans">
       <header className="w-full max-w-md mx-auto flex items-center justify-between pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded bg-action flex items-center justify-center text-white font-black text-sm shadow-md shadow-action/30 group-hover:scale-105 transition">
-            A
-          </div>
+          <Logo size={32} className="shrink-0 shadow-md shadow-action/30 group-hover:scale-105 transition" />
           <span className="font-bold text-ink tracking-tight text-base">AyoReview</span>
         </Link>
         <Link

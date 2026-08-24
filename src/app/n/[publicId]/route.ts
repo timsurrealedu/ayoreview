@@ -4,7 +4,6 @@ import { isBotUserAgent, detectDeviceType, hashIp } from '@/lib/bot-filter';
 import { validateGoogleReviewUrl } from '@/lib/url-validator';
 import { isAuthenticatedRequest } from '@/lib/session-check';
 import { buildReviewUrl } from '@/lib/places';
-import { checkCardSubscriptionStatus } from '@/lib/subscription';
 import * as Sentry from '@sentry/nextjs';
 
 export const dynamic = 'force-dynamic';
@@ -30,12 +29,6 @@ export async function GET(
     }
 
     if (card.status !== 'active' || (card.location_id && card.location_status !== 'active')) {
-      return NextResponse.redirect(new URL('/fallback/inactive', request.url), 302);
-    }
-
-    // Subscription & 7-day grace period check
-    const subCheck = checkCardSubscriptionStatus(card);
-    if (!subCheck.allowed) {
       return NextResponse.redirect(new URL('/fallback/inactive', request.url), 302);
     }
 

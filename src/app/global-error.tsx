@@ -2,6 +2,7 @@
 
 import * as Sentry from '@sentry/nextjs';
 import { useEffect } from 'react';
+import { Logo } from '@/components/ui/logo';
 
 export default function GlobalError({
   error,
@@ -18,7 +19,10 @@ export default function GlobalError({
     <html>
       <body className="bg-canvas text-ink flex items-center justify-center min-h-screen font-sans p-6">
         <div role="alert" aria-live="assertive" className="max-w-md w-full rounded border border-error/25 bg-surface p-6 text-center shadow-lg space-y-4">
-          <div className="text-action font-black text-2xl">AyoReview</div>
+          <div className="flex items-center justify-center gap-2.5 text-action font-black text-2xl">
+            <Logo size={32} className="shrink-0" />
+            AyoReview
+          </div>
           <h2 className="text-xl font-bold">Terjadi kesalahan sistem</h2>
           <p className="text-xs text-ink">
             Kesalahan sistem telah dicatat secara otomatis. Silakan muat ulang halaman.

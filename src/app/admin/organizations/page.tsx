@@ -29,7 +29,7 @@ export default async function AdminOrganizationsPage() {
               <th className="py-3 px-4">Tanggal Dibuat</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-800/60">
+          <tbody className="divide-y divide-line">
             {orgs.map((org) => (
               <tr key={org.id} className="hover:bg-subtle/20 transition">
                 <td className="py-4 px-5 font-bold text-ink text-sm">
@@ -42,7 +42,7 @@ export default async function AdminOrganizationsPage() {
                   <StatusBadge tone={org.status === 'active' ? 'success' : 'neutral'}>{org.status}</StatusBadge>
                 </td>
                 <td className="py-4 px-4 text-muted-ink">
-                  {new Date(org.created_at).toLocaleDateString()}
+                  {new Date(org.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </td>
               </tr>
             ))}

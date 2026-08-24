@@ -4,8 +4,7 @@ import { requireUser } from '@/lib/auth';
 import { dbRepo } from '@/lib/db';
 import { generateQrPngDataUrl } from '@/lib/qr';
 import { buildReviewUrl } from '@/lib/places';
-import { checkCardSubscriptionStatus } from '@/lib/subscription';
-import { 
+import {
   ArrowLeft, 
   ExternalLink, 
   Download, 
@@ -46,7 +45,7 @@ export default async function MyCardDetailPage({
     : card.google_review_url || qrTargetUrl;
 
   const analytics = await dbRepo.setupGetCardAnalytics(card.id);
-  const subCheck = checkCardSubscriptionStatus(card as any);
+  const isLinked = !!(card.place_id || card.location_id);
 
   return (
     <div className="space-y-6">
@@ -65,7 +64,7 @@ export default async function MyCardDetailPage({
             <h1 className="text-xl font-bold text-ink tracking-tight">
               {card.business_name || card.name}
             </h1>
-            {subCheck.inGracePeriod ? <StatusBadge tone="warning">Masa Tenggang 7 Hari ({subCheck.daysRemainingInGrace} hari tersisa)</StatusBadge> : card.subscription_status === 'active' ? <StatusBadge tone="success">Aktif</StatusBadge> : <StatusBadge>{card.subscription_status || 'Pending'}</StatusBadge>}
+            {!isLinked ? <StatusBadge tone="info">Menunggu Setup</StatusBadge> : card.status === 'active' ? <StatusBadge tone="success">Aktif</StatusBadge> : <StatusBadge tone="error">Non-aktif</StatusBadge>}
           </div>
           <div className="flex items-center gap-3 text-xs text-ink mt-1 font-mono">
             <span>Kode: <strong className="text-warning font-semibold">{card.inventory_code}</strong></span>

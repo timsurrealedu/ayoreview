@@ -1,6 +1,7 @@
 import { dbRepo } from '@/lib/db';
 import { requirePlatformAdmin } from '@/lib/auth';
 import { StatusBadge } from '@/components/ui/status-badge';
+import { OrderActions } from './order-actions';
 import type { Order, OrderStatus } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -89,6 +90,7 @@ export default async function AdminOrdersPage() {
                 <th className="px-4 py-3 font-semibold">Nominal</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
                 <th className="px-4 py-3 font-semibold">Masuk</th>
+                <th className="px-4 py-3 font-semibold">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -108,6 +110,9 @@ export default async function AdminOrdersPage() {
                     <StatusBadge tone={statusTone[o.status]}>{statusLabel[o.status]}</StatusBadge>
                   </td>
                   <td className="px-4 py-3 text-muted-ink whitespace-nowrap">{formatDate(o.created_at)}</td>
+                  <td className="px-4 py-3">
+                    <OrderActions orderId={o.id} status={o.status} allocatedCardId={o.allocated_card_id} />
+                  </td>
                 </tr>
               ))}
             </tbody>

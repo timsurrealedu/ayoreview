@@ -36,3 +36,10 @@
 UPDATE public.users SET is_platform_admin = TRUE WHERE email = 'admin@example.com';
 ```
 or set `ADMIN_EMAILS=admin@example.com` (checked at runtime in `src/lib/auth.ts`).
+
+## Accepted risks (beta, 2026-08-24)
+
+1. **Card ownership = email string.** Cards match their owner by `merchant_email` (case-insensitive). Changing account email orphans purchased cards; Google-OAuth users whose Google email differs from the order email will not see their cards until they sign up with the order email. Multi-user/ownership-transfer is post-beta scope.
+2. **In-memory rate limiter** — per-instance state resets on deploy and does not dedupe across lambda instances (documented since pilot; see above).
+3. **Vestigial subscription columns.** `cards.subscription_status` / `subscription_id` / `subscription_current_period_end` remain in the schema after the switch to one-time pricing; new writes set `active` at fulfillment/link time only. Do not build on them.
+4. **Migration 009 must be applied** (`supabase/migrations/009_analytics_aggregates.sql`) before or with the release that calls `get_card_analytics` / `get_cards_stats_by_email` RPCs.

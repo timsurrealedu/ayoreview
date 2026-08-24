@@ -4,6 +4,16 @@
 
 Web on Next.js 15 and Tailwind CSS v4. The landing page is **Persuade**; authenticated product surfaces are **Operate**.
 
+## Canonical logo
+
+The only brand mark is the AyoReview tap logo: a blue vertical-gradient rounded square containing a white speech bubble with five gold stars above a white tap-hand with NFC ripples.
+
+- Source of truth: `public/images/logo.svg` (vector, viewBox `0 0 120 120`).
+- In-app rendering: `<Logo size={n} />` from `src/components/ui/logo.tsx` — always inline SVG via this component; never recreate the mark with text tiles, conic gradients, colored dots, or unicode glyphs.
+- Favicon: `src/app/icon.svg` (same mark, Next.js file convention).
+- The logo appears everywhere a brand mark is shown: landing nav/footer, order wizard, order success, setup wizard, login, signup, dashboard/admin sidebar, rate-limited page, fallback pages, global error, and the physical-card print template.
+- Do not introduce alternate mark variants; changes go through `logo.tsx` and `logo.svg` only.
+
 ## Shared palette (semantic tokens, `globals.css`)
 
 All surfaces draw from the same Tailwind v4 `@theme` tokens; hardcoded hexes are a defect.

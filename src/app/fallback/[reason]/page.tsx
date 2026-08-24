@@ -1,5 +1,28 @@
-import Link from 'next/link';
-import { AlertCircle, HelpCircle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { AlertCircle, HelpCircle, ShieldCheck } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
+
+export const dynamic = 'force-dynamic';
+
+const recoveryCopy: Record<string, { title: string; message: string; icon: React.ReactNode }> = {
+  'not-found': {
+    title: 'Kartu Tidak Ditemukan',
+    message:
+      'Kode pada kartu ini tidak terdaftar di sistem AyoReview. Jika Anda pelanggan, mohon beri tahu pihak usaha ini agar kartunya dapat diperiksa.',
+    icon: <HelpCircle className="w-12 h-12 text-muted-ink" />,
+  },
+  unconfigured: {
+    title: 'Kartu Sedang Disiapkan',
+    message:
+      'Kartu ulasan milik usaha ini belum selesai dihubungkan ke profil Google mereka. Silakan kembali lagi nanti, atau beri ulasan langsung melalui Google Maps.',
+    icon: <AlertCircle className="w-12 h-12 text-action" />,
+  },
+  inactive: {
+    title: 'Kartu Sedang Tidak Aktif',
+    message:
+      'Kartu ulasan milik usaha ini sedang tidak aktif. Mohon informasikan pihak pengelola usaha agar dapat mengaktifkannya kembali.',
+    icon: <AlertCircle className="w-12 h-12 text-warning" />,
+  },
+};
 
 export default async function FallbackPage({
   params,
@@ -7,55 +30,38 @@ export default async function FallbackPage({
   params: Promise<{ reason: string }>;
 }) {
   const { reason } = await params;
+  const copy = recoveryCopy[reason];
 
-  let title = 'Tautan Ulasan Tidak Tersedia';
-  let message = 'Tautan AyoReview ini sedang tidak aktif atau sedang dalam pemeliharaan.';
-  let icon = <AlertCircle className="w-12 h-12 text-warning" />;
-
-  if (reason === 'not-found') {
-    title = 'Kartu Tidak Ditemukan';
-    message = 'Kartu AyoReview ini tidak ditemukan dalam sistem kami. Silakan hubungi pengelola usaha.';
-    icon = <HelpCircle className="w-12 h-12 text-muted-ink" />;
-  } else if (reason === 'unconfigured') {
-    title = 'Pengaturan Belum Selesai';
-    message = 'Kartu ulasan ini sudah terdaftar, tetapi tujuan ulasan Google belum dikonfigurasi.';
-    icon = <AlertCircle className="w-12 h-12 text-action" />;
+  if (!copy) {
+    return (
+      <div className="min-h-[100dvh] bg-canvas text-ink flex flex-col items-center justify-center p-6 font-sans">
+        <div className="w-full max-w-md text-center py-10 px-6 rounded bg-surface border border-line shadow-xl space-y-3">
+          <HelpCircle className="w-10 h-10 text-muted-ink mx-auto" />
+          <h1 className="text-xl font-bold tracking-tight">Halaman Tidak Ditemukan</h1>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="min-h-[100dvh] bg-canvas text-ink flex flex-col items-center justify-between p-6 sm:p-12 font-sans">
       <div className="w-full max-w-md flex justify-between items-center text-xs tracking-wider uppercase text-muted-ink">
         <span className="font-bold tracking-tight text-ink flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-[conic-gradient(from_25deg,#ea4335_0_25%,#fbbc04_0_50%,#34a853_0_75%,#1a73e8_0)] flex items-center justify-center text-ink font-black text-[10px] ring-2 ring-white/30 ring-inset">
-            A
-          </div>
+          <Logo size={24} className="rounded-md" />
           AyoReview
-        </span>
-        <span className="rounded border border-line bg-surface px-2.5 py-1 text-[11px] font-semibold text-ink">
-          Pengalihan Terproteksi
         </span>
       </div>
 
       <main className="w-full max-w-md my-auto text-center py-10 px-6 rounded bg-surface border border-line shadow-2xl space-y-4">
-        <div className="inline-flex p-4 rounded bg-surface border border-line mx-auto">
-          {icon}
+        <div className="inline-flex p-4 rounded bg-subtle border border-line mx-auto">
+          {copy.icon}
         </div>
         <h1 className="text-2xl font-black tracking-tight text-ink">
-          {title}
+          {copy.title}
         </h1>
-        <p className="text-ink text-sm leading-relaxed max-w-sm mx-auto">
-          {message}
+        <p className="text-muted-ink text-sm leading-relaxed max-w-sm mx-auto">
+          {copy.message}
         </p>
-
-        <div className="pt-4 border-t border-line flex flex-col gap-3">
-          <Link
-            href="/"
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-sm shadow-md transition"
-          >
-            Pelajari AyoReview
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
       </main>
 
       <footer className="w-full max-w-md text-center text-xs text-muted-ink flex items-center justify-center gap-2">

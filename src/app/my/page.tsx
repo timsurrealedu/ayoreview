@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { requireUser } from '@/lib/auth';
 import { dbRepo } from '@/lib/db';
-import { checkCardSubscriptionStatus } from '@/lib/subscription';
 import { 
   CreditCard, 
   ExternalLink, 
@@ -17,6 +16,7 @@ import {
 
 import { ActivateCardModal } from '@/components/ui/activate-card-modal';
 import { StatusBadge } from '@/components/ui/status-badge';
+import { DestinationEditor } from './destination-editor';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,8 +43,11 @@ export default async function MyCardsDashboardPage() {
           <h1 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
             Kartu Ulasan Saya
           </h1>
-          <p className="text-xs sm:text-sm text-ink mt-1">
+          <p className="text-xs sm:text-sm text-muted-ink mt-1">
             Pantau performa ketukan NFC dan pemindaian QR kartu ulasan bisnis Anda
+          </p>
+          <p className="text-[11px] text-muted-ink mt-1">
+            Kartu muncul di dasbor ini jika email akun Anda sama dengan email saat memesan.
           </p>
         </div>
         <div>
@@ -109,8 +112,7 @@ export default async function MyCardsDashboardPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {cards.map((c) => {
-              const subCheck = checkCardSubscriptionStatus(c as any);
-              const isPastDueGrace = subCheck.inGracePeriod;
+              const isLinked = !!(c.place_id || c.location_id);
 
               return (
                 <div
@@ -133,19 +135,9 @@ export default async function MyCardsDashboardPage() {
                       </div>
                     </div>
 
-                    {/* Subscription Status Badge */}
-                    {isPastDueGrace ? <StatusBadge tone="warning">Tenggang ({subCheck.daysRemainingInGrace} hr)</StatusBadge> : c.subscription_status === 'active' ? <StatusBadge tone="success">Aktif</StatusBadge> : c.subscription_status === 'pending' ? <StatusBadge tone="info">Uji Coba / Pending</StatusBadge> : <StatusBadge tone="error">Non-aktif</StatusBadge>}
+                    {/* Card Status Badge */}
+                    {!isLinked ? <StatusBadge tone="info">Menunggu Setup</StatusBadge> : c.status === 'active' ? <StatusBadge tone="success">Aktif</StatusBadge> : <StatusBadge tone="error">Non-aktif</StatusBadge>}
                   </div>
-
-                  {/* Grace period warning message */}
-                  {isPastDueGrace && (
-                    <div role="status" className="flex items-center justify-between rounded border border-warning/25 bg-warning-soft p-3 text-xs text-warning">
-                      <span>Pembayaran tertunda. Kartu tetap aktif selama masa tenggang 7 hari.</span>
-                      <Link href="/my/billing" className="ml-2 shrink-0 font-bold underline">
-                        Bayar →
-                      </Link>
-                    </div>
-                  )}
 
                   {/* Quick Card Stats */}
                   <div className="grid grid-cols-3 gap-2 bg-surface border border-line p-3 rounded text-center text-xs">
@@ -162,6 +154,14 @@ export default async function MyCardsDashboardPage() {
                       <div className="font-bold text-ink mt-0.5">{c.stats.allTime}</div>
                     </div>
                   </div>
+
+                  {/* Destination editor */}
+                  <DestinationEditor
+                    publicId={c.public_id}
+                    businessName={c.business_name || c.name}
+                    merchantEmail={user.email}
+                    isLinked={isLinked}
+                  />
 
                   {/* Card Actions */}
                   <div className="flex items-center justify-between pt-2 border-t border-line text-xs">

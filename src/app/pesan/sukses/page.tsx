@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
 import { dbRepo } from '@/lib/db';
 import { getMidtransStatus, mapMidtransToOrderStatus } from '@/lib/midtrans';
+import { Logo } from '@/components/ui/logo';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,9 +35,7 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
     <div className="min-h-screen bg-canvas text-ink flex flex-col p-4 sm:p-8 font-sans">
       <header className="w-full max-w-lg mx-auto flex items-center pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded bg-action flex items-center justify-center text-white font-black text-sm">
-            A
-          </div>
+          <Logo size={32} className="shrink-0" />
           <span className="font-bold text-ink tracking-tight text-sm sm:text-base">AyoReview</span>
         </Link>
       </header>
@@ -63,8 +62,8 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
             <h1 className="text-xl font-bold">Pembayaran sedang diproses</h1>
             <p className="text-xs text-muted-ink leading-relaxed">
               Pesanan <span className="font-mono font-bold text-ink">{order.order_code}</span> belum
-              terkonfirmasi. Halaman ini akan diperbarui otomatis setelah pembayaran terverifikasi —
-              atau muat ulang dalam satu menit.
+              terkonfirmasi. Setelah menyelesaikan pembayaran, muat ulang halaman ini untuk melihat
+              status pesanan Anda.
             </p>
           </div>
         ) : (
@@ -97,7 +96,7 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
             </ol>
 
             <Link
-              href="/signup"
+              href={`/signup?email=${encodeURIComponent(order.merchant_email)}`}
               className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition shadow-lg shadow-action/30 active:scale-[0.98]"
             >
               Buat Akun Dasbor

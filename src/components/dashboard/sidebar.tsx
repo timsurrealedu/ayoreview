@@ -3,12 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CreditCard, LayoutDashboard, LogOut, Menu, Package, Receipt, ShieldCheck, Store, Users, X } from 'lucide-react';
+import { CreditCard, LayoutDashboard, LogOut, Menu, Package, ShieldCheck, Store, Users, X } from 'lucide-react';
 import clsx from 'clsx';
+import { Logo } from '@/components/ui/logo';
 
 type Shell = 'merchant' | 'admin';
 const navigation = {
-  merchant: [{ label: 'Kartu Saya', href: '/my', icon: CreditCard }, { label: 'Langganan & Tagihan', href: '/my/billing', icon: Receipt }],
+  merchant: [{ label: 'Kartu Saya', href: '/my', icon: CreditCard }],
   admin: [{ label: 'Ringkasan', href: '/admin', icon: LayoutDashboard }, { label: 'Pesanan Masuk', href: '/admin/orders', icon: Package }, { label: 'Inventaris & Kartu Fisik', href: '/admin/cards', icon: CreditCard }, { label: 'Organisasi', href: '/admin/organizations', icon: Store }, { label: 'Pengguna', href: '/admin/users', icon: Users }],
 } satisfies Record<Shell, Array<{ label: string; href: string; icon: typeof LayoutDashboard }>>;
 
@@ -39,7 +40,7 @@ export function DashboardSidebar({ isPlatformAdmin, shell = 'merchant', userName
   const panel = (
     <div className="flex h-full flex-col bg-surface">
       <div className="flex min-h-16 items-center justify-between border-b border-line px-5">
-        <Link href={home} className="flex min-h-11 items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded bg-action text-sm font-black text-white">AR</span><span><span className="block text-sm font-bold leading-none text-ink">{title}</span><span className="mt-1 block font-mono text-[10px] font-medium text-muted-ink">{subtitle}</span></span></Link>
+        <Link href={home} className="flex min-h-11 items-center gap-2.5"><Logo size={32} className="shrink-0" /><span><span className="block text-sm font-bold leading-none text-ink">{title}</span><span className="mt-1 block font-mono text-[10px] font-medium text-muted-ink">{subtitle}</span></span></Link>
         <button ref={closeRef} type="button" onClick={() => setOpen(false)} className="flex h-11 w-11 items-center justify-center rounded text-ink md:hidden" aria-label="Tutup navigasi"><X className="h-5 w-5" /></button>
       </div>
       <div className="flex-1 overflow-y-auto px-3 py-4">
@@ -54,5 +55,5 @@ export function DashboardSidebar({ isPlatformAdmin, shell = 'merchant', userName
       </div>
     </div>
   );
-  return <><a href="#main-content" className="fixed left-3 top-3 z-[70] -translate-y-20 rounded bg-action px-4 py-3 text-sm font-bold text-white focus:translate-y-0">Lewati ke konten utama</a><header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-line bg-surface px-4 md:hidden"><Link href={home} className="flex min-h-11 items-center gap-2"><span className="flex h-8 w-8 items-center justify-center rounded bg-action text-xs font-black text-white">AR</span><span className="text-sm font-bold text-ink">{title}</span></Link><button ref={triggerRef} type="button" onClick={() => setOpen(true)} aria-label="Buka navigasi" aria-expanded={open} aria-controls={`${shell}-navigation`} className="flex h-11 w-11 items-center justify-center rounded border border-line text-ink"><Menu className="h-5 w-5" /></button></header><aside className="hidden min-h-screen w-64 shrink-0 border-r border-line md:block">{panel}</aside>{open && <div className="fixed inset-0 z-50 md:hidden"><button type="button" className="absolute inset-0 bg-ink/35" onClick={() => setOpen(false)} aria-label="Tutup navigasi" /><aside id={`${shell}-navigation`} role="dialog" aria-modal="true" aria-label={subtitle} className="relative h-full w-[min(20rem,88vw)] shadow-2xl">{panel}</aside></div>}</>;
+  return <><a href="#main-content" className="fixed left-3 top-3 z-[70] -translate-y-20 rounded bg-action px-4 py-3 text-sm font-bold text-white focus:translate-y-0">Lewati ke konten utama</a><header className="sticky top-0 z-40 flex min-h-16 items-center justify-between border-b border-line bg-surface px-4 md:hidden"><Link href={home} className="flex min-h-11 items-center gap-2"><Logo size={32} className="shrink-0" /><span className="text-sm font-bold text-ink">{title}</span></Link><button ref={triggerRef} type="button" onClick={() => setOpen(true)} aria-label="Buka navigasi" aria-expanded={open} aria-controls={`${shell}-navigation`} className="flex h-11 w-11 items-center justify-center rounded border border-line text-ink"><Menu className="h-5 w-5" /></button></header><aside className="hidden min-h-screen w-64 shrink-0 border-r border-line md:block">{panel}</aside>{open && <div className="fixed inset-0 z-50 md:hidden"><button type="button" className="absolute inset-0 bg-ink/35" onClick={() => setOpen(false)} aria-label="Tutup navigasi" /><aside id={`${shell}-navigation`} role="dialog" aria-modal="true" aria-label={subtitle} className="relative h-full w-[min(20rem,88vw)] shadow-2xl">{panel}</aside></div>}</>;
 }

@@ -14,6 +14,7 @@ import {
   Printer
 } from 'lucide-react';
 import { StatusBadge } from '@/components/ui/status-badge';
+import { Modal } from '@/components/ui/modal';
 
 interface AdminLocation {
   id: string;
@@ -36,6 +37,8 @@ export default function AdminCardsInventoryPage() {
   const [assigningCard, setAssigningCard] = useState<any | null>(null);
   const [selectedLocationId, setSelectedLocationId] = useState('');
   const [assignedPlacement, setAssignedPlacement] = useState('cashier');
+  const [assignError, setAssignError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   // Replace modal state
   const [replacingCard, setReplacingCard] = useState<any | null>(null);
@@ -63,6 +66,7 @@ export default function AdminCardsInventoryPage() {
 
   const handleBatchGenerate = async () => {
     setGenerating(true);
+    setNotice(null);
     try {
       const res = await fetch('/api/admin/batch-generate', {
         method: 'POST',
@@ -71,10 +75,14 @@ export default function AdminCardsInventoryPage() {
       });
       const data = await res.json();
       if (data.success) {
+        setNotice(`${batchCount} kartu berhasil dibuat.`);
         fetchCards();
+      } else {
+        setNotice(data.error || 'Gagal membuat kartu.');
       }
     } catch (err) {
       console.error(err);
+      setNotice('Gagal membuat kartu. Coba lagi.');
     } finally {
       setGenerating(false);
     }
@@ -83,6 +91,7 @@ export default function AdminCardsInventoryPage() {
   const handleAssign = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!assigningCard || !selectedLocationId) return;
+    setAssignError(null);
 
     try {
       const res = await fetch('/api/admin/assign', {
@@ -97,10 +106,14 @@ export default function AdminCardsInventoryPage() {
       const data = await res.json();
       if (data.success) {
         setAssigningCard(null);
+        setNotice(`Kartu ${assigningCard.inventory_code} berhasil ditetapkan.`);
         fetchCards();
+      } else {
+        setAssignError(data.error || 'Gagal menetapkan lokasi.');
       }
     } catch (err) {
       console.error(err);
+      setAssignError('Gagal menetapkan lokasi. Coba lagi.');
     }
   };
 
@@ -148,13 +161,19 @@ export default function AdminCardsInventoryPage() {
           <button
             onClick={handleBatchGenerate}
             disabled={generating}
-            className="flex items-center gap-1 px-3 py-1 bg-amber-500 hover:bg-amber-400 text-ink font-bold rounded transition disabled:opacity-50"
+            className="flex items-center gap-1 px-3 py-1 bg-action hover:bg-action-hover text-white font-bold rounded transition disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
             {generating ? 'Membuat...' : 'Buat Kartu Kosong'}
           </button>
         </div>
       </div>
+
+      {notice && (
+        <p role="status" aria-live="polite" className="rounded border border-line bg-subtle p-3 text-xs font-semibold text-ink">
+          {notice}
+        </p>
+      )}
 
       {/* Tabs & Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -178,7 +197,7 @@ export default function AdminCardsInventoryPage() {
           <button
             onClick={() => setFilterTab('linked')}
             className={`px-3 py-1 rounded font-medium transition ${
-              filterTab === 'linked' ? 'bg-action/20 text-success' : 'text-muted-ink hover:text-ink'
+              filterTab === 'linked' ? 'bg-action-soft text-action' : 'text-muted-ink hover:text-ink'
             }`}
           >
             Tertaut ({cards.filter((c) => Boolean(c.place_id || c.location_id)).length})
@@ -192,7 +211,7 @@ export default function AdminCardsInventoryPage() {
             placeholder="Saring kode RT, ID, bisnis..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-surface border border-line rounded pl-9 pr-4 py-1.5 text-ink placeholder-zinc-500 focus:outline-none focus:border-amber-500"
+            className="w-full bg-surface border border-line rounded pl-9 pr-4 py-1.5 text-ink placeholder:text-muted-ink focus:outline-none focus:border-action"
           />
         </div>
       </div>
@@ -213,7 +232,7 @@ export default function AdminCardsInventoryPage() {
                 <th className="py-3 px-5 text-right">Tindakan</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-line">
               {filteredCards.map((c) => (
                 <tr key={c.id} className="hover:bg-subtle/20 transition">
                   <td className="py-3.5 px-5 font-mono font-bold text-warning">
@@ -241,7 +260,7 @@ export default function AdminCardsInventoryPage() {
                     {c.placement}
                   </td>
                   <td className="py-3.5 px-4">
-                    <StatusBadge tone={c.status === 'active' ? 'success' : c.status === 'replaced' ? 'warning' : 'neutral'}>{c.status}</StatusBadge>
+                    <StatusBadge tone={c.status === 'active' ? 'success' : c.status === 'replaced' ? 'warning' : 'neutral'}>{c.status === 'active' ? 'Aktif' : c.status === 'inactive' ? 'Non-aktif' : c.status === 'lost' ? 'Hilang' : c.status === 'replaced' ? 'Diganti' : c.status}</StatusBadge>
                   </td>
                   <td className="py-3.5 px-4 text-right font-bold text-ink">
                     {c.stats?.allTime || 0}
@@ -272,30 +291,23 @@ export default function AdminCardsInventoryPage() {
       </div>
 
       {/* Assign Venue Modal */}
-      {assigningCard && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-surface border border-line rounded w-full max-w-md p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-line pb-3">
-              <h3 className="text-sm font-bold text-ink">
-                Tetapkan Perangkat {assigningCard.inventory_code}
-              </h3>
-              <button
-                onClick={() => setAssigningCard(null)}
-                className="text-muted-ink hover:text-ink"
-              >
-                ✕
-              </button>
-            </div>
+      <Modal open={!!assigningCard} onClose={() => setAssigningCard(null)} title={`Tetapkan Perangkat ${assigningCard?.inventory_code ?? ''}`}>
+        {assigningCard && (
+          <>
+            <h3 className="text-sm font-bold text-ink pr-8">
+              Tetapkan Perangkat {assigningCard.inventory_code}
+            </h3>
 
             <form onSubmit={handleAssign} className="space-y-4">
               <div>
-                <label className="block text-ink font-semibold mb-1">
+                <label htmlFor="assign-location" className="block text-ink font-semibold mb-1">
                   Cabang Tujuan
                 </label>
                 <select
+                  id="assign-location"
                   value={selectedLocationId}
                   onChange={(e) => setSelectedLocationId(e.target.value)}
-                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-amber-500"
+                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-action"
                 >
                   {locations.map((l) => (
                     <option key={l.id} value={l.id}>
@@ -306,13 +318,14 @@ export default function AdminCardsInventoryPage() {
               </div>
 
               <div>
-                <label className="block text-ink font-semibold mb-1">
+                <label htmlFor="assign-placement" className="block text-ink font-semibold mb-1">
                   Penempatan Fisik
                 </label>
                 <select
+                  id="assign-placement"
                   value={assignedPlacement}
                   onChange={(e) => setAssignedPlacement(e.target.value)}
-                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-amber-500"
+                  className="w-full bg-surface border border-line rounded px-3 py-2 text-ink focus:outline-none focus:border-action"
                 >
                   <option value="cashier">Kasir / POS</option>
                   <option value="table">Meja / Bilik makan</option>
@@ -322,6 +335,10 @@ export default function AdminCardsInventoryPage() {
                   <option value="receipt">Penjepit tagihan</option>
                 </select>
               </div>
+
+              {assignError && (
+                <p role="alert" className="text-xs font-semibold text-error">{assignError}</p>
+              )}
 
               <div className="flex justify-end gap-2 pt-3 border-t border-line">
                 <button
@@ -333,15 +350,15 @@ export default function AdminCardsInventoryPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-amber-500 hover:bg-amber-400 text-ink font-bold transition shadow"
+                  className="px-4 py-2 rounded bg-action hover:bg-action-hover text-white font-bold transition shadow"
                 >
                   Konfirmasi Penetapan
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </Modal>
     </main>
   );
 }

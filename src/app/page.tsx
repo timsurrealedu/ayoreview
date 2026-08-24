@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Archivo } from 'next/font/google';
 import { ArrowRight, BarChart3, Building2, Check, LayoutDashboard, MapPin, Nfc, QrCode, Smartphone, Star } from 'lucide-react';
 import { ActivateCardModal } from '@/components/ui/activate-card-modal';
+import { Logo } from '@/components/ui/logo';
 import { LandingCounter } from './landing-counter';
 import './landing.css';
 
@@ -40,7 +41,7 @@ function ReviewStars({ label = 'Bintang dari pelanggan' }: { label?: string }) {
 export default function LandingPage() {
   return <main lang="id" className={`landing ${archivo.variable}`}>
     <nav className="landing-nav" aria-label="Navigasi utama"><div className="nav-inner">
-      <Link href="/" className="wordmark" aria-label="Beranda AyoReview"><span aria-hidden="true">A</span>AyoReview</Link>
+      <Link href="/" className="wordmark" aria-label="Beranda AyoReview"><Logo size={32} />AyoReview</Link>
       <div className="nav-links"><a href="#cara-kerja">Cara kerja</a><a href="#produk">Produknya</a><a href="#penempatan">Penempatan</a></div>
       <div className="nav-actions">
         <ActivateCardModal />
@@ -56,7 +57,7 @@ export default function LandingPage() {
           <Link href="/pesan" className="button">Pesan Sekarang <ArrowRight aria-hidden="true" /></Link>
           <ActivateCardModal />
         </div>
-        <p className="hero-note">Kartu siap pakai Rp 20.000 sekali bayar · dikirim ke alamat Anda</p>
+        <p className="hero-note">Kartu siap pakai Rp 30.000 sekali bayar · tanpa biaya bulanan · dikirim ke alamat Anda</p>
       </div>
 
       <div className="hero-demo" role="img" aria-label="Contoh tampilan dasbor AyoReview dengan jumlah ulasan yang bertambah, rasio NFC dan QR, serta tren 30 hari">
@@ -97,6 +98,6 @@ export default function LandingPage() {
     </div></section>
 
     <section className="closing" aria-labelledby="closing-title"><div><ReviewStars label="Lima bintang Ulasan Google" /><h2 id="closing-title">Mulai menghitung ulasan hari ini.</h2><p>Pesan kartu, tertaut ke bisnis Anda sebelum dikirim. Bayar via QRIS, GoPay, atau transfer bank.</p></div><Link href="/pesan" className="button button-inverse">Pesan Sekarang <ArrowRight aria-hidden="true" /></Link></section>
-    <footer><Link href="/" className="wordmark"><span aria-hidden="true">A</span>AyoReview</Link><p>Kartu NFC + QR untuk Ulasan Google.</p><div><Link href="/login">Masuk</Link><Link href="/pesan">Pesan Sekarang</Link></div><small>© 2026 AyoReview. Hak cipta dilindungi.</small></footer>
+    <footer><Link href="/" className="wordmark"><Logo size={32} />AyoReview</Link><p>Kartu NFC + QR untuk Ulasan Google.</p><div><Link href="/login">Masuk</Link><Link href="/pesan">Pesan Sekarang</Link></div><small>© 2026 AyoReview. Hak cipta dilindungi.</small></footer>
   </main>;
 }

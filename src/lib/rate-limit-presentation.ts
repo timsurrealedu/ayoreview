@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 
-const structuredPrefixes = ['/api/', '/q/', '/n/', '/r/'];
+const structuredPrefixes = ['/api/'];
 
 export function wantsRateLimitPage(request: NextRequest) {
   return ['GET', 'HEAD'].includes(request.method)

@@ -63,13 +63,8 @@ export const config = {
     '/q/:path*',
     '/n/:path*',
     '/r/:path*',
-    '/api/businesses/:path*',
-    '/api/locations/:path*',
-    '/api/cards/:path*',
-    '/api/analytics/:path*',
     '/api/admin/:path*',
     '/api/setup/:path*',
     '/api/orders/:path*',
-    '/api/stripe/:path*',
   ],
 };

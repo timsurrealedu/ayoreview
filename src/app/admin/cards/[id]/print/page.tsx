@@ -2,8 +2,10 @@ import { dbRepo } from '@/lib/db';
 import { requirePlatformAdmin } from '@/lib/auth';
 import { generateQrPngDataUrl } from '@/lib/qr';
 import Link from 'next/link';
-import { Smartphone, ArrowLeft } from 'lucide-react';
+import { Smartphone, ArrowLeft, Star } from 'lucide-react';
 import { headers } from 'next/headers';
+import { Logo } from '@/components/ui/logo';
+import { PrintButton } from './print-button';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,16 +41,11 @@ export default async function PrintCardTemplatePage({
         >
           <ArrowLeft className="w-4 h-4" /> Kembali ke Inventaris Kartu
         </Link>
-        <button
-          onClick={() => window.print()}
-          className="px-4 py-2 bg-action hover:bg-action-hover text-white text-xs font-bold rounded shadow cursor-pointer transition"
-        >
-          Cetak Kartu Dudukan
-        </button>
+        <PrintButton />
       </div>
 
       {/* Official AyoReview 5-Star Acrylic Template (10 x 15 cm ratio) */}
-      <div className="w-full max-w-[360px] h-[520px] bg-white border-2 border-zinc-300 rounded p-8 flex flex-col items-center justify-between text-center shadow-2xl relative overflow-hidden print:w-[360px]">
+      <div className="w-full max-w-[360px] h-[540px] bg-white border-2 border-zinc-300 rounded p-8 flex flex-col items-center justify-between text-center shadow-2xl relative overflow-hidden print:w-[360px]">
         {/* Top subtle decorative strip */}
         <div className="w-full flex justify-between items-center text-[10px] text-muted-ink font-mono">
           <span>{card.inventory_code}</span>
@@ -57,9 +54,12 @@ export default async function PrintCardTemplatePage({
 
         {/* 5-Star Hospitality Visual */}
         <div className="flex flex-col items-center my-auto space-y-3">
-          <div className="flex items-center gap-1 text-warning text-2xl tracking-wider">
-            ★★★★★
+          <div className="flex items-center gap-1" aria-hidden="true">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <Star key={i} className="w-6 h-6 fill-warning text-warning" />
+            ))}
           </div>
+          <span className="sr-only">Ulasan lima bintang</span>
 
           <h2 className="text-2xl font-black text-zinc-900 tracking-tight leading-tight">
             Puas dengan kunjungan Anda?
@@ -69,8 +69,8 @@ export default async function PrintCardTemplatePage({
             Ketuk ponsel pada dudukan atau pindai kode QR untuk memberi ulasan Google
           </p>
 
-          {/* High-DPI QR Container */}
-          <div className="p-3.5 bg-zinc-50 border border-zinc-200 rounded shadow-inner mt-2">
+          {/* High-DPI QR Container — pure white quiet zone for maximum scanability */}
+          <div className="p-3.5 bg-white mt-2">
             <img
               src={pngDataUrl}
               alt="Pindai untuk memberi Ulasan Google"
@@ -87,7 +87,7 @@ export default async function PrintCardTemplatePage({
         {/* Bottom Logo & Inventory Bar */}
         <div className="w-full pt-3 border-t border-zinc-200 flex items-center justify-between text-[11px] text-muted-ink font-medium">
           <span className="font-bold text-zinc-900 tracking-tight flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-action"></span>
+            <Logo size={16} className="rounded" />
             AyoReview
           </span>
           <span className="font-mono text-[10px] text-muted-ink">{card.public_id}</span>

@@ -11,7 +11,6 @@ import {
   ArrowRight, 
   ArrowLeft,
   ShieldCheck, 
-  CreditCard, 
   Sparkles, 
   AlertCircle, 
   Lock, 
@@ -22,6 +21,8 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { PlaceSearchResult } from '@/lib/types';
+import { validateGoogleReviewUrl } from '@/lib/url-validator';
+import { Logo } from '@/components/ui/logo';
 
 export default function CardSetupPage() {
   return (
@@ -37,7 +38,7 @@ function CardSetupContent() {
   const searchParams = useSearchParams();
   const publicId = typeof params.publicId === 'string' ? params.publicId : '';
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,6 +52,7 @@ function CardSetupContent() {
   // Direct link state (no Places API credit card needed)
   const [directName, setDirectName] = useState('');
   const [directUrl, setDirectUrl] = useState('');
+  const directUrlCheck = validateGoogleReviewUrl(directUrl);
 
   // Account state
   const [user, setUser] = useState<any | null>(null);
@@ -60,12 +62,12 @@ function CardSetupContent() {
 
   // Link state
   const [isLinked, setIsLinked] = useState(false);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [cardMissing, setCardMissing] = useState(false);
 
   useEffect(() => {
     if (searchParams.get('paid') === '1') {
       setIsLinked(true);
-      setStep(6);
+      setStep(5);
       return;
     }
     const supabase = createClient();
@@ -77,6 +79,26 @@ function CardSetupContent() {
       }
     });
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!publicId || searchParams.get('paid') === '1') return;
+    let cancelled = false;
+    fetch(`/api/setup/card-status?publicId=${encodeURIComponent(publicId)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled || !d.success || !d.data) return;
+        if (!d.data.exists) {
+          setCardMissing(true);
+        } else if (d.data.linked && d.data.status === 'active') {
+          setIsLinked(true);
+          setStep(5);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [publicId, searchParams]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,11 +144,21 @@ function CardSetupContent() {
     if (!directName.trim() || !directUrl.trim()) return;
 
     const trimmedUrl = directUrl.trim();
+    const check = validateGoogleReviewUrl(trimmedUrl);
+    if (!check.isValid || !check.sanitizedUrl) {
+      setError(
+        'Tautan belum benar: ' +
+          (check.error || 'URL tidak valid') +
+          '. Salin tautan langsung dari aplikasi Google Maps (tombol Bagikan atau Minta Ulasan).'
+      );
+      return;
+    }
+
     const mockPlace: PlaceSearchResult = {
-      place_id: trimmedUrl,
+      place_id: check.sanitizedUrl,
       name: directName.trim(),
       address: 'Tautan Ulasan Google Langsung',
-      google_maps_url: trimmedUrl,
+      google_maps_url: check.sanitizedUrl,
     };
 
     handleSelectPlace(mockPlace);
@@ -187,31 +219,11 @@ function CardSetupContent() {
       }
 
       setIsLinked(true);
-      setStep(5); // Move to subscription step
+      setStep(5);
     } catch (err: any) {
       setError(err.message || 'Gagal menghubungkan kartu AyoReview');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleStartSubscription = async () => {
-    setCheckoutLoading(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/stripe/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ publicId, email }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success || !data.url) {
-        throw new Error(data.error || 'Gagal membuka halaman pembayaran');
-      }
-      window.location.href = data.url;
-    } catch (err: any) {
-      setError(err.message || 'Gagal membuka pembayaran. Coba lagi.');
-      setCheckoutLoading(false);
     }
   };
 
@@ -220,7 +232,6 @@ function CardSetupContent() {
     'Bisnis',
     'Pilih',
     'Akun',
-    'Langganan',
     'Selesai'
   ];
 
@@ -229,9 +240,7 @@ function CardSetupContent() {
       {/* Header */}
       <header className="w-full max-w-lg mx-auto flex items-center justify-between pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded bg-action flex items-center justify-center text-white font-black text-sm shadow-md shadow-action/30 group-hover:scale-105 transition">
-            A
-          </div>
+          <Logo size={32} className="shrink-0 shadow-md shadow-action/30 group-hover:scale-105 transition" />
           <div className="flex flex-col">
             <span className="font-bold text-ink tracking-tight text-sm sm:text-base">AyoReview</span>
             <span className="text-[10px] text-muted-ink font-medium">Aktivasi Kartu Pintar</span>
@@ -247,16 +256,30 @@ function CardSetupContent() {
 
       {/* Main Container */}
       <main className="w-full max-w-lg mx-auto my-auto py-6">
+        {cardMissing ? (
+          <div className="bg-surface border border-line rounded p-8 shadow-2xl text-center space-y-4">
+            <HelpCircle className="w-12 h-12 text-muted-ink mx-auto" />
+            <h1 className="text-xl font-bold text-ink tracking-tight">Kartu Tidak Ditemukan</h1>
+            <p className="text-xs text-muted-ink leading-relaxed">
+              Kode <span className="font-mono font-bold text-ink">{publicId}</span> tidak terdaftar
+              di sistem AyoReview. Periksa kembali kode pada kartu fisik Anda, atau hubungi pihak
+              yang memberikan kartu tersebut.
+            </p>
+          </div>
+        ) : (
+        <>
         {/* Progress Tracker */}
         <div className="mb-4 bg-surface/90 border border-line rounded p-3">
           <div className="flex justify-between items-center text-xs font-semibold text-ink mb-2">
-            <span>Langkah {step} dari 6</span>
+            <span>
+              Langkah {step === 3 && setupMode === 'direct' ? '—' : setupMode === 'direct' && step > 3 ? step - 1 : step} dari {setupMode === 'direct' ? 4 : 5}
+            </span>
             <span className="text-action">{stepLabels[step - 1]}</span>
           </div>
           <div className="w-full bg-subtle h-1.5 rounded-full overflow-hidden">
             <div 
               className="bg-action h-full transition-all duration-300 rounded-full"
-              style={{ width: `${(step / 6) * 100}%` }}
+              style={{ width: `${(step / 5) * 100}%` }}
             />
           </div>
         </div>
@@ -336,6 +359,7 @@ function CardSetupContent() {
                 <button
                   type="button"
                   onClick={() => setSetupMode('direct')}
+                  aria-pressed={setupMode === 'direct'}
                   className={`py-2.5 rounded transition text-center ${
                     setupMode === 'direct'
                       ? 'bg-action text-white shadow-md'
@@ -347,6 +371,7 @@ function CardSetupContent() {
                 <button
                   type="button"
                   onClick={() => setSetupMode('search')}
+                  aria-pressed={setupMode === 'search'}
                   className={`py-2.5 rounded transition text-center ${
                     setupMode === 'search'
                       ? 'bg-action text-white shadow-md'
@@ -386,8 +411,17 @@ function CardSetupContent() {
                       placeholder="https://g.page/r/.../review atau https://maps.app.goo.gl/..."
                       value={directUrl}
                       onChange={(e) => setDirectUrl(e.target.value)}
-                      className="w-full bg-surface border border-line rounded px-3.5 py-3 text-ink font-mono text-xs placeholder:text-muted-ink font-medium focus:outline-none focus:border-action focus:ring-1 focus:ring-action"
+                      className={`w-full bg-surface border rounded px-3.5 py-3 text-ink font-mono text-xs placeholder:text-muted-ink font-medium focus:outline-none focus:ring-1 ${
+                        directUrl.trim() && !directUrlCheck.isValid
+                          ? 'border-error focus:border-error focus:ring-error'
+                          : 'border-line focus:border-action focus:ring-action'
+                      }`}
                     />
+                    {directUrl.trim() && !directUrlCheck.isValid && (
+                      <p role="alert" className="mt-1.5 text-[11px] font-semibold text-error">
+                        Tautan ini bukan tautan Google yang valid — periksa kembali sebelum lanjut.
+                      </p>
+                    )}
                     <div className="p-3.5 bg-surface/90 border border-line rounded mt-2.5 text-xs text-ink space-y-1.5">
                       <div className="font-bold text-ink flex items-center gap-1.5">
                         <HelpCircle className="w-4 h-4 text-warning" />
@@ -401,15 +435,8 @@ function CardSetupContent() {
 
                   <div className="flex gap-2.5 pt-2">
                     <button
-                      type="button"
-                      onClick={() => setStep(1)}
-                      className="w-1/3 py-3 rounded bg-subtle hover:bg-subtle text-ink font-bold text-xs border border-line transition"
-                    >
-                      Kembali
-                    </button>
-                    <button
                       type="submit"
-                      disabled={!directName.trim() || !directUrl.trim()}
+                      disabled={!directName.trim() || !directUrl.trim() || !directUrlCheck.isValid}
                       className="flex-1 flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                     >
                       Lanjutkan ke Akun
@@ -453,13 +480,6 @@ function CardSetupContent() {
                   </div>
 
                   <div className="flex gap-2.5 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setStep(1)}
-                      className="w-1/3 py-3 rounded bg-subtle hover:bg-subtle text-ink font-bold text-xs border border-line transition"
-                    >
-                      Kembali
-                    </button>
                     <button
                       type="submit"
                       disabled={loading || !businessQuery.trim()}
@@ -516,14 +536,6 @@ function CardSetupContent() {
                   </button>
                 ))}
               </div>
-
-              <button
-                type="button"
-                onClick={() => setStep(2)}
-                className="w-full py-3 rounded bg-subtle hover:bg-subtle text-ink font-bold text-xs border border-line transition"
-              >
-                ← Kembali ke Form Pencarian
-              </button>
             </div>
           )}
 
@@ -629,61 +641,8 @@ function CardSetupContent() {
             </div>
           )}
 
-          {/* STEP 5: Payment / Subscription */}
+          {/* STEP 5: Done */}
           {step === 5 && (
-            <div className="space-y-6 text-center">
-              <div className="w-16 h-16 rounded bg-action/20 border border-action/50 flex items-center justify-center text-action mx-auto shadow-lg shadow-action/20">
-                <CreditCard className="w-8 h-8 text-action" />
-              </div>
-
-              <div>
-                <h2 className="text-xl font-bold text-ink tracking-tight">
-                  Langganan Kartu AyoReview
-                </h2>
-                <p className="text-xs text-ink mt-1">
-                  Aktifkan pengalihan ulasan instan dan analitik realtime
-                </p>
-              </div>
-
-              <div className="bg-surface border border-line p-5 rounded text-left space-y-3">
-                <div className="flex justify-between items-baseline">
-                  <span className="text-sm font-bold text-ink">Paket Langganan Kartu</span>
-                  <span className="text-lg font-black text-success">Rp 5.000<span className="text-xs font-normal text-muted-ink">/bln</span></span>
-                </div>
-                <ul className="text-xs text-ink space-y-2 pt-2.5 border-t border-line">
-                  <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
-                    Pengalihan NFC & QR tanpa batas
-                  </li>
-                  <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
-                    Masa tenggang 7 hari jika pembayaran tertunda
-                  </li>
-                  <li className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
-                    Laporan analitik ketukan & pemindaian
-                  </li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <button
-                  onClick={handleStartSubscription}
-                  disabled={checkoutLoading}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded bg-action hover:bg-action-hover text-white font-bold text-sm transition shadow-lg shadow-action/30 active:scale-[0.98] disabled:opacity-50"
-                >
-                  {checkoutLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
-                  {checkoutLoading ? 'Membuka Pembayaran...' : 'Aktifkan Langganan (Stripe)'}
-                </button>
-                <p className="text-[11px] text-muted-ink text-center">
-                  Kartu baru aktif setelah langganan dibayarkan.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 6: Done */}
-          {step === 6 && (
             <div className="space-y-6 text-center">
               <div className="w-16 h-16 rounded bg-success flex items-center justify-center text-ink mx-auto shadow-lg shadow-success/30">
                 <CheckCircle2 className="w-8 h-8" />
@@ -708,6 +667,8 @@ function CardSetupContent() {
             </div>
           )}
         </div>
+        </>
+        )}
       </main>
 
       {/* Footer */}

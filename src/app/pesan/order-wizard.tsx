@@ -16,6 +16,8 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import { PlaceSearchResult } from '@/lib/types';
+import { validateGoogleReviewUrl } from '@/lib/url-validator';
+import { Logo } from '@/components/ui/logo';
 
 type SetupMode = 'direct' | 'search';
 
@@ -32,6 +34,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
   const [businessQuery, setBusinessQuery] = useState('');
   const [cityQuery, setCityQuery] = useState('');
   const [directUrl, setDirectUrl] = useState('');
+  const directUrlCheck = validateGoogleReviewUrl(directUrl);
   const [places, setPlaces] = useState<PlaceSearchResult[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<PlaceSearchResult | null>(null);
 
@@ -60,7 +63,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
       if (!data.places?.length) {
         setError('Tidak ditemukan tempat yang cocok. Coba ubah nama atau gunakan opsi Tempel Tautan.');
       } else {
-        setStep(2);
+        setError(null);
       }
     } catch (err: any) {
       setError(err.message || 'Terjadi kesalahan saat mencari listing');
@@ -71,17 +74,17 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
 
   const pickPlace = (place: PlaceSearchResult) => {
     setSelectedPlace(place);
-    setStep(3);
+    setStep(2);
   };
 
   const handleDirectSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!businessQuery.trim() || !directUrl.trim()) return;
+    if (!businessQuery.trim() || !directUrl.trim() || !directUrlCheck.isValid || !directUrlCheck.sanitizedUrl) return;
     pickPlace({
-      place_id: directUrl.trim(),
+      place_id: directUrlCheck.sanitizedUrl,
       name: businessQuery.trim(),
       address: 'Tautan Ulasan Google Langsung',
-      google_maps_url: directUrl.trim(),
+      google_maps_url: directUrlCheck.sanitizedUrl,
     });
   };
 
@@ -133,9 +136,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
     <div className="min-h-screen bg-canvas text-ink flex flex-col p-4 sm:p-8 font-sans">
       <header className="w-full max-w-lg mx-auto flex items-center justify-between pb-4 border-b border-line">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded bg-action flex items-center justify-center text-white font-black text-sm shadow-md shadow-action/30 group-hover:scale-105 transition">
-            A
-          </div>
+          <Logo size={32} className="shrink-0 shadow-md shadow-action/30 group-hover:scale-105 transition" />
           <span className="font-bold text-ink tracking-tight text-sm sm:text-base">AyoReview</span>
         </Link>
         <Link href="/login" className="text-xs font-semibold text-muted-ink hover:text-action transition">
@@ -179,7 +180,8 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
               <div className="grid grid-cols-2 gap-2 p-1.5 bg-surface border border-line rounded text-xs font-bold">
                 <button
                   type="button"
-                  onClick={() => setSetupMode('direct')}
+                  onClick={() => { setSetupMode('direct'); setPlaces([]); }}
+                  aria-pressed={setupMode === 'direct'}
                   className={`py-2.5 rounded transition text-center ${
                     setupMode === 'direct'
                       ? 'bg-action text-white shadow-md'
@@ -190,7 +192,8 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setSetupMode('search')}
+                  onClick={() => { setSetupMode('search'); setPlaces([]); }}
+                  aria-pressed={setupMode === 'search'}
                   className={`py-2.5 rounded transition text-center ${
                     setupMode === 'search'
                       ? 'bg-action text-white shadow-md'
@@ -222,8 +225,16 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                       placeholder="https://g.page/r/.../review atau https://maps.app.goo.gl/..."
                       value={directUrl}
                       onChange={(e) => setDirectUrl(e.target.value)}
-                      className={`${inputClass} font-mono`}
+                      aria-describedby="direct-url-hint"
+                      className={`${inputClass} font-mono ${
+                        directUrl.trim() && !directUrlCheck.isValid ? 'border-error focus:border-error focus:ring-error' : ''
+                      }`}
                     />
+                    {directUrl.trim() && !directUrlCheck.isValid && (
+                      <p id="direct-url-hint" role="alert" className="mt-1.5 text-[11px] font-semibold text-error">
+                        Tautan ini bukan tautan Google yang valid — periksa kembali sebelum lanjut.
+                      </p>
+                    )}
                     <div className="p-3.5 bg-subtle border border-line rounded mt-2.5 text-xs text-ink space-y-1.5">
                       <div className="font-bold flex items-center gap-1.5">
                         <HelpCircle className="w-4 h-4 text-warning" />
@@ -236,13 +247,51 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                   </div>
                   <button
                     type="submit"
-                    disabled={!businessQuery.trim() || !directUrl.trim()}
+                    disabled={!businessQuery.trim() || !directUrl.trim() || !directUrlCheck.isValid}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
                   >
                     Lanjut ke Pengiriman
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </form>
+              ) : places.length > 0 ? (
+                <div className="space-y-4 text-xs">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-lg font-bold text-ink tracking-tight">Pilih Lokasi Google</h2>
+                      <p className="text-muted-ink mt-0.5">Pilih lokasi yang tepat dari hasil pencarian</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPlaces([])}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-ink hover:bg-subtle border border-line px-3 py-1.5 rounded transition"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      Ubah Pencarian
+                    </button>
+                  </div>
+                  <div className="space-y-3 max-h-72 overflow-y-auto pr-1" role="listbox" aria-label="Hasil pencarian Google Maps">
+                    {places.map((place) => (
+                      <button
+                        key={place.place_id}
+                        type="button"
+                        role="option"
+                        aria-selected={selectedPlace?.place_id === place.place_id}
+                        onClick={() => pickPlace(place)}
+                        disabled={loading}
+                        className="w-full text-left p-4 rounded bg-surface hover:bg-subtle border border-line hover:border-action transition group flex items-start gap-3.5 shadow-sm disabled:opacity-50"
+                      >
+                        <MapPin className="w-5 h-5 text-action shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-ink text-sm group-hover:text-action-hover truncate">
+                            {place.name}
+                          </div>
+                          <div className="text-muted-ink mt-0.5 line-clamp-2">{place.address}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <form onSubmit={handleSearch} className="space-y-4 text-xs">
                   <div>
@@ -347,11 +396,22 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                   <textarea
                     required
                     rows={3}
+                    minLength={20}
                     placeholder="Nama jalan, nomor, RT/RW, kelurahan, kecamatan, kota, kode pos"
                     value={shippingAddress}
                     onChange={(e) => setShippingAddress(e.target.value)}
+                    aria-describedby="shipping-address-hint"
                     className={`${inputClass} resize-none`}
                   />
+                  <p
+                    id="shipping-address-hint"
+                    aria-live="polite"
+                    className={`mt-1 text-[11px] font-medium ${shippingAddress.trim().length >= 20 ? 'text-success' : 'text-muted-ink'}`}
+                  >
+                    {shippingAddress.trim().length >= 20
+                      ? 'Alamat terlihat lengkap.'
+                      : `Minimal 20 karakter (${shippingAddress.trim().length}/20) — tulis alamat lengkap agar kurir mudah menemukan.`}
+                  </p>
                 </div>
                 <button
                   type="submit"
@@ -402,7 +462,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
                   </li>
                   <li className="flex items-center gap-2 font-medium">
                     <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
-                    Langganan Rp 5.000/bulan dimulai setelah kartu aktif dipakai
+                    Tanpa biaya bulanan — bayar sekali, kartu aktif selamanya
                   </li>
                   <li className="flex items-center gap-2 font-medium">
                     <CheckCircle2 className="w-4 h-4 text-success shrink-0" />

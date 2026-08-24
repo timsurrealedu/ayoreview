@@ -849,7 +849,7 @@ export const dbRepo = {
         business_name: businessName,
         merchant_email: merchantEmail.toLowerCase().trim(),
         linked_at: now,
-        subscription_status: 'pending',
+        subscription_status: 'active',
         subscription_status_updated_at: now,
         updated_at: now,
       })
@@ -859,44 +859,6 @@ export const dbRepo = {
 
     if (error) throw error;
     return data as Card;
-  },
-
-  async setupUpdateSubscription(
-    cardId: string,
-    subscriptionId: string,
-    status: string,
-    options?: { statusUpdatedAt?: string; currentPeriodEnd?: string }
-  ): Promise<void> {
-    const supabase = getAdminClient();
-    const now = new Date().toISOString();
-    const updatePayload: any = {
-      subscription_id: subscriptionId,
-      subscription_status: status,
-      subscription_status_updated_at: options?.statusUpdatedAt || now,
-      updated_at: now,
-    };
-    if (options?.currentPeriodEnd) {
-      updatePayload.subscription_current_period_end = options.currentPeriodEnd;
-    }
-    await supabase.from('cards').update(updatePayload).eq('id', cardId);
-  },
-
-  async setupUpdateSubscriptionByStripeId(
-    subscriptionId: string,
-    status: string,
-    options?: { statusUpdatedAt?: string; currentPeriodEnd?: string }
-  ): Promise<void> {
-    const supabase = getAdminClient();
-    const now = new Date().toISOString();
-    const updatePayload: any = {
-      subscription_status: status,
-      subscription_status_updated_at: options?.statusUpdatedAt || now,
-      updated_at: now,
-    };
-    if (options?.currentPeriodEnd) {
-      updatePayload.subscription_current_period_end = options.currentPeriodEnd;
-    }
-    await supabase.from('cards').update(updatePayload).eq('subscription_id', subscriptionId);
   },
 
   async setupGetCardByPublicId(publicId: string): Promise<(Card & { google_review_url?: string; location_status?: string }) | null> {
@@ -936,44 +898,29 @@ export const dbRepo = {
     const supabase = getAdminClient();
     const { data } = await supabase
       .from('cards')
-      .select(`
-        *,
-        interactions (
-          id,
-          source,
-          timestamp,
-          is_bot
-        )
-      `)
+      .select('*')
       .ilike('merchant_email', email.toLowerCase().trim())
       .order('created_at', { ascending: false });
 
     if (!data) return [];
 
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-    const yesterdayStart = todayStart - 86400000;
-    const d7Start = now.getTime() - 7 * 86400000;
-    const d30Start = now.getTime() - 30 * 86400000;
+    // Aggregate interaction stats in SQL (migration 009) — bounded, indexed counts
+    const { data: statRows } = await supabase.rpc('get_cards_stats_by_email', {
+      p_email: email.toLowerCase().trim(),
+    });
+    const statsByCard = new Map<string, any>(
+      ((statRows as any[]) || []).map((row) => [row.card_id, row])
+    );
 
     return data.map((c: any) => {
-      const validInts = (c.interactions || []).filter((i: any) => i.is_bot === 0);
-      let today = 0;
-      let yesterday = 0;
-      let last7Days = 0;
-      let last30Days = 0;
-      let qr = 0;
-      let nfc = 0;
-
-      validInts.forEach((i: any) => {
-        const time = new Date(i.timestamp).getTime();
-        if (time >= todayStart) today++;
-        else if (time >= yesterdayStart) yesterday++;
-        if (time >= d7Start) last7Days++;
-        if (time >= d30Start) last30Days++;
-        if (i.source === 'qr') qr++;
-        if (i.source === 'nfc') nfc++;
-      });
+      const row = statsByCard.get(c.id);
+      const today = Number(row?.today ?? 0);
+      const yesterday = Number(row?.yesterday ?? 0);
+      const last7Days = Number(row?.last_7_days ?? 0);
+      const last30Days = Number(row?.last_30_days ?? 0);
+      const allTime = Number(row?.all_time ?? 0);
+      const qr = Number(row?.qr ?? 0);
+      const nfc = Number(row?.nfc ?? 0);
 
       return {
         id: c.id,
@@ -998,7 +945,7 @@ export const dbRepo = {
           yesterday,
           last7Days,
           last30Days,
-          allTime: validInts.length,
+          allTime,
           qr,
           nfc,
         },
@@ -1008,36 +955,16 @@ export const dbRepo = {
 
   async setupGetCardAnalytics(cardId: string): Promise<AnalyticsOverview> {
     const supabase = getAdminClient();
-    const { data: ints } = await supabase
-      .from('interactions')
-      .select('*')
-      .eq('card_id', cardId)
-      .eq('is_bot', 0);
-
-    const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-    const yesterdayStart = todayStart - 86400000;
-    const d7Start = now.getTime() - 7 * 86400000;
-    const d30Start = now.getTime() - 30 * 86400000;
-
-    let today = 0;
-    let yesterday = 0;
-    let last7Days = 0;
-    let last30Days = 0;
-    let qrTotal = 0;
-    let nfcTotal = 0;
-
-    (ints || []).forEach((i: any) => {
-      const time = new Date(i.timestamp).getTime();
-      if (time >= todayStart) today++;
-      else if (time >= yesterdayStart) yesterday++;
-      if (time >= d7Start) last7Days++;
-      if (time >= d30Start) last30Days++;
-      if (i.source === 'qr') qrTotal++;
-      if (i.source === 'nfc') nfcTotal++;
+    const { data, error } = await supabase.rpc('get_card_analytics', {
+      p_card_id: cardId,
     });
 
-    const allTime = (ints || []).length;
+    const row = (!error && data && data[0]) || {};
+    const today = Number(row.today ?? 0);
+    const yesterday = Number(row.yesterday ?? 0);
+    const qrTotal = Number(row.qr_total ?? 0);
+    const nfcTotal = Number(row.nfc_total ?? 0);
+
     const totalSources = qrTotal + nfcTotal || 1;
     const qrPercentage = Math.round((qrTotal / totalSources) * 100);
     const nfcPercentage = 100 - qrPercentage;
@@ -1045,9 +972,9 @@ export const dbRepo = {
 
     return {
       today,
-      last7Days,
-      last30Days,
-      allTime,
+      last7Days: Number(row.last_7_days ?? 0),
+      last30Days: Number(row.last_30_days ?? 0),
+      allTime: Number(row.all_time ?? 0),
       qrTotal,
       nfcTotal,
       qrPercentage,
@@ -1169,7 +1096,7 @@ export const dbRepo = {
           business_name: order.business_name,
           merchant_email: order.merchant_email,
           linked_at: now,
-          subscription_status: 'pending',
+          subscription_status: 'active',
           subscription_status_updated_at: now,
           updated_at: now,
         })

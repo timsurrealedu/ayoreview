@@ -1,0 +1,32 @@
+export function Logo({ size = 32, className }: { size?: number; className?: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 120 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      className={className}
+    >
+      <defs>
+        <linearGradient id="ayo-logo-gradient" x1="60" y1="6" x2="60" y2="114" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#55A2F0" />
+          <stop offset="1" stopColor="#2B6BDB" />
+        </linearGradient>
+      </defs>
+      <rect x="6" y="6" width="108" height="108" rx="27" fill="url(#ayo-logo-gradient)" />
+      <path d="M28 23h64c5.52 0 10 4.48 10 10v23c0 5.52-4.48 10-10 10H71l-11 12-11-12H28c-5.52 0-10-4.48-10-10V33c0-5.52 4.48-10 10-10z" fill="#fff" />
+      <g fill="#FBBC04">
+        <path transform="translate(32.5 46) scale(0.62)" d="M0-10 2.47-3.4 9.51-3.09 3.99 1.3 5.88 8.09 0 4.2-5.88 8.09-3.99 1.3-9.51-3.09-2.47-3.4Z" />
+        <path transform="translate(44.5 45.5) scale(0.8)" d="M0-10 2.47-3.4 9.51-3.09 3.99 1.3 5.88 8.09 0 4.2-5.88 8.09-3.99 1.3-9.51-3.09-2.47-3.4Z" />
+        <path transform="translate(60 44.5) scale(1.12)" d="M0-10 2.47-3.4 9.51-3.09 3.99 1.3 5.88 8.09 0 4.2-5.88 8.09-3.99 1.3-9.51-3.09-2.47-3.4Z" />
+        <path transform="translate(75.5 45.5) scale(0.8)" d="M0-10 2.47-3.4 9.51-3.09 3.99 1.3 5.88 8.09 0 4.2-5.88 8.09-3.99 1.3-9.51-3.09-2.47-3.4Z" />
+        <path transform="translate(87.5 46) scale(0.62)" d="M0-10 2.47-3.4 9.51-3.09 3.99 1.3 5.88 8.09 0 4.2-5.88 8.09-3.99 1.3-9.51-3.09-2.47-3.4Z" />
+      </g>
+      <circle cx="60" cy="80" r="8" stroke="#fff" strokeOpacity="0.55" strokeWidth="2.6" fill="none" />
+      <circle cx="60" cy="80" r="15" stroke="#fff" strokeOpacity="0.3" strokeWidth="2.6" fill="none" />
+      <path transform="translate(38.15 67.65) scale(1.9)" fill="#fff" d="M18.84 15.87l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.03-.24-.03-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.44 1.06.44h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z" />
+    </svg>
+  );
+}
