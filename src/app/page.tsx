@@ -30,7 +30,7 @@ const placements = [
 ];
 
 function ReviewCard({ priority = false }: { priority?: boolean }) {
-  return <div className="review-card"><Image src="/images/review-card-reference.png" alt="Kartu AyoReview dengan merek Google, nama bisnis, kode QR, dan area ketuk NFC" fill priority={priority} sizes="(max-width: 700px) 88vw, 520px" /></div>;
+  return <div className="review-card"><Image src="/images/nfc-card-design.png" alt="Kartu AyoReview: kode QR untuk scan dan area NFC untuk ketuk, dengan merek Google" fill priority={priority} sizes="(max-width: 700px) 88vw, 520px" /></div>;
 }
 
 function ReviewStars({ label = 'Bintang dari pelanggan' }: { label?: string }) {
