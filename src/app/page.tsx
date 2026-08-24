@@ -12,7 +12,7 @@ import './landing.css';
 THESIS: The product is shown working before it is explained — first viewport is the merchant's own dashboard mid-count, not a claim about reviews.
 OWN-WORLD: Committed violet (#7c3aed) on warm-white canvas #fbfaff; white surfaces at 16px radii with soft offset shadows; Archivo throughout; green/amber reserved for data states.
 STORY: Visitor sees review count rising live, believes the loop works, learns tap→review in three beats, sees the card in real placements, orders.
-FIRST VIEWPORT: Left 45%: headline with violet emphasis word, deck, primary "Pesan Sekarang" + secondary activation action. Right 55%: white dashboard mock (counting number, NFC/QR split, drawn sparkline) overlapped by angled physical card photo. Primary action bottom-left of viewport half.
+FIRST VIEWPORT: Left 45%: headline with violet emphasis word, deck, primary "Pesan Sekarang" + secondary activation action. Right 55%: white dashboard mock (counting number, NFC/QR split, stars popping in) overlapped by angled physical card photo. Primary action bottom-left of viewport half.
 FORM: "The counter that counts" — dealt index 5, seed key ccc25469, locked by user.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
 */
@@ -60,7 +60,7 @@ export default function LandingPage() {
         <p className="hero-note">Kartu siap pakai Rp 30.000 sekali bayar · tanpa biaya bulanan · dikirim ke alamat Anda</p>
       </div>
 
-      <div className="hero-demo" role="img" aria-label="Contoh tampilan dasbor AyoReview dengan jumlah ulasan yang bertambah, rasio NFC dan QR, serta tren 30 hari">
+      <div className="hero-demo" role="img" aria-label="Contoh tampilan dasbor AyoReview dengan jumlah ulasan yang bertambah, rasio NFC dan QR, serta bintang ulasan yang menyala satu per satu">
         <div className="dash-mock" aria-hidden="true">
           <div className="dash-head"><strong>Ulasan bulan ini</strong><span className="dash-live">Langsung</span></div>
           <LandingCounter />
@@ -68,10 +68,10 @@ export default function LandingPage() {
             <div><Nfc /><i style={{ '--w': '68%' } as React.CSSProperties} /></div>
             <div><QrCode /><i style={{ '--w': '32%' } as React.CSSProperties} /></div>
           </div>
-          <svg className="dash-spark" viewBox="0 0 220 56" preserveAspectRatio="none">
-            <path className="spark-line" d="M0,46 C18,44 28,38 44,39 S70,30 88,31 S116,20 134,22 S166,10 184,13 S210,4 220,5" />
-          </svg>
-          <div className="dash-foot">Tren 30 hari terakhir</div>
+          <div className="dash-stars">
+            {Array.from({ length: 5 }, (_, i) => <Star key={i} style={{ '--star-i': i } as React.CSSProperties} />)}
+          </div>
+          <div className="dash-foot">Bintang 5 terus masuk dari pelanggan</div>
         </div>
         <div className="demo-card-wrap"><ReviewCard priority /></div>
         <p className="demo-caption">Contoh tampilan dasbor Anda</p>
