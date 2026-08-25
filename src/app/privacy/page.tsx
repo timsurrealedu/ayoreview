@@ -170,8 +170,8 @@ export default function PrivacyPage() {
             </h2>
             <p className="mt-3 text-[15px] leading-relaxed text-muted-ink">
               Ada pertanyaan tentang kebijakan ini atau data Anda? Kirim email ke{' '}
-              <a href="mailto:tim@ayoreview.id" className="font-semibold text-action underline underline-offset-4">
-                tim@ayoreview.id
+              <a href="mailto:td522637@gmail.com" className="font-semibold text-action underline underline-offset-4">
+                td522637@gmail.com
               </a>{' '}
               dan kami akan membantu Anda.
             </p>

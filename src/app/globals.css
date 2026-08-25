@@ -3,40 +3,40 @@
 @theme {
   --font-sans: var(--font-archivo), sans-serif;
   --font-mono: var(--font-plex-mono), monospace;
-  --color-canvas: #fbfaff;
+  --color-canvas: #f8fafc;
   --color-surface: #ffffff;
-  --color-subtle: #f4f1fc;
-  --color-ink: #241b3e;
-  --color-muted-ink: #6f6893;
-  --color-line: #e7e3f4;
-  --color-action: #7c3aed;
-  --color-action-hover: #6d28d9;
-  --color-action-soft: #f1eafe;
+  --color-subtle: #f1f5f9;
+  --color-ink: #0f172a;
+  --color-muted-ink: #64748b;
+  --color-line: #e2e8f0;
+  --color-action: #2563eb;
+  --color-action-hover: #1d4ed8;
+  --color-action-soft: #dbeafe;
   --color-success: #0c9d61;
   --color-success-soft: #e0f8ee;
   --color-warning: #b45309;
   --color-warning-soft: #fdf1df;
   --color-error: #e11d48;
   --color-error-soft: #ffe8ee;
-  --color-focus: #7c3aed;
+  --color-focus: #2563eb;
 }
 
 @layer base {
   :root {
-    --background: #fbfaff;
-    --foreground: #241b3e;
+    --background: #f8fafc;
+    --foreground: #0f172a;
     --card: #ffffff;
-    --card-foreground: #241b3e;
-    --primary: #7c3aed;
+    --card-foreground: #0f172a;
+    --primary: #2563eb;
     --primary-foreground: #ffffff;
-    --muted: #f4f1fc;
-    --muted-foreground: #6f6893;
-    --border: #e7e3f4;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --border: #e2e8f0;
     --radius: 0.5rem;
     --signal-red: #f04438;
     --signal-yellow: #fbbc04;
     --signal-green: #12c78f;
-    --gradient-fun: linear-gradient(120deg, #7c3aed, #d946ef 55%, #f97316);
+    --gradient-fun: linear-gradient(120deg, #2563eb, #38bdf8 55%, #fbbc04);
   }
 
   body {
@@ -46,12 +46,12 @@
   }
 
   :focus-visible {
-    outline: 3px solid #7c3aed;
+    outline: 3px solid #2563eb;
     outline-offset: 3px;
   }
 
   ::selection {
-    background: #ede4ff;
+    background: #dbeafe;
     color: var(--foreground);
   }
 
@@ -59,7 +59,7 @@
 }
 
 @layer utilities {
-  .shadow-lg, .shadow-xl, .shadow-2xl { --tw-shadow-color: rgb(36 27 62 / 0.12); }
+  .shadow-lg, .shadow-xl, .shadow-2xl { --tw-shadow-color: rgb(15 23 42 / 0.12); }
   .text-gradient {
     background: var(--gradient-fun);
     -webkit-background-clip: text;
