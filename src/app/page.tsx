@@ -188,7 +188,7 @@ export default async function LandingPage() {
     <footer>
       <Link href="/" className="wordmark"><Logo size={32} />AyoReview</Link>
       <p>Kartu NFC + QR untuk review Google.</p>
-      <div><Link href="/login">Masuk</Link><Link href="/pesan">Pesan Kartu</Link></div>
+      <div><Link href="/login">Masuk</Link><Link href="/pesan">Pesan Kartu</Link><Link href="/privacy">Privasi</Link></div>
       <small>© 2026 AyoReview. Hak cipta dilindungi.</small>
     </footer>
   </main>;
