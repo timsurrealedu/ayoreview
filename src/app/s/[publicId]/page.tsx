@@ -149,7 +149,7 @@ function CardSetupContent() {
       setError(
         'Tautan belum benar: ' +
           (check.error || 'URL tidak valid') +
-          '. Salin tautan langsung dari aplikasi Google Maps (tombol Bagikan atau Minta Ulasan).'
+          '. Salin tautan langsung dari aplikasi Google Maps (tombol Bagikan atau Minta Review).'
       );
       return;
     }
@@ -157,7 +157,7 @@ function CardSetupContent() {
     const mockPlace: PlaceSearchResult = {
       place_id: check.sanitizedUrl,
       name: directName.trim(),
-      address: 'Tautan Ulasan Google Langsung',
+      address: 'Tautan Review Google Langsung',
       google_maps_url: check.sanitizedUrl,
     };
 
@@ -303,7 +303,7 @@ function CardSetupContent() {
                   Aktifkan Kartu AyoReview Anda
                 </h1>
                 <p className="text-xs sm:text-sm text-ink mt-2 leading-relaxed font-normal">
-                  Kartu fisik dengan ID <span className="font-mono text-warning font-bold">{publicId}</span> siap dihubungkan ke profil ulasan Google Maps tempat usaha Anda.
+                  Kartu fisik dengan ID <span className="font-mono text-warning font-bold">{publicId}</span> siap dihubungkan ke profil review Google Maps tempat usaha Anda.
                 </p>
               </div>
 
@@ -403,7 +403,7 @@ function CardSetupContent() {
 
                   <div>
                     <label className="block text-ink font-bold mb-1.5">
-                      Tautan Ulasan Google / Google Maps *
+                      Tautan Review Google / Google Maps *
                     </label>
                     <input
                       type="url"
@@ -428,7 +428,7 @@ function CardSetupContent() {
                         Cara mendapatkan tautan gratis (10 Detik):
                       </div>
                 <div className="text-ink">1. Buka aplikasi Google Maps di HP, lalu cari nama toko Anda.</div>
-                <div className="text-ink">2. Klik tombol <span className="font-semibold text-ink">&quot;Bagikan&quot;</span> atau <span className="font-semibold text-ink">&quot;Minta Ulasan&quot;</span>, lalu salin tautannya.</div>
+                <div className="text-ink">2. Klik tombol <span className="font-semibold text-ink">&quot;Bagikan&quot;</span> atau <span className="font-semibold text-ink">&quot;Minta Review&quot;</span>, lalu salin tautannya.</div>
                       <div className="text-ink">3. Tempel link tersebut di atas. Selesai!</div>
                     </div>
                   </div>
@@ -548,7 +548,7 @@ function CardSetupContent() {
                     Buat Akun Pemilik Bisnis
                   </h2>
                   <p className="text-xs text-ink mt-1">
-                    Untuk mengelola kartu ulasan dan melihat analitik pelanggan
+                    Untuk mengelola kartu review dan melihat analitik pelanggan
                   </p>
                 </div>
                 <button
@@ -653,7 +653,7 @@ function CardSetupContent() {
                   Kartu AyoReview Anda Siap Digunakan!
                 </h2>
                 <p className="text-xs sm:text-sm text-ink mt-2 leading-relaxed font-normal">
-                  Kartu fisik dengan ID <span className="font-mono text-warning font-bold">{publicId}</span> sekarang tertaut secara permanen. Setiap pelanggan yang mengetap atau memindai akan langsung diarahkan ke form ulasan Google bisnis Anda.
+                  Kartu fisik dengan ID <span className="font-mono text-warning font-bold">{publicId}</span> sekarang tertaut secara permanen. Setiap pelanggan yang mengetap atau memindai akan langsung diarahkan ke form review Google bisnis Anda.
                 </p>
               </div>
 

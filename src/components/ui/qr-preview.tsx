@@ -68,7 +68,7 @@ export function QrPreviewModal({
           Puas dengan kunjungan Anda?
         </h4>
         <p className="text-ink text-xs mb-4">
-          Ketuk ponsel atau pindai kode untuk memberi ulasan
+          Ketuk ponsel atau pindai kode untuk memberi review
         </p>
 
         {/* QR Code Frame */}

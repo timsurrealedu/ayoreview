@@ -41,10 +41,10 @@ export default async function MyCardsDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
-            Kartu Ulasan Saya
+            Kartu Review Saya
           </h1>
           <p className="text-xs sm:text-sm text-muted-ink mt-1">
-            Pantau performa ketukan NFC dan pemindaian QR kartu ulasan bisnis Anda
+            Pantau performa ketukan NFC dan pemindaian QR kartu review bisnis Anda
           </p>
           <p className="text-[11px] text-muted-ink mt-1">
             Kartu muncul di dasbor ini jika email akun Anda sama dengan email saat memesan.
@@ -171,7 +171,7 @@ export default async function MyCardsDashboardPage() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-ink hover:text-ink transition"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" /> Uji Tautan Ulasan
+                      <ExternalLink className="w-3.5 h-3.5" /> Uji Tautan Review
                     </a>
 
                     <Link

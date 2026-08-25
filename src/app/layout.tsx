@@ -20,22 +20,22 @@ function resolveSiteUrl(): URL {
 export const metadata: Metadata = {
   metadataBase: resolveSiteUrl(),
   title: {
-    default: 'AyoReview — Infrastruktur Ulasan Google NFC & QR Pintar',
+    default: 'AyoReview — Infrastruktur Review Google NFC & QR Pintar',
     template: '%s · AyoReview',
   },
-  description: 'Ubah pelanggan yang puas menjadi ulasan Google bintang 5 instan melalui kartu NFC dan QR dinamis.',
+  description: 'Ubah pelanggan yang puas menjadi review Google bintang 5 instan melalui kartu NFC dan QR dinamis.',
   openGraph: {
     type: 'website',
     siteName: 'AyoReview',
     locale: 'id_ID',
     url: resolveSiteUrl().toString(),
-    title: 'AyoReview — Kartu Ulasan Google NFC & QR',
-    description: 'Kartu NFC + QR sekali bayar yang mengarahkan pelanggan langsung ke form ulasan Google bisnis Anda.',
+    title: 'AyoReview — Kartu Review Google NFC & QR',
+    description: 'Kartu NFC + QR sekali bayar yang mengarahkan pelanggan langsung ke form review Google bisnis Anda.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AyoReview — Kartu Ulasan Google NFC & QR',
-    description: 'Kartu NFC + QR sekali bayar yang mengarahkan pelanggan langsung ke form ulasan Google bisnis Anda.',
+    title: 'AyoReview — Kartu Review Google NFC & QR',
+    description: 'Kartu NFC + QR sekali bayar yang mengarahkan pelanggan langsung ke form review Google bisnis Anda.',
   },
 };
 

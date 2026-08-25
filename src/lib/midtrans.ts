@@ -54,7 +54,7 @@ export async function createSnapTransaction(params: {
       item_details: [
         {
           id: 'card-nfc-qr',
-          name: 'Kartu Ulasan AyoReview (NFC + QR)',
+          name: 'Kartu Review AyoReview (NFC + QR)',
           price: params.grossAmount,
           quantity: 1,
         },

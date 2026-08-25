@@ -189,7 +189,7 @@ export default function LoginPage() {
               Masuk ke AyoReview
             </h1>
             <p className="text-xs text-ink mt-1">
-              Akses dasbor bisnis dan analitik kartu ulasan Anda
+              Akses dasbor bisnis dan analitik kartu review Anda
             </p>
           </div>
 
@@ -200,7 +200,7 @@ export default function LoginPage() {
       </div>
 
       <footer className="w-full max-w-md mx-auto text-center text-xs text-muted-ink py-2">
-        © 2026 AyoReview · Platform Ulasan Google Cerdas
+        © 2026 AyoReview · Platform Review Google Cerdas
       </footer>
     </div>
   );

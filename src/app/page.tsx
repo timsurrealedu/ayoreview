@@ -2,26 +2,27 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Archivo } from 'next/font/google';
-import { ArrowRight, BarChart3, Building2, Check, LayoutDashboard, MapPin, Nfc, QrCode, Smartphone, Star } from 'lucide-react';
-import { ActivateCardModal } from '@/components/ui/activate-card-modal';
+import { ArrowRight, BarChart3, Building2, Check, LayoutDashboard, MapPin, Nfc, QrCode, ShieldCheck, Smartphone, Star, X } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
+import { getCurrentUser } from '@/lib/auth';
 import { LandingCounter } from './landing-counter';
+import { ScrollReveal } from './scroll-reveal';
 import './landing.css';
 
 /*
-THESIS: The product is shown working before it is explained — first viewport is the merchant's own dashboard mid-count, not a claim about reviews.
-OWN-WORLD: Committed violet (#7c3aed) on warm-white canvas #fbfaff; white surfaces at 16px radii with soft offset shadows; Archivo throughout; green/amber reserved for data states.
-STORY: Visitor sees review count rising live, believes the loop works, learns tap→review in three beats, sees the card in real placements, orders.
-FIRST VIEWPORT: Left 45%: headline with violet emphasis word, deck, primary "Pesan Sekarang" + secondary activation action. Right 55%: white dashboard mock (counting number, NFC/QR split, stars popping in) overlapped by angled physical card photo. Primary action bottom-left of viewport half.
-FORM: "The counter that counts" — dealt index 5, seed key ccc25469, locked by user.
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
+MESSAGE ARC: WHAT (pre-linked NFC+QR card, one tap to the Google review form)
+-> WHY (reviews decide where people go; happy customers forget to review)
+-> HOW (we link the card to the listing before shipping)
+-> WHAT YOU GET (Rp 30.000 once, dashboard included)
+-> WHERE (placements) -> MANAGE (dashboard) -> GO.
+One order CTA label ("Pesan Kartu") everywhere. No invented stats, no em-dashes.
 */
 
 const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'AyoReview | Kartu NFC & QR untuk Ulasan Google',
-  description: 'Bantu pelanggan memberi ulasan Google dengan mudah. Cukup ketuk kartu NFC atau pindai QR di tempat usaha Anda.',
+  title: 'AyoReview | Kartu NFC & QR untuk Review Google',
+  description: 'Kartu NFC + QR yang tertaut ke listing Google bisnis Anda sebelum dikirim. Pelanggan mengetuk, formulir review langsung terbuka. Rp 30.000 sekali bayar.',
 };
 
 const placements = [
@@ -30,74 +31,165 @@ const placements = [
   { label: 'Di resepsionis', className: 'use-reception' },
 ];
 
-function ReviewCard({ priority = false }: { priority?: boolean }) {
-  return <div className="review-card"><Image src="/images/nfc-card-design.png" alt="Kartu AyoReview: kode QR untuk scan dan area NFC untuk ketuk, dengan merek Google" fill priority={priority} sizes="(max-width: 700px) 88vw, 520px" /></div>;
-}
+const included = [
+  'Kartu NFC + QR siap pajang',
+  'Tertaut ke listing Google Anda sebelum dikirim',
+  'Dasbor interaksi: ketukan, pindaian, tren 30 hari',
+  'Ganti tujuan review kapan saja tanpa cetak ulang',
+  'Siap dipakai untuk beberapa cabang sejak awal',
+];
 
-function ReviewStars({ label = 'Bintang dari pelanggan' }: { label?: string }) {
-  return <div className="review-stars" role="img" aria-label={label}>{Array.from({ length: 5 }, (_, index) => <Star key={index} aria-hidden="true" />)}</div>;
-}
+const dashboardFeatures = [
+  { icon: LayoutDashboard, title: 'Kelola kartu', body: 'Aktifkan dan atur kartu tiap bisnis.' },
+  { icon: QrCode, title: 'Perbarui tautan', body: 'Ganti tujuan review tanpa mengganti kartu.' },
+  { icon: BarChart3, title: 'Lihat aktivitas', body: 'Pantau jumlah ketukan dan pindaian.' },
+  { icon: Building2, title: 'Atur cabang', body: 'Bedakan kartu di tiap lokasi.' },
+];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const user = await getCurrentUser();
+  const isAdmin = user?.is_platform_admin === true;
   return <main lang="id" className={`landing ${archivo.variable}`}>
+    <ScrollReveal />
     <nav className="landing-nav" aria-label="Navigasi utama"><div className="nav-inner">
       <Link href="/" className="wordmark" aria-label="Beranda AyoReview"><Logo size={32} />AyoReview</Link>
-      <div className="nav-links"><a href="#cara-kerja">Cara kerja</a><a href="#produk">Produknya</a><a href="#penempatan">Penempatan</a></div>
+      <div className="nav-links"><a href="#cara-kerja">Cara kerja</a><a href="#harga">Harga</a><a href="#penempatan">Penempatan</a></div>
       <div className="nav-actions">
-        <ActivateCardModal />
-        <Link href="/login" className="button button-small button-inverse">Masuk</Link>
+        {isAdmin && <Link href="/admin" className="admin-link"><ShieldCheck aria-hidden="true" />Admin</Link>}
+        <Link href={user ? '/my' : '/login'} className="button button-small button-inverse">{user ? 'Dasbor' : 'Masuk'}</Link>
       </div>
     </div></nav>
 
+    {/* WHAT: the offer, stated plainly, with the physical product front and center */}
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero-copy">
-        <h1 id="hero-title">Ulasan Google naik,<em> begitu saja.</em></h1>
-        <p className="hero-deck">Kartu NFC + QR di meja atau kasir Anda. Pelanggan mengetuk, ulasan masuk, dasbor Anda menghitung. Tanpa aplikasi, tanpa ribet.</p>
+        <h1 id="hero-title"><em>Satu ketukan</em>, review Google meningkat.</h1>
+        <p className="hero-deck">Kami kirim kartu NFC + QR yang sudah tertaut ke listing Google usaha Anda. Pelanggan mengetuk, formulir review langsung terbuka.</p>
         <div className="hero-actions">
-          <Link href="/pesan" className="button">Pesan Sekarang <ArrowRight aria-hidden="true" /></Link>
-          <ActivateCardModal />
+          <Link href="/pesan" className="button">Pesan Kartu <ArrowRight aria-hidden="true" /></Link>
         </div>
-        <p className="hero-note">Kartu siap pakai Rp 30.000 sekali bayar · tanpa biaya bulanan · dikirim ke alamat Anda</p>
       </div>
 
-      <div className="hero-demo" role="img" aria-label="Contoh tampilan dasbor AyoReview dengan jumlah ulasan yang bertambah, rasio NFC dan QR, serta bintang ulasan yang menyala satu per satu">
-        <div className="dash-mock" aria-hidden="true">
-          <div className="dash-head"><strong>Ulasan bulan ini</strong><span className="dash-live">Langsung</span></div>
-          <LandingCounter />
-          <div className="dash-split">
+      <div className="hero-stage" role="img" aria-label="Kartu AyoReview fisik berisi kode QR dan area NFC, dengan notifikasi review baru yang muncul di atasnya">
+        <div className="hero-card-wrap" aria-hidden="true">
+          <div className="review-card"><Image src="/images/nfc-card-design.png" alt="" fill priority sizes="(max-width: 900px) 92vw, 560px" /></div>
+          <div className="tap-toast">
+            <Star aria-hidden="true" />
+            <span><strong>Review baru masuk</strong>barusan, dari meja kasir</span>
+          </div>
+          <div className="tap-hint"><Nfc aria-hidden="true" /><span>Cukup tempelkan ponsel</span></div>
+        </div>
+        <p className="hero-caption">Kartu fisik Anda, tertaut ke Google sebelum dikirim</p>
+      </div>
+    </section>
+
+    {/* WHY: reviews decide where people go; happy customers forget to review */}
+    <section className="why" aria-labelledby="why-title">
+      <div className="section-heading reveal">
+        <h2 id="why-title">Review menentukan pilihan pelanggan.</h2>
+        <p>Sebelum datang, calon pelanggan mengecek Google dulu. Bisnis dengan review yang banyak dan bagus tampil lebih atas, dan lebih dipercaya.</p>
+      </div>
+      <div className="why-grid">
+        <article className="why-card why-without reveal" aria-label="Kondisi tanpa AyoReview">
+          <h3>Tanpa kartu</h3>
+          <ul>
+            <li><X aria-hidden="true" />Pelanggan puas lalu pulang, review terlupakan</li>
+            <li><X aria-hidden="true" />Meminta review langsung terasa canggung</li>
+            <li><X aria-hidden="true" />Yang rajin memberi review cuma yang kecewa</li>
+          </ul>
+        </article>
+        <article className="why-card why-with reveal" aria-label="Kondisi dengan AyoReview">
+          <h3>Dengan AyoReview</h3>
+          <ul>
+            <li><Check aria-hidden="true" />Kartu di kasir atau meja mengajak di momen yang tepat</li>
+            <li><Check aria-hidden="true" />Satu ketukan, tanpa aplikasi dan tanpa login</li>
+            <li><Check aria-hidden="true" />Review masuk sebelum pelanggan keluar pintu</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    {/* HOW: order, we link it, customers tap */}
+    <section className="how" id="cara-kerja" aria-labelledby="how-title">
+      <div className="section-heading reveal">
+        <h2 id="how-title">Dari pesanan ke review masuk, tiga langkah.</h2>
+        <p>Anda tidak perlu mengatur apa pun di Google. Kami yang menyiapkannya.</p>
+      </div>
+      <ol className="steps">
+        <li className="reveal"><span aria-hidden="true"><Smartphone /></span><h3>Pesan dan bayar</h3><p>Pilih bisnis Anda, isi alamat kirim, bayar lewat QRIS, GoPay, atau bank.</p></li>
+        <li className="reveal"><span aria-hidden="true"><MapPin /></span><h3>Kami tautkan dan kirim</h3><p>Kartu tertaut ke listing Google bisnis Anda sebelum dikemas. Tinggal taruh di tempat.</p></li>
+        <li className="reveal"><span aria-hidden="true"><Star /></span><h3>Pelanggan ketuk</h3><p>Ponsel menyentuh kartu atau memindai QR, formulir review Google langsung terbuka.</p></li>
+      </ol>
+    </section>
+
+    {/* WHAT YOU GET: the concrete offer */}
+    <section className="get" id="harga" aria-labelledby="get-title">
+      <div className="get-price reveal">
+        <p className="get-label">Sekali bayar</p>
+        <p className="get-amount">Rp 30.000</p>
+        <p className="get-note">Tanpa langganan, tanpa biaya bulanan. Kartu dan dasbor jadi milik Anda.</p>
+        <Link href="/pesan" className="button button-inverse">Pesan Kartu <ArrowRight aria-hidden="true" /></Link>
+        <p className="get-pay">Dikirim ke alamat Anda. Pembayaran via QRIS, GoPay, ShopeePay, dan transfer bank.</p>
+      </div>
+      <div className="get-list reveal" aria-labelledby="get-title">
+        <h2 id="get-title">Apa yang Anda dapatkan.</h2>
+        <ul>
+          {included.map((item) => <li key={item}><Check aria-hidden="true" />{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    {/* WHERE: placements */}
+    <section className="placements" id="penempatan" aria-labelledby="placements-title">
+      <div className="section-heading reveal">
+        <h2 id="placements-title">Taruh di momen yang pas.</h2>
+        <p>Dekat pembayaran, setelah layanan selesai, atau saat pelanggan bersiap pulang.</p>
+      </div>
+      <div className="placement-grid">
+        {placements.map((place) => <article className={`placement ${place.className} reveal`} key={place.label}>
+          <Image src="/images/placement-scenes.png" alt={`${place.label} sebagai tempat AyoReview digunakan`} fill sizes="(max-width: 760px) 92vw, 33vw" />
+          <h3>{place.label}</h3>
+        </article>)}
+      </div>
+      <p className="placement-more">Cocok juga untuk klinik, salon, pangkas rambut, toko, hotel, dan meja resepsionis.</p>
+    </section>
+
+    {/* MANAGE: the dashboard, with the live mock as proof */}
+    <section className="software" aria-labelledby="software-title">
+      <div className="software-copy reveal">
+        <h2 id="software-title">Setiap ketukan tercatat.</h2>
+        <p>Dasbor Anda memperlihatkan aktivitas tiap kartu dan cabang, dari ketukan NFC sampai pindai QR.</p>
+        <div className="dash-mock" role="img" aria-label="Contoh tampilan dasbor AyoReview dengan jumlah review yang bertambah dan rasio NFC terhadap QR">
+          <div className="dash-head" aria-hidden="true"><strong>Review bulan ini</strong><span className="dash-live">Langsung</span></div>
+          <div aria-hidden="true"><LandingCounter /></div>
+          <div className="dash-split" aria-hidden="true">
             <div><Nfc /><i style={{ '--w': '68%' } as React.CSSProperties} /></div>
             <div><QrCode /><i style={{ '--w': '32%' } as React.CSSProperties} /></div>
           </div>
-          <div className="dash-stars">
-            {Array.from({ length: 5 }, (_, i) => <Star key={i} style={{ '--star-i': i } as React.CSSProperties} />)}
-          </div>
-          <div className="dash-foot">Bintang 5 terus masuk dari pelanggan</div>
         </div>
-        <div className="demo-card-wrap"><ReviewCard priority /></div>
         <p className="demo-caption">Contoh tampilan dasbor Anda</p>
+      </div>
+      <div className="software-list reveal">
+        {dashboardFeatures.map(({ icon: Icon, title, body }) => (
+          <div key={title}><Icon aria-hidden="true" /><span><strong>{title}</strong>{body}</span></div>
+        ))}
       </div>
     </section>
 
-    <section className="trust-story" aria-labelledby="trust-title">
-      <div className="trust-copy reveal"><ReviewStars label="Lima bintang ulasan" /><h2 id="trust-title">Ulasan bagus membuat orang lebih percaya.</h2><p>Sebelum datang atau membeli, calon pelanggan sering memeriksa Google. Ulasan yang kuat membantu usaha Anda lebih meyakinkan.</p></div>
-      <div className="friction-note reveal"><strong>Pelanggan puas sering lupa memberi ulasan.</strong><span>AyoReview mengingatkan mereka di waktu yang tepat, sebelum meninggalkan tempat Anda.</span></div>
+    {/* GO */}
+    <section className="closing" aria-labelledby="closing-title">
+      <div>
+        <h2 id="closing-title">Mulai kumpulkan review minggu ini.</h2>
+        <p>Pesan hari ini, kartu sampai di alamat Anda sudah tertaut ke bisnis Anda.</p>
+      </div>
+      <Link href="/pesan" className="button button-inverse">Pesan Kartu <ArrowRight aria-hidden="true" /></Link>
     </section>
 
-    <section className="how" id="cara-kerja" aria-labelledby="how-title"><div className="section-heading reveal"><h2 id="how-title">Tiga langkah. Tidak ribet.</h2><p>Tanpa cari nama bisnis, tanpa ketik alamat, tanpa instruksi panjang.</p></div><ol className="steps">
-      <li className="reveal"><span><Smartphone aria-hidden="true" /></span><h3>Ketuk atau pindai</h3><p>Pelanggan mendekatkan ponsel atau memindai QR.</p></li>
-      <li className="reveal"><span><MapPin aria-hidden="true" /></span><h3>Google terbuka</h3><p>Langsung masuk ke halaman ulasan bisnis Anda.</p></li>
-      <li className="reveal"><span><Star aria-hidden="true" /></span><h3>Ulasan masuk</h3><p>Pelanggan tinggal memilih bintang dan mengirim — dasbor Anda bertambah.</p></li>
-    </ol></section>
-
-    <section className="product" id="produk" aria-labelledby="product-title"><div className="product-stage reveal"><ReviewCard /></div><div className="product-copy reveal"><h2 id="product-title">Satu kartu, dua cara yang mudah.</h2><p>Taruh di tempat pelanggan biasa berhenti. NFC siap diketuk, QR siap dipindai.</p><div className="product-points"><span><Check aria-hidden="true" /> Siap dipajang</span><span><Check aria-hidden="true" /> NFC + QR dalam satu produk</span><span><Check aria-hidden="true" /> Dibuat untuk bisnis Anda</span></div><Link href="/pesan" className="button">Pesan Kartu Ulasan <ArrowRight aria-hidden="true" /></Link></div></section>
-
-    <section className="placements" id="penempatan" aria-labelledby="placements-title"><div className="section-heading reveal"><h2 id="placements-title">Taruh di momen yang pas.</h2><p>Dekat pembayaran, setelah layanan selesai, atau saat pelanggan bersiap pulang.</p></div><div className="placement-grid">{placements.map((place) => <article className={`placement ${place.className} reveal`} key={place.label}><Image src="/images/placement-scenes.png" alt={`${place.label} sebagai tempat AyoReview digunakan`} fill sizes="(max-width: 760px) 92vw, 33vw" /><h3>{place.label}</h3></article>)}</div><p className="placement-more">Cocok juga untuk klinik, salon, pangkas rambut, toko, hotel, dan meja resepsionis.</p></section>
-
-    <section className="software" aria-labelledby="software-title"><div className="software-copy reveal"><h2 id="software-title">Kartu fisiknya didukung dasbor.</h2><p>Kelola semua kartu dan cabang dari satu tempat. Praktis saat bisnis Anda bertambah.</p></div><div className="software-list reveal">
-      <div><LayoutDashboard aria-hidden="true" /><span><strong>Kelola kartu</strong>Aktifkan dan atur kartu bisnis.</span></div><div><QrCode aria-hidden="true" /><span><strong>Perbarui tautan</strong>Ganti tujuan tanpa mengganti kartu.</span></div><div><BarChart3 aria-hidden="true" /><span><strong>Lihat aktivitas</strong>Pantau jumlah ketukan dan pindaian.</span></div><div><Building2 aria-hidden="true" /><span><strong>Atur cabang</strong>Bedakan kartu di tiap lokasi.</span></div>
-    </div></section>
-
-    <section className="closing" aria-labelledby="closing-title"><div><ReviewStars label="Lima bintang Ulasan Google" /><h2 id="closing-title">Mulai menghitung ulasan hari ini.</h2><p>Pesan kartu, tertaut ke bisnis Anda sebelum dikirim. Bayar via QRIS, GoPay, atau transfer bank.</p></div><Link href="/pesan" className="button button-inverse">Pesan Sekarang <ArrowRight aria-hidden="true" /></Link></section>
-    <footer><Link href="/" className="wordmark"><Logo size={32} />AyoReview</Link><p>Kartu NFC + QR untuk Ulasan Google.</p><div><Link href="/login">Masuk</Link><Link href="/pesan">Pesan Sekarang</Link></div><small>© 2026 AyoReview. Hak cipta dilindungi.</small></footer>
+    <footer>
+      <Link href="/" className="wordmark"><Logo size={32} />AyoReview</Link>
+      <p>Kartu NFC + QR untuk review Google.</p>
+      <div><Link href="/login">Masuk</Link><Link href="/pesan">Pesan Kartu</Link></div>
+      <small>© 2026 AyoReview. Hak cipta dilindungi.</small>
+    </footer>
   </main>;
 }

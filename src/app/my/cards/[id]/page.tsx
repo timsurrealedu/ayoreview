@@ -171,7 +171,7 @@ export default async function MyCardDetailPage({
                 <span className="font-mono text-ink text-xs">{card.place_id || 'Tidak ditentukan'}</span>
               </div>
               <div className="pt-2 border-t border-line">
-                <span className="text-muted-ink block text-[10px] uppercase font-bold">Tujuan Form Ulasan Langsung</span>
+                <span className="text-muted-ink block text-[10px] uppercase font-bold">Tujuan Form Review Langsung</span>
                 <a
                   href={targetGoogleUrl}
                   target="_blank"

@@ -13,13 +13,9 @@ import {
   AlertCircle,
   Loader2,
   ShieldCheck,
-  HelpCircle,
 } from 'lucide-react';
 import { PlaceSearchResult } from '@/lib/types';
-import { validateGoogleReviewUrl } from '@/lib/url-validator';
 import { Logo } from '@/components/ui/logo';
-
-type SetupMode = 'direct' | 'search';
 
 function formatIdr(amount: number) {
   return 'Rp ' + amount.toLocaleString('id-ID');
@@ -30,11 +26,8 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [setupMode, setSetupMode] = useState<SetupMode>('direct');
   const [businessQuery, setBusinessQuery] = useState('');
   const [cityQuery, setCityQuery] = useState('');
-  const [directUrl, setDirectUrl] = useState('');
-  const directUrlCheck = validateGoogleReviewUrl(directUrl);
   const [places, setPlaces] = useState<PlaceSearchResult[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<PlaceSearchResult | null>(null);
 
@@ -61,7 +54,7 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
       }
       setPlaces(data.places || []);
       if (!data.places?.length) {
-        setError('Tidak ditemukan tempat yang cocok. Coba ubah nama atau gunakan opsi Tempel Tautan.');
+        setError('Tidak ditemukan tempat yang cocok. Coba ubah nama atau tambahkan kota.');
       } else {
         setError(null);
       }
@@ -75,17 +68,6 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
   const pickPlace = (place: PlaceSearchResult) => {
     setSelectedPlace(place);
     setStep(2);
-  };
-
-  const handleDirectSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!businessQuery.trim() || !directUrl.trim() || !directUrlCheck.isValid || !directUrlCheck.sanitizedUrl) return;
-    pickPlace({
-      place_id: directUrlCheck.sanitizedUrl,
-      name: businessQuery.trim(),
-      address: 'Tautan Ulasan Google Langsung',
-      google_maps_url: directUrlCheck.sanitizedUrl,
-    });
   };
 
   const handleCheckout = async (e: React.FormEvent) => {
@@ -170,91 +152,14 @@ export function OrderWizard({ cardPrice }: { cardPrice: number }) {
             <div className="space-y-6">
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
-                  Pesan Kartu Ulasan
+                  Pesan Kartu Review
                 </h1>
                 <p className="text-xs sm:text-sm text-muted-ink mt-1.5 leading-relaxed">
-                  Hubungkan kartu ke profil Google bisnis Anda sekarang, kartu dikirim siap pakai.
+                  Cari bisnis Anda di Google Maps, kartu dikirim siap pakai tertaut ke profil tersebut.
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 p-1.5 bg-surface border border-line rounded text-xs font-bold">
-                <button
-                  type="button"
-                  onClick={() => { setSetupMode('direct'); setPlaces([]); }}
-                  aria-pressed={setupMode === 'direct'}
-                  className={`py-2.5 rounded transition text-center ${
-                    setupMode === 'direct'
-                      ? 'bg-action text-white shadow-md'
-                      : 'text-ink hover:bg-subtle'
-                  }`}
-                >
-                  Tempel Tautan (Mudah)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSetupMode('search'); setPlaces([]); }}
-                  aria-pressed={setupMode === 'search'}
-                  className={`py-2.5 rounded transition text-center ${
-                    setupMode === 'search'
-                      ? 'bg-action text-white shadow-md'
-                      : 'text-ink hover:bg-subtle'
-                  }`}
-                >
-                  Cari di Google Maps
-                </button>
-              </div>
-
-              {setupMode === 'direct' ? (
-                <form onSubmit={handleDirectSubmit} className="space-y-4 text-xs">
-                  <div>
-                    <label className={labelClass}>Nama Bisnis / Cabang *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Contoh: Kopi Kenangan Senopati"
-                      value={businessQuery}
-                      onChange={(e) => setBusinessQuery(e.target.value)}
-                      className={inputClass}
-                    />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Tautan Ulasan Google / Google Maps *</label>
-                    <input
-                      type="url"
-                      required
-                      placeholder="https://g.page/r/.../review atau https://maps.app.goo.gl/..."
-                      value={directUrl}
-                      onChange={(e) => setDirectUrl(e.target.value)}
-                      aria-describedby="direct-url-hint"
-                      className={`${inputClass} font-mono ${
-                        directUrl.trim() && !directUrlCheck.isValid ? 'border-error focus:border-error focus:ring-error' : ''
-                      }`}
-                    />
-                    {directUrl.trim() && !directUrlCheck.isValid && (
-                      <p id="direct-url-hint" role="alert" className="mt-1.5 text-[11px] font-semibold text-error">
-                        Tautan ini bukan tautan Google yang valid — periksa kembali sebelum lanjut.
-                      </p>
-                    )}
-                    <div className="p-3.5 bg-subtle border border-line rounded mt-2.5 text-xs text-ink space-y-1.5">
-                      <div className="font-bold flex items-center gap-1.5">
-                        <HelpCircle className="w-4 h-4 text-warning" />
-                        Cara mendapatkan tautan gratis:
-                      </div>
-                      <div>1. Buka aplikasi Google Maps di HP, lalu cari nama toko Anda.</div>
-                      <div>2. Klik tombol &quot;Bagikan&quot; atau &quot;Minta Ulasan&quot;, lalu salin tautannya.</div>
-                      <div>3. Tempel link tersebut di atas. Selesai!</div>
-                    </div>
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={!businessQuery.trim() || !directUrl.trim() || !directUrlCheck.isValid}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition shadow-lg shadow-action/20 active:scale-[0.98] disabled:opacity-50"
-                  >
-                    Lanjut ke Pengiriman
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </form>
-              ) : places.length > 0 ? (
+              {places.length > 0 ? (
                 <div className="space-y-4 text-xs">
                   <div className="flex items-center justify-between">
                     <div>

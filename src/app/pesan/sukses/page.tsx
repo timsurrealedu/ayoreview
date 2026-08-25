@@ -91,7 +91,7 @@ export default async function OrderSuccessPage({ searchParams }: Props) {
               </li>
               <li className="flex items-start gap-2.5 font-medium">
                 <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
-                Kartu tiba: taruh di kasir atau meja, pelanggan langsung bisa memberi ulasan
+                Kartu tiba: taruh di kasir atau meja, pelanggan langsung bisa memberi review
               </li>
             </ol>
 

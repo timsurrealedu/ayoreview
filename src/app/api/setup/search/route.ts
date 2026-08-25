@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { searchPlaces } from '@/lib/places';
+import { searchPlaces, PlacesUnavailableError } from '@/lib/places';
 import { strictLimiter } from '@/lib/rate-limiter';
 
 export async function POST(request: NextRequest) {
@@ -24,6 +24,13 @@ export async function POST(request: NextRequest) {
     const places = await searchPlaces(query, typeof city === 'string' ? city : undefined);
     return NextResponse.json({ success: true, places });
   } catch (err: any) {
+    if (err instanceof PlacesUnavailableError) {
+      console.error('Places API unavailable in POST /api/setup/search:', err.message);
+      return NextResponse.json(
+        { success: false, error: 'Layanan pencarian sedang tidak tersedia. Coba lagi atau gunakan Tempel Tautan.' },
+        { status: 502 }
+      );
+    }
     console.error('Error in POST /api/setup/search:', err);
     return NextResponse.json(
       { success: false, error: 'Failed to search Google Places' },

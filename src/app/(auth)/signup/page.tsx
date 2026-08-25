@@ -122,7 +122,7 @@ function SignupContent() {
               Daftar Akun AyoReview
             </h1>
             <p className="text-xs text-ink mt-1">
-              Pasang kartu ulasan Google NFC & QR pintar di tempat usaha Anda
+              Pasang kartu review Google NFC & QR pintar di tempat usaha Anda
             </p>
           </div>
 
@@ -231,7 +231,7 @@ function SignupContent() {
       </div>
 
       <footer className="w-full max-w-md mx-auto text-center text-xs text-muted-ink py-2">
-        © 2026 AyoReview · Platform Ulasan Google Cerdas
+        © 2026 AyoReview · Platform Review Google Cerdas
       </footer>
     </div>
   );

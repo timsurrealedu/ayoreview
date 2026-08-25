@@ -13,13 +13,13 @@ const recoveryCopy: Record<string, { title: string; message: string; icon: React
   unconfigured: {
     title: 'Kartu Sedang Disiapkan',
     message:
-      'Kartu ulasan milik usaha ini belum selesai dihubungkan ke profil Google mereka. Silakan kembali lagi nanti, atau beri ulasan langsung melalui Google Maps.',
+      'Kartu review milik usaha ini belum selesai dihubungkan ke profil Google mereka. Silakan kembali lagi nanti, atau beri review langsung melalui Google Maps.',
     icon: <AlertCircle className="w-12 h-12 text-action" />,
   },
   inactive: {
     title: 'Kartu Sedang Tidak Aktif',
     message:
-      'Kartu ulasan milik usaha ini sedang tidak aktif. Mohon informasikan pihak pengelola usaha agar dapat mengaktifkannya kembali.',
+      'Kartu review milik usaha ini sedang tidak aktif. Mohon informasikan pihak pengelola usaha agar dapat mengaktifkannya kembali.',
     icon: <AlertCircle className="w-12 h-12 text-warning" />,
   },
 };

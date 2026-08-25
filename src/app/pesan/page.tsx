@@ -1,8 +1,8 @@
 import { OrderWizard } from './order-wizard';
 
 export const metadata = {
-  title: 'Pesan Kartu Ulasan | AyoReview',
-  description: 'Pesan kartu NFC + QR AyoReview untuk ulasan Google bisnis Anda.',
+  title: 'Pesan Kartu Review | AyoReview',
+  description: 'Pesan kartu NFC + QR AyoReview untuk review Google bisnis Anda.',
 };
 
 export default function PesanPage() {

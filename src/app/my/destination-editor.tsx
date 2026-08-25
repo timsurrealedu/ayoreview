@@ -42,14 +42,14 @@ export function DestinationEditor({
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Gagal memperbarui tujuan ulasan');
+        throw new Error(data.error || 'Gagal memperbarui tujuan review');
       }
       setOpen(false);
       setUrl('');
-      setFeedback({ tone: 'ok', text: 'Tujuan ulasan diperbarui.' });
+      setFeedback({ tone: 'ok', text: 'Tujuan review diperbarui.' });
       router.refresh();
     } catch (err) {
-      setFeedback({ tone: 'error', text: err instanceof Error ? err.message : 'Gagal memperbarui tujuan ulasan' });
+      setFeedback({ tone: 'error', text: err instanceof Error ? err.message : 'Gagal memperbarui tujuan review' });
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ export function DestinationEditor({
       ) : (
         <form onSubmit={submit} className="space-y-2 pt-1">
           <label htmlFor={`dest-${publicId}`} className="block text-[11px] font-bold text-ink">
-            Tempel tautan ulasan Google baru
+            Tempel tautan review Google baru
           </label>
           <div className="flex gap-2">
             <input
@@ -91,7 +91,7 @@ export function DestinationEditor({
             <button
               type="submit"
               disabled={loading || !check.isValid}
-              aria-label="Simpan tujuan ulasan"
+              aria-label="Simpan tujuan review"
               className="inline-flex items-center justify-center px-3 py-2 rounded bg-action hover:bg-action-hover text-white font-bold text-xs transition disabled:opacity-50 shrink-0"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}

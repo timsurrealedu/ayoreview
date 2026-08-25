@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const trimmedPlaceId = typeof placeId === 'string' ? placeId.trim() : '';
     if (!trimmedPlaceId) {
       return NextResponse.json(
-        { success: false, error: 'Tautan ulasan Google atau lokasi bisnis wajib dipilih' },
+        { success: false, error: 'Tautan review Google atau lokasi bisnis wajib dipilih' },
         { status: 400 }
       );
     }
