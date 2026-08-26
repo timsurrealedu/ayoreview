@@ -26,11 +26,16 @@ export function DashboardSidebar({ isPlatformAdmin, shell = 'merchant', userName
   useEffect(() => {
     if (!open) return;
     const overflow = document.body.style.overflow;
+    const triggerEl = triggerRef.current;
     document.body.style.overflow = 'hidden';
     closeRef.current?.focus();
     const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && setOpen(false);
     document.addEventListener('keydown', closeOnEscape);
-    return () => { document.body.style.overflow = overflow; document.removeEventListener('keydown', closeOnEscape); triggerRef.current?.focus(); };
+    return () => {
+      document.body.style.overflow = overflow;
+      document.removeEventListener('keydown', closeOnEscape);
+      triggerEl?.focus();
+    };
   }, [open]);
 
   const admin = shell === 'admin';

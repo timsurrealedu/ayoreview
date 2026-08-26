@@ -59,7 +59,10 @@ export async function updateSession(request: NextRequest) {
 
     // Redirect authenticated user away from /login /signup
     if ((path === '/login' || path === '/signup') && user) {
-      const redirectTo = request.nextUrl.searchParams.get('redirectTo') || '/my';
+      const requestedRedirect = request.nextUrl.searchParams.get('redirectTo') || '/my';
+      const redirectTo = requestedRedirect.startsWith('/') && !requestedRedirect.startsWith('//')
+        ? requestedRedirect
+        : '/my';
       const url = request.nextUrl.clone();
       url.pathname = redirectTo;
       url.searchParams.delete('redirectTo');
